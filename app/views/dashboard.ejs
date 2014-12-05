@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>
+    apunto
+  </title>
+
+</head>
+<body>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <td>
+          Date
+        </td>
+        <td>
+          Number
+        </td>
+        <td>
+          Message
+        </td>
+        <td>
+          Sent
+        </td>
+      </tr>
+    </thead>
+    <tbody>
+      <% alerts.forEach(function(alert, index) { %>
+
+        <tr>
+          <td>
+            <%= alert.date %>
+          </td>
+          <td>
+            <%= alert.number %>
+          </td>
+          <td>
+            <%= alert.message %>
+          </td>
+          <td>
+            <%= alert.sent %>
+          </td>
+        </tr>
+
+      <% }) %>
+    </tbody>
+  </table>
+
+</body>
+</html>

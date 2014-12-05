@@ -1,0 +1,27 @@
+{
+  "name": "apunto",
+  "version": "0.0.1",
+  "private": true,
+  "main": "server.js",
+  "scripts": {},
+  "dependencies": {
+    "async": "0.9.x",
+    "basic-auth-connect": "^1.0.x",
+    "body-parser": "^1.6.x",
+    "ejs": "1.0.x",
+    "errorhandler": "^1.1.x",
+    "express": "4.8.x",
+    "express-validator": "^2.7.0",
+    "moment": "2.8.x",
+    "moment-timezone": "^0.2.5",
+    "nedb": "1.0.x",
+    "sugar": "^1.4.1",
+    "superagent": "0.18.x"
+  },
+  "devDependencies": {
+    "jshint": "^2.5.x",
+    "mocha": "^1.21.x",
+    "should": "^4.0.x",
+    "supertest": "^0.13.x"
+  }
+}
