@@ -4,6 +4,7 @@
   "private": true,
   "main": "server.js",
   "scripts": {
+    "start": "TZ='Europe/Bucharest' node server.js",
     "test": "./node_modules/.bin/jshint ."
   },
   "dependencies": {
