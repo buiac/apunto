@@ -2,6 +2,8 @@
 /* server
  */
 
+process.env.TZ = 'Europe/Bucharest';
+
 module.exports = (function() {
   'use strict';
 
