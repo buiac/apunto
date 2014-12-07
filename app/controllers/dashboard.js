@@ -1,7 +1,7 @@
 /* dashboard
  */
 
-module.exports = (function(config, db) {
+module.exports = function(config, db) {
   'use strict';
 
   var express = require('express');
@@ -28,4 +28,4 @@ module.exports = (function(config, db) {
     view: view
   };
 
-});
+};

@@ -16,15 +16,37 @@ module.exports = (function() {
 
     timezone: 'Europe/Bucharest',
 
+    admin: {
+      user: 'admin',
+      password: 'admin'
+    },
+
+    sender: 'Apunto',
+
+    gateway: {
+      key: '',
+      secret: '',
+      protocol: 'https',
+      debug: true
+    },
+
     errors: {
     }
   };
 
-  // read admin user credentials
-  config.admin = JSON.parse(fs.readFileSync(config.dataDir + '/private/admin-config.json'));
+  var adminUserFile = config.dataDir + '/private/admin-config.json';
 
-  // read mailchimp api details
-  config.mailchimp = JSON.parse(fs.readFileSync(config.dataDir + '/private/mailchimp-config.json'));
+  if(fs.existsSync(adminUserFile)) {
+    // read admin user credentials from file
+    config.admin = JSON.parse(fs.readFileSync(adminUserFile));
+  }
+
+  var gatewayFile = config.dataDir + '/private/nexmo-config.json';
+
+  if(fs.existsSync(gatewayFile)) {
+    // read sms gateway details
+    config.gateway = JSON.parse(fs.readFileSync(gatewayFile));
+  }
 
   // dev config
   if(process.env.OPENSHIFT_APP_NAME === 'dev') {

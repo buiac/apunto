@@ -25,6 +25,7 @@ module.exports = (function() {
   // Admin auth
   var adminAuth = basicAuth(function(user, pass, callback) {
     var admin = false;
+
     if(process.env.OPENSHIFT_APP_NAME) {
       admin = (user === config.admin.user && pass === config.admin.password);
     } else {
@@ -82,7 +83,7 @@ module.exports = (function() {
   // dashboard routes
   var dashboard = require('./app/controllers/dashboard.js')(config, db);
 
-  app.get('/dashboard', dashboard.view);
+  app.get('/dashboard', adminAuth, dashboard.view);
 
   // start express server
   app.listen(config.port, config.ipAddress, function() {

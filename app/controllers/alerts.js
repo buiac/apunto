@@ -1,7 +1,7 @@
 /* alerts
  */
 
-module.exports = (function(config, db) {
+module.exports = function(config, db) {
   'use strict';
 
   var express = require('express');
@@ -11,6 +11,14 @@ module.exports = (function(config, db) {
   var util = require('util');
 
   var moment = require('moment-timezone');
+
+  var nexmo = require('easynexmo');
+  nexmo.initialize(
+    config.gateway.key,
+    config.gateway.secret,
+    config.gateway.protocol,
+    config.gateway.debug
+  );
 
   var create = function(req, res, next) {
 
@@ -67,9 +75,13 @@ module.exports = (function(config, db) {
 
   var sendAll = function(req, res, next) {
 
+    // find alerts to be sent in the next minute
+    // and have not been already sent
+
     db.alerts.find({
       date: {
-        $gte: moment().tz(config.timezone).toDate()
+        $gte: moment().tz(config.timezone).toDate(),
+        $lte: moment().tz(config.timezone).add(1, 'minutes').toDate()
       },
       sent: {
         $ne: true
@@ -82,24 +94,32 @@ module.exports = (function(config, db) {
         return res.send(err, 400);
       }
 
-      // TODO optimize update loop
-      // to use a single update method for all ids
-
       // TODO integrate gateway and send alert
       // on success set sent true
+
       alerts.forEach(function(alert) {
 
-        db.alerts.update({
-          _id: alert._id
-        }, {
-          $set: {
-            sent: true
-          }
-        }, {}, function(err, alert) {
+        nexmo.sendTextMessage(
+          config.sender,
+          alert.number,
+          alert.message,
+          {},
+          function(err, response) {
 
-          console.log(alert);
+            // set sent to true in db
+            db.alerts.update({
+              _id: alert._id
+            }, {
+              $set: {
+                sent: true
+              }
+            }, {}, function(err, alert) {
 
-        });
+              //console.log(alert);
+
+            });
+
+          });
 
       });
 
@@ -115,4 +135,4 @@ module.exports = (function(config, db) {
     sendAll: sendAll
   };
 
-});
+};
