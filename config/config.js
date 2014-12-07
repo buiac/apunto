@@ -24,8 +24,8 @@ module.exports = (function() {
     sender: 'Apunto',
 
     gateway: {
-      key: '',
-      secret: '',
+      key: '0',
+      secret: '0',
       protocol: 'https',
       debug: true
     },
