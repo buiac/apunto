@@ -20,6 +20,18 @@ module.exports = function(config, db) {
     config.gateway.debug
   );
 
+  function toMomentInTimezone(sourceMoment, timezone) {
+    var result = moment.tz(timezone);
+    result.year(sourceMoment.year());
+    result.month(sourceMoment.month());
+    result.date(sourceMoment.date());
+    result.hour(sourceMoment.hour());
+    result.minute(sourceMoment.minute());
+    result.second(sourceMoment.second());
+    result.millisecond(sourceMoment.millisecond());
+    return result;
+  }
+
   var create = function(req, res, next) {
 
     req.checkBody('number', 'Number should not be empty.').notEmpty();
