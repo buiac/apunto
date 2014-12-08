@@ -17,7 +17,6 @@
     "express-validator": "^2.7.0",
     "jshint": "^2.5.10",
     "moment": "2.8.x",
-    "moment-timezone": "^0.2.5",
     "nedb": "1.0.x",
     "sugar": "^1.4.1",
     "superagent": "0.18.x"

@@ -10,7 +10,7 @@ module.exports = function(config, db) {
   var fs = require('fs');
   var util = require('util');
 
-  var moment = require('moment-timezone');
+  var moment = require('moment');
 
   var nexmo = require('easynexmo');
   nexmo.initialize(
@@ -32,9 +32,7 @@ module.exports = function(config, db) {
 
     var date = Date.create(req.body.date);
 
-    // TODO timezone not working right?
-    //date = moment(date).clone().tz(config.timezone).toDate();
-    date = moment(date).clone().toDate();
+    date = moment(date).toDate();
 
     // TODO add multiple validations after transforms
 
@@ -76,15 +74,13 @@ module.exports = function(config, db) {
 
   var sendAll = function(req, res, next) {
 
-    // find alerts to be sent in the next minute
+    // find alerts that had to be sent in the last two minutes
     // and have not been already sent
 
     db.alerts.find({
       date: {
-        //$gte: moment().tz(config.timezone).toDate(),
-        $gte: moment().toDate(),
-        //$lte: moment().tz(config.timezone).add(1, 'minutes').toDate()
-        $lte: moment().add(1, 'minutes').toDate()
+        $gte: moment().subtract(2, 'minutes').toDate(),
+        $lte: moment().toDate()
       },
       sent: {
         $ne: true

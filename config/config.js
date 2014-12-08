@@ -15,7 +15,6 @@ module.exports = (function() {
     dbDir: '/db',
 
     serverTimezone: 'America/Detroit',
-    timezone: 'Europe/Bucharest',
 
     admin: {
       user: 'admin',
