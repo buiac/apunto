@@ -14,6 +14,7 @@ module.exports = (function() {
     publicDir: '/public',
     dbDir: '/db',
 
+    serverTimezone: 'America/Detroit',
     timezone: 'Europe/Bucharest',
 
     admin: {
@@ -56,6 +57,10 @@ module.exports = (function() {
   // live config
   if(process.env.OPENSHIFT_APP_NAME === 'live') {
 
+  }
+
+  if(process.env.OPENSHIFT_APP_NAME) {
+    process.env.TZ = serverTimezone;
   }
 
   //  ip and port

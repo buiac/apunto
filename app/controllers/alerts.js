@@ -20,18 +20,6 @@ module.exports = function(config, db) {
     config.gateway.debug
   );
 
-  function toMomentInTimezone(sourceMoment, timezone) {
-    var result = moment.tz(timezone);
-    result.year(sourceMoment.year());
-    result.month(sourceMoment.month());
-    result.date(sourceMoment.date());
-    result.hour(sourceMoment.hour());
-    result.minute(sourceMoment.minute());
-    result.second(sourceMoment.second());
-    result.millisecond(sourceMoment.millisecond());
-    return result;
-  }
-
   var create = function(req, res, next) {
 
     req.checkBody('number', 'Number should not be empty.').notEmpty();
@@ -45,7 +33,8 @@ module.exports = function(config, db) {
     var date = Date.create(req.body.date);
 
     // TODO timezone not working right?
-    date = moment(date).clone().tz(config.timezone).toDate();
+    //date = moment(date).clone().tz(config.timezone).toDate();
+    date = moment(date).clone().toDate();
 
     // TODO add multiple validations after transforms
 
@@ -92,8 +81,10 @@ module.exports = function(config, db) {
 
     db.alerts.find({
       date: {
-        $gte: moment().tz(config.timezone).toDate(),
-        $lte: moment().tz(config.timezone).add(1, 'minutes').toDate()
+        //$gte: moment().tz(config.timezone).toDate(),
+        $gte: moment().toDate(),
+        //$lte: moment().tz(config.timezone).add(1, 'minutes').toDate()
+        $lte: moment().add(1, 'minutes').toDate()
       },
       sent: {
         $ne: true
