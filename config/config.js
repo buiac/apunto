@@ -60,7 +60,7 @@ module.exports = (function() {
   }
 
   if(process.env.OPENSHIFT_APP_NAME) {
-    process.env.TZ = serverTimezone;
+    process.env.TZ = config.serverTimezone;
   }
 
   //  ip and port
