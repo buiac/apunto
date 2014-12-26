@@ -1,0 +1,19 @@
+/* Header
+*/
+
+.navbar .navbar-brand {
+	position: relative;
+	padding-left: 54px;
+	font-size: 27px;
+}
+.navbar .logo {
+	position: absolute;
+	display: block;
+	top: 7px;
+	left: 0;
+	width: 44px;
+	height: 35px;
+	background-image: url(../images/apunto-logo-small.png);
+	-webkit-background-size: 44px 35px;
+	background-size: 44px 35px;
+}

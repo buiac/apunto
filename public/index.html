@@ -6,23 +6,42 @@
   <title>
     apunto
   </title>
-
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style/app.css">
 </head>
 <body>
-  <p>schedule an sms reminder</p>
-  <form method="post" action="/api/1/alerts">
+  <nav class="navbar navbar-inverse navbar-static-top">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+          <div class="navbar-header">
+            <a href="" class="navbar-brand">
+              <span class="logo"></span>
+              Apunto
+            </a>
+          </div>
+        </div>
+      </div>
+      
 
-    <input type="text" name="number" id="number" value="0040">
+    </div>
+  </nav>
+  <div class="container">
+    
+    <p>schedule an sms reminder</p>
+    <form method="post" action="/api/1/alerts">
 
-    <input type="text" name="date" id="date" value="in 10 seconds">
+      <input type="text" name="number" id="number" value="0040">
 
-    <input type="text" name="message" id="message" value="test">
+      <input type="text" name="date" id="date" value="in 10 seconds">
 
-    <button type="submit">
-      submit
-    </button>
+      <input type="text" name="message" id="message" value="test">
 
-  </form>
+      <button type="submit">
+        submit
+      </button>
 
+    </form>
+  </div> <!-- container -->
 </body>
 </html>
