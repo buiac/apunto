@@ -4,65 +4,26 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>
-    apunto
+    Apunto - apointment reminder with SMS
   </title>
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="style/app.css">
+  <link rel="stylesheet" href="style/website.css">
 </head>
 <body>
-  
-  <nav class="navbar navbar-inverse navbar-static-top">
+
+  <div class="home">
     
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-          
-          <div class="navbar-header">
-            
-            <a href="" class="navbar-brand">
-              <span class="logo"></span>
-              Apunto
-            </a>
+    <div class="brand">
+      
+      <img src="images/apunto-logo-final.png" alt="">
 
-          </div> <!-- navbar-header -->
+    </div>
+    
+    <h1>Apunto is an apointment reminder <br> app that helps businesses save money by preventing no-shows.</h1>
 
-        </div> <!-- col -->
-      </div> <!-- row -->
-    </div> <!-- container-fluid -->
-  </nav>
+    <a href="/dashboard" class="btn btn-default btn-lg">Set an SMS reminder</a>
 
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-8 col-md-offset-2">
-        
-        <h3>
-          Schedule an apointment reminder:
-        </h3>
+  </div> <!-- home -->
 
-        <form class="form" method="post" action="/api/1/alerts">
-          
-          <div class="row">
-            <div class="col-md-3">
-              <input type="text" name="number" id="number" value="0040" class="form-control">
-            </div>
-
-            <div class="col-md-3">
-              <input type="text" name="date" id="date" value="in 10 seconds" class="form-control">
-            </div>
-
-            <div class="col-md-3">
-              <input type="text" name="message" id="message" value="test" class="form-control">
-            </div>
-
-            <div class="col-md-3">
-              <button type="submit" class="btn btn-primary">
-                Save
-              </button>
-            </div>
-          </div>
-        </form>
-      </div> <!-- col -->
-    </div> <!-- row -->
-  </div> <!-- container -->
 </body>
 </html>

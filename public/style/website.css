@@ -1,0 +1,26 @@
+body {
+	background: #720DAD;
+}
+
+.home	{
+	width: 800px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.home h1 {
+	text-align: center;
+	color: #fff;
+	opacity: .8;
+	line-height: 130%;
+	margin: 0 0 60px;
+}
+
+.brand {
+	margin: 50px auto 30px;
+	width: 400px;
+}
+
+.brand img {
+	width: 100%;
+}
