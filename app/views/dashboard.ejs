@@ -4,50 +4,107 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>
-    apunto
+    Apunto Dashboard
   </title>
-
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style/app.css">
 </head>
 <body>
-  <img src="/images/apunto-logo-final.png" alt="">
-  <table border="1">
-    <thead>
-      <tr>
-        <td>
-          Date
-        </td>
-        <td>
-          Number
-        </td>
-        <td>
-          Message
-        </td>
-        <td>
-          Sent
-        </td>
-      </tr>
-    </thead>
-    <tbody>
-      <% alerts.forEach(function(alert, index) { %>
 
-        <tr>
-          <td>
-            <%= alert.date %>
-          </td>
-          <td>
-            <%= alert.number %>
-          </td>
-          <td>
-            <%= alert.message %>
-          </td>
-          <td>
-            <%= alert.sent %>
-          </td>
-        </tr>
+  <nav class="navbar navbar-inverse navbar-static-top">
+    
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+          
+          <div class="navbar-header">
+            
+            <a href="" class="navbar-brand">
+              <span class="logo"></span>
+              Apunto
+            </a>
 
-      <% }) %>
-    </tbody>
-  </table>
+          </div> <!-- navbar-header -->
+
+        </div> <!-- col -->
+      </div> <!-- row -->
+    </div> <!-- container-fluid -->
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        
+        <h3>
+          Schedule an apointment reminder:
+        </h3>
+
+        <form class="form form-alerts" method="post" action="/api/1/alerts" >
+          
+          <div class="row">
+            <div class="col-md-3">
+              <input type="text" name="number" id="number" value="0040" class="form-control">
+            </div>
+
+            <div class="col-md-3">
+              <input type="text" name="date" id="date" value="in 10 seconds" class="form-control">
+            </div>
+
+            <div class="col-md-3">
+              <input type="text" name="message" id="message" value="test" class="form-control">
+            </div>
+
+            <div class="col-md-3">
+              <button type="submit" class="btn btn-primary">
+                Save
+              </button>
+            </div>
+          </div>
+
+        </form>
+
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <td>
+                Date
+              </td>
+              <td>
+                Number
+              </td>
+              <td>
+                Message
+              </td>
+              <td>
+                Sent
+              </td>
+            </tr>
+          </thead>
+          <tbody>
+            <% alerts.forEach(function(alert, index) { %>
+
+              <tr>
+                <td>
+                  <%= alert.date %>
+                </td>
+                <td>
+                  <%= alert.number %>
+                </td>
+                <td>
+                  <%= alert.message %>
+                </td>
+                <td>
+                  <%= alert.sent %>
+                </td>
+              </tr>
+
+            <% }) %>
+          </tbody>
+        </table>
+      </div> <!-- col -->
+    </div> <!-- row -->
+  </div> <!-- container -->
+  
 
 </body>
 </html>

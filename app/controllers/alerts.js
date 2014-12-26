@@ -51,7 +51,7 @@ module.exports = function(config, db) {
 
     db.alerts.insert(alert);
 
-    res.json(alert);
+    res.redirect('/dashboard');
 
   };
 
