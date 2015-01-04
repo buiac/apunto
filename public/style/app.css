@@ -24,3 +24,10 @@
 .form-alerts {
 	margin-bottom: 40px;
 }
+
+
+/* Weekly callendar
+*/
+.wc-time-header-cell {
+	height: 79px !important;
+}

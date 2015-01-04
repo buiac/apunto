@@ -7,6 +7,41 @@
     Apunto Dashboard
   </title>
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="bower_components/jquery-ui/themes/smoothness/jquery-ui.min.css">
+  <link rel="stylesheet" href="libs/jquery.weekcalendar/jquery.weekcalendar.css">
+  
+  <script src="//code.jquery.com/jquery-1.8.0.min.js "></script>
+  <script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
+  <script src="libs/jquery.weekcalendar/date.js"></script>
+  <script src="libs/jquery.weekcalendar/jquery.weekcalendar.js"></script>
+  
+  <style>
+    #calendar {
+      height: 300px;
+    }
+  </style>
+  <script>
+    $(document).ready(function () {
+
+      var year = new Date().getFullYear();
+        var month = new Date().getMonth();
+        var day = new Date().getDate();
+        
+      $('#calendar').weekCalendar({
+        timeslotsPerHour: 4,
+        //timeslotHeigh: 20,
+        hourLine: true,
+        events: [
+          {"id":1, "start": new Date(year, month, day, 12), "end": new Date(year, month, day, 13, 35),"title":"Lunch with Mike"}
+        ],
+        height: function () {
+          return 300;
+        },
+        businessHours: {start: 8, end: 18, limitDisplay: true}
+      });
+    });
+  </script>
+
   <link rel="stylesheet" href="style/app.css">
 </head>
 <body>
@@ -34,6 +69,8 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-8 col-md-offset-2">
+
+        <div id="calendar"></div>
         
         <h3>
           Schedule an apointment reminder:
