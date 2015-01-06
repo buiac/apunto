@@ -14,30 +14,46 @@
   <script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
   <script src="libs/jquery.weekcalendar/date.js"></script>
   <script src="libs/jquery.weekcalendar/jquery.weekcalendar.js"></script>
-  
-  <style>
-    #calendar {
-      height: 300px;
-    }
-  </style>
+
   <script>
     $(document).ready(function () {
 
       var year = new Date().getFullYear();
         var month = new Date().getMonth();
         var day = new Date().getDate();
+
+      var showModal = function (calEvent, calElement, freeBusyManager, calendar, DomEvent) {
+        
+        calEvent.end = new Date(year, month, day, 13, 35);
+      };
+
+      console.log({"id":1, "start": new Date(year, month, day, 12), "end": new Date(year, month, day, 13, 35),"title":"Lunch with Mike"});
         
       $('#calendar').weekCalendar({
         timeslotsPerHour: 4,
         //timeslotHeigh: 20,
         hourLine: true,
-        events: [
-          {"id":1, "start": new Date(year, month, day, 12), "end": new Date(year, month, day, 13, 35),"title":"Lunch with Mike"}
-        ],
-        height: function () {
-          return 300;
+        data: {
+          events: [
+            {"id":1, "start": new Date(year, month, day, 12), "end": new Date(year, month, day, 13, 35),"title":"Lunch with Mike"}
+          ]
         },
-        businessHours: {start: 8, end: 18, limitDisplay: true}
+        height: function () {
+          return 500;
+        },
+        businessHours: {start: 8, end: 18, limitDisplay: true},
+        firstDayOfWeek: 1,
+        daysToShow: 5,
+        use24Hour: true,
+        eventNew: function (calEvent, calElement, freeBusyManager, calendar, DomEvent) {
+          showModal(calEvent, calElement, freeBusyManager, calendar, DomEvent);
+        },
+        eventDrop: function () {
+          console.log('event moved');
+        },
+        eventClick: function () {
+          console.log('event clicked');
+        }
       });
     });
   </script>
@@ -69,14 +85,9 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-8 col-md-offset-2">
-
-        <div id="calendar"></div>
         
-        <h3>
-          Schedule an apointment reminder:
-        </h3>
 
-        <form class="form form-alerts" method="post" action="/api/1/alerts" >
+        <form class="form form-alerts hide" method="post" action="/api/1/alerts" >
           
           <div class="row">
             <div class="col-md-3">
@@ -100,7 +111,9 @@
 
         </form>
 
-        <table class="table table-bordered">
+        <div id="calendar"></div>
+        
+        <table class="table table-bordered hide">
           <thead>
             <tr>
               <td>

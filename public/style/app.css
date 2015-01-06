@@ -1,3 +1,10 @@
+body,
+html,
+#calendar,
+.container-fluid {
+	height: 100%;
+}
+
 /* Header
 */
 
@@ -28,6 +35,22 @@
 
 /* Weekly callendar
 */
+
+.ui-widget-header {
+	background: transparent;
+	border: transparent;
+}
+.ui-widget-header h1{
+	font-size: 20px;
+}
+
+.ui-widget-header .wc-nav.ui-buttonset {
+	position: absolute;
+	right: 35px;
+	margin: 0;
+}
+
 .wc-time-header-cell {
 	height: 79px !important;
+	font-size: 14px;
 }
