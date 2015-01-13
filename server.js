@@ -7,6 +7,7 @@ module.exports = (function() {
 
   var express = require('express');
   var expressValidator = require('express-validator');
+  var bCrypt = require('bcrypt-nodejs');
 
   var async = require('async');
   var fs = require('fs');
@@ -18,6 +19,28 @@ module.exports = (function() {
   var basicAuth = require('basic-auth-connect');
 
   var app = express();
+
+  
+  // Configuring Passport
+  var flash = require('connect-flash');
+  var passport = require('passport');
+  var LocalStrategy = require('passport-local').Strategy;
+  
+  var expressSession = require('express-session');
+  app.use(expressSession({
+    secret: 'mySecretKey',
+    saveUninitialized: true,
+    resave: true       
+  }));
+
+  app.use(flash());
+  app.use(passport.initialize());
+  app.use(passport.session());
+
+  // Generates hash using bCrypt
+  var createHash = function(password){
+    return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
+  }
 
   // configs
   var config = require('./config/config.js');
@@ -73,6 +96,11 @@ module.exports = (function() {
     autoload: true
   });
 
+  db.users = new Datastore({
+    filename: config.dataDir + config.dbDir + '/users.db',
+    autoload: true
+  });
+
   // alert routes
   var alerts = require('./app/controllers/alerts.js')(config, db);
 
@@ -85,6 +113,71 @@ module.exports = (function() {
 
   app.get('/dashboard', adminAuth, dashboard.view);
 
+
+  passport.serializeUser(function(user, done) {
+    console.log('serializeUser');
+    done(null, user);
+  });
+   
+  passport.deserializeUser(function(user, done) {
+    console.log('deserializeUser');
+    done(null, user);
+    // User.findById(id, function(err, user) {
+    //   done(err, user);
+    // });
+  });
+
+  passport.use('signup', new LocalStrategy({
+      passReqToCallback : true
+    },
+    function (req, username, password, done) {
+      var findOrCreateUser = function(){
+        
+        db.users.findOne({'username': username}, function (err, user) {
+        
+         if (err){
+          
+           return done(err);
+         }
+
+         if (user) {
+          
+           return done(null, false, 
+             req.flash('message', 'User Already Exists'));
+
+         } else {
+           
+           //if there is no user with that email
+           // create the user
+           var newUser = {};
+           // set the user's local credentials
+           newUser.username = username;
+           newUser.password = createHash(password);
+         
+           // save the user
+          db.users.insert(newUser);
+          return done(null, newUser);
+         }
+        });
+      } // findorcreateuser
+
+      process.nextTick(findOrCreateUser);
+
+    }
+  ));
+
+  // signup routes
+  app.get('/signup', function(req, res, next) {
+
+    res.render('signup', {info: req.flash("message")});
+  });
+
+  app.post('/signup', passport.authenticate('signup', {
+    successRedirect: '/dashboard',
+    failureRedirect: '/signup',
+    failureFlash : true
+  }));
+
   // start express server
   app.listen(config.port, config.ipAddress, function() {
     console.log(
@@ -94,6 +187,7 @@ module.exports = (function() {
       config.port
     );
   });
+
 
   return app;
 

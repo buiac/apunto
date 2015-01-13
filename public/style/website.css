@@ -1,5 +1,5 @@
 body {
-	background: #720DAD;
+	background: #fff;
 }
 
 .home	{
@@ -10,7 +10,7 @@ body {
 
 .home h1 {
 	text-align: center;
-	color: #fff;
+	color: #000;
 	opacity: .8;
 	line-height: 130%;
 	margin: 0 0 60px;
