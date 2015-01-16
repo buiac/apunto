@@ -9,20 +9,30 @@ html,
 */
 
 .navbar .navbar-brand {
-	position: relative;
-	padding-left: 54px;
-	font-size: 27px;
+	padding: 0;
+	height: auto;
+	margin: 11px 0 6px 0;
 }
 .navbar .logo {
-	position: absolute;
-	display: block;
-	top: 7px;
-	left: 0;
-	width: 44px;
+	width: 93px;
 	height: 35px;
-	background-image: url(../images/apunto-logo-small.png);
-	-webkit-background-size: 44px 35px;
-	background-size: 44px 35px;
+	background-image: url(../images/logo-white.png);
+	-webkit-background-size: 93px 35px;
+	background-size: 93px 35px;
+	text-indent: -10000px;
+	display: block;
+}
+
+.logout {
+	color: #fff;
+	text-decoration: none;
+	margin: 15px 15px 0 0;
+}
+
+.logout:hover {
+	opacity: .8;
+	text-decoration: none;
+	color: #FFF;
 }
 
 /* Alerts form
@@ -53,4 +63,32 @@ html,
 .wc-time-header-cell {
 	height: 79px !important;
 	font-size: 14px;
+}
+
+.home	{
+	width: 800px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.brand {
+	margin: 20px auto 30px;
+	width: 210px;
+}
+
+.brand img {
+	width: 100%;
+}
+
+.form-wrap {
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	padding: 15px;
+	margin-bottom: 10px;
+}
+
+.form-wrap h1 {
+	font-size: 20px;
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 15px;
 }

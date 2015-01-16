@@ -9,6 +9,7 @@ module.exports = function(config, db) {
   var async = require('async');
   var fs = require('fs');
   var util = require('util');
+  var passport = require('passport');
 
   var view = function(req, res, next) {
 
@@ -17,7 +18,8 @@ module.exports = function(config, db) {
     .end(function(err, response){
 
       res.render('dashboard', {
-        alerts: response.body
+        alerts: response.body,
+        user: req.user
       });
 
     });

@@ -8,10 +8,12 @@
   </title>
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="bower_components/jquery-ui/themes/smoothness/jquery-ui.min.css">
+  <link rel="stylesheet" href="bower_components/fontawesome/css/font-awesome.min.css">
   <link rel="stylesheet" href="libs/jquery.weekcalendar/jquery.weekcalendar.css">
   
   <script src="//code.jquery.com/jquery-1.8.0.min.js "></script>
   <script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
+
   <script src="libs/jquery.weekcalendar/date.js"></script>
   <script src="libs/jquery.weekcalendar/jquery.weekcalendar.js"></script>
 
@@ -26,9 +28,7 @@
         
         calEvent.end = new Date(year, month, day, 13, 35);
       };
-
-      console.log({"id":1, "start": new Date(year, month, day, 12), "end": new Date(year, month, day, 13, 35),"title":"Lunch with Mike"});
-        
+  
       $('#calendar').weekCalendar({
         timeslotsPerHour: 4,
         //timeslotHeigh: 20,
@@ -72,10 +72,11 @@
             
             <a href="" class="navbar-brand">
               <span class="logo"></span>
-              Apunto
             </a>
 
           </div> <!-- navbar-header -->
+
+          <a href="/signout" class="pull-right logout"> <i class="fa fa-power-off"></i> Log out</a>
 
         </div> <!-- col -->
       </div> <!-- row -->
@@ -85,7 +86,8 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-8 col-md-offset-2">
-        
+
+        <%= user.username %>  
 
         <form class="form form-alerts hide" method="post" action="/api/1/alerts" >
           
