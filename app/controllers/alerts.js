@@ -57,6 +57,8 @@ module.exports = function(config, db) {
 
   var list = function(req, res, next) {
 
+    console.log(req.user);
+
     db.alerts.find({
     }).sort({
       date: -1

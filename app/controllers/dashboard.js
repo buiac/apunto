@@ -13,16 +13,27 @@ module.exports = function(config, db) {
 
   var view = function(req, res, next) {
 
-    request
-    .get(config.ipAddress + ':' + config.port + '/api/1/alerts')
-    .end(function(err, response){
+    db.calendars.findOne({'userId': req.user._id}, function (err, calendar) {
+      
+      if (calendar) {
+        
+        request
+        .get(config.ipAddress + ':' + config.port + '/api/1/alerts')
+        .end(function(err, response){
 
-      res.render('dashboard', {
-        alerts: response.body,
-        user: req.user
-      });
+          res.render('dashboard', {
+            alerts: response.body,
+            user: req.user,
+            calendar: calendar
+          });
+
+        });
+        
+      }
 
     });
+
+    
 
   };
 

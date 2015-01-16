@@ -112,7 +112,7 @@ module.exports = (function() {
   // alert routes
   var alerts = require('./app/controllers/alerts.js')(config, db);
 
-  app.get('/api/1/alerts', alerts.list);
+  app.get('/api/1/alerts/', alerts.list);
   app.get('/api/1/alerts/send-all', alerts.sendAll);
   app.post('/api/1/alerts', alerts.create);
 
@@ -158,20 +158,29 @@ module.exports = (function() {
 
          } else {
            
-           //if there is no user with that email
-           // create the user
-           var newUser = {};
-           
-           // set the user's local credentials
-           newUser.username = username;
-           newUser.password = createHash(password);
-         
+          //if there is no user with that email
+          // create the user
+          var newUser = {};
+          var calendar = {}
+
+          // set the user's local credentials
+          newUser.username = username;
+          newUser.password = createHash(password);
+
+          // set calendar default name
+          calendar.name = 'Default name';
+
            // save the user
           db.users.insert(newUser, function (err, newDoc) {
             
             if (err) {
               return done(err);
             } else {
+
+              // insert the calendar
+              calendar.userId = newDoc._id;
+              db.calendars.insert(calendar);
+
               return done(null, newDoc);  
             }
           });
@@ -237,7 +246,6 @@ module.exports = (function() {
     failureRedirect: '/signup',
     failureFlash : true
   }));
-
 
 
   // signin routes
