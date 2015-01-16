@@ -17,46 +17,8 @@
   <script src="libs/jquery.weekcalendar/date.js"></script>
   <script src="libs/jquery.weekcalendar/jquery.weekcalendar.js"></script>
 
-  <script>
-    $(document).ready(function () {
+  <script src="scripts/calendar.js"></script>
 
-      var year = new Date().getFullYear();
-        var month = new Date().getMonth();
-        var day = new Date().getDate();
-
-      var showModal = function (calEvent, calElement, freeBusyManager, calendar, DomEvent) {
-        
-        calEvent.end = new Date(year, month, day, 13, 35);
-      };
-  
-      $('#calendar').weekCalendar({
-        timeslotsPerHour: 4,
-        //timeslotHeigh: 20,
-        hourLine: true,
-        data: {
-          events: [
-            {"id":1, "start": new Date(year, month, day, 12), "end": new Date(year, month, day, 13, 35),"title":"Lunch with Mike"}
-          ]
-        },
-        height: function () {
-          return 500;
-        },
-        businessHours: {start: 8, end: 18, limitDisplay: true},
-        firstDayOfWeek: 1,
-        daysToShow: 5,
-        use24Hour: true,
-        eventNew: function (calEvent, calElement, freeBusyManager, calendar, DomEvent) {
-          showModal(calEvent, calElement, freeBusyManager, calendar, DomEvent);
-        },
-        eventDrop: function () {
-          console.log('event moved');
-        },
-        eventClick: function () {
-          console.log('event clicked');
-        }
-      });
-    });
-  </script>
 
   <link rel="stylesheet" href="style/app.css">
 </head>
@@ -90,29 +52,7 @@
         <%= user.username %>
         <%= calendar.name %>
 
-        <form class="form form-alerts hide" method="post" action="/api/1/alerts" >
-          
-          <div class="row">
-            <div class="col-md-3">
-              <input type="text" name="number" id="number" value="0040" class="form-control">
-            </div>
-
-            <div class="col-md-3">
-              <input type="text" name="date" id="date" value="in 10 seconds" class="form-control">
-            </div>
-
-            <div class="col-md-3">
-              <input type="text" name="message" id="message" value="test" class="form-control">
-            </div>
-
-            <div class="col-md-3">
-              <button type="submit" class="btn btn-primary">
-                Save
-              </button>
-            </div>
-          </div>
-
-        </form>
+        
 
         <div id="calendar"></div>
         
@@ -158,6 +98,37 @@
     </div> <!-- row -->
   </div> <!-- container -->
   
+
+  <div class="ap-modal">
+    
+    <div class="ap-modal-content">
+        
+      <form class="form form-alerts" method="post" action="/api/1/alerts/<%= calendar._id %>" >
+          
+        <div class="row">
+          <div class="col-md-3">
+            <input type="text" name="number" id="number" value="0040" class="form-control">
+          </div>
+
+          <div class="col-md-3">
+            <input type="text" name="date" id="date" value="in 10 seconds" class="form-control">
+          </div>
+
+          <div class="col-md-3">
+            <input type="text" name="message" id="message" value="test" class="form-control">
+          </div>
+
+          <div class="col-md-3">
+            <button type="submit" class="btn btn-primary">
+              Save
+            </button>
+          </div>
+        </div>
+
+      </form>
+
+    </div>  
+  </div>
 
 </body>
 </html>

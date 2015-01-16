@@ -14,11 +14,15 @@ module.exports = function(config, db) {
   var view = function(req, res, next) {
 
     db.calendars.findOne({'userId': req.user._id}, function (err, calendar) {
+
+      if (!calendar) {
+        res.send({error: 'error'}, 400);
+      }
       
       if (calendar) {
         
         request
-        .get(config.ipAddress + ':' + config.port + '/api/1/alerts')
+        .get(config.ipAddress + ':' + config.port + '/api/1/alerts/' + calendar._id)
         .end(function(err, response){
 
           res.render('dashboard', {
@@ -28,7 +32,7 @@ module.exports = function(config, db) {
           });
 
         });
-        
+
       }
 
     });

@@ -30,6 +30,8 @@ module.exports = function(config, db) {
 
     var message = req.body.message.trim();
 
+    console.log(req.body.date);
+
     var date = Date.create(req.body.date);
 
     date = moment(date).toDate();
@@ -46,7 +48,8 @@ module.exports = function(config, db) {
       sent: false,
       number: number,
       date: date,
-      message: message
+      message: message,
+      calendarId: req.params.calendarId
     };
 
     db.alerts.insert(alert);
@@ -57,9 +60,8 @@ module.exports = function(config, db) {
 
   var list = function(req, res, next) {
 
-    console.log(req.user);
-
     db.alerts.find({
+      calendarId: req.params.calendarId
     }).sort({
       date: -1
     }).exec(function (err, alerts) {
@@ -68,7 +70,31 @@ module.exports = function(config, db) {
         return res.send(err, 400);
       }
 
+      if (!alerts.length) {
+        alerts = [];
+      }
+
       res.json(alerts);
+
+    });
+
+  };
+
+  var get = function(req, res, next) {
+
+    db.alerts.findOne({
+      _id: req.params.alertId
+    }).exec(function (err, alert) {
+
+      if(err) {
+        return res.send(err, 400);
+      }
+
+      if (!alert) {
+        alerts = {};
+      }
+
+      res.json(alert);
 
     });
 
@@ -133,7 +159,8 @@ module.exports = function(config, db) {
   return {
     create: create,
     list: list,
-    sendAll: sendAll
+    sendAll: sendAll,
+    get: get
   };
 
 };

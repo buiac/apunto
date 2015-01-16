@@ -18,7 +18,7 @@ module.exports = (function() {
   //var async = require('async');
   var fs = require('fs');
 
-  //var sugar = require('sugar');
+  var sugar = require('sugar');
 
   var bodyParser = require('body-parser');
   var errorhandler = require('errorhandler');
@@ -112,9 +112,10 @@ module.exports = (function() {
   // alert routes
   var alerts = require('./app/controllers/alerts.js')(config, db);
 
-  app.get('/api/1/alerts/', alerts.list);
+  app.get('/api/1/alerts/:calendarId', alerts.list);
   app.get('/api/1/alerts/send-all', alerts.sendAll);
-  app.post('/api/1/alerts', alerts.create);
+  app.post('/api/1/alerts/:calendarId', alerts.create);
+  app.get('/api/1/alert/:alertId', alerts.get);
 
   // dashboard routes
   var dashboard = require('./app/controllers/dashboard.js')(config, db);
@@ -194,8 +195,6 @@ module.exports = (function() {
     }
   ));
 
-  
-
   passport.use('signin', new LocalStrategy({
       passReqToCallback : true
     },
@@ -204,6 +203,9 @@ module.exports = (function() {
         
       db.users.findOne({'username': username}, function (err, user) {
 
+        console.log('\n\n\n');
+        console.log(user);
+        console.log('\n\n\n');
         if (err){
 
          return done(err);
@@ -211,12 +213,19 @@ module.exports = (function() {
 
         if (!user) {
 
+          console.log('\n\n\n');
+          console.log('!user');
+          console.log('\n\n\n');
+
          return done(null, false, 
            req.flash('message', 'User does not exist'));
 
         }
 
         if (!isValidPassword(user, password)) {
+          console.log('\n\n\n');
+          console.log('!isValidPassword');
+          console.log('\n\n\n');
           return done(null, false, 
             req.flash('message', 'Invalid Password'));
         }
