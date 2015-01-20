@@ -52,9 +52,7 @@ module.exports = (function() {
      }
   };
 
-  var isValidPassword = function(user, password){
-    return bCrypt.compareSync(password, user.password);
-  };
+  
 
   // configs
   var config = require('./config/config.js');
@@ -207,37 +205,7 @@ module.exports = (function() {
     }
   ));
 
-  passport.use('signin', new LocalStrategy({
-      passReqToCallback : true
-    },
-    function (req, username, password, done) {
-      
-        
-      db.users.findOne({'username': username}, function (err, user) {
-
-        if (err){
-
-         return done(err);
-        }
-
-        if (!user) {
-
-         return done(null, false, 
-           req.flash('message', 'User does not exist'));
-
-        }
-
-        if (!isValidPassword(user, password)) {
-          return done(null, false, 
-            req.flash('message', 'Invalid Password'));
-        }
-
-        return done(null, user);
-
-      });
-
-    }
-  ));
+  
 
   
 
@@ -247,11 +215,7 @@ module.exports = (function() {
     failureFlash : true
   }));
 
-  app.post('/signin', passport.authenticate('signin', {
-    successRedirect: '/dashboard',
-    failureRedirect: '/signin',
-    failureFlash : true
-  }));
+  app.post('/signin', signin.signin);
 
   // Logout
   app.get('/signout', function(req, res) {
@@ -259,7 +223,7 @@ module.exports = (function() {
     res.redirect('/signin');
   });
 
-  
+
 
   // start express server
   app.listen(config.port, config.ipAddress, function() {
