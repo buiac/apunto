@@ -38,10 +38,7 @@ module.exports = (function() {
   app.use(passport.initialize());
   app.use(passport.session());
 
-  // Generates hash using bCrypt
-  var createHash = function(password){
-    return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
-  };
+
 
   // Chekcs if user is authenticated
   var isAuthenticated = function (req,res,next){
@@ -126,10 +123,14 @@ module.exports = (function() {
 
   app.get('/signup', signup.view);
 
+  app.post('/signup', signup.signup);
+
   // signin routes
   var signin = require('./app/controllers/signin.js')(config, db);
 
   app.get('/signin', signin.view);
+
+  app.post('/signin', signin.signin);
 
 
   // passport signup / login
@@ -149,73 +150,10 @@ module.exports = (function() {
 
   });
 
-  passport.use('signup', new LocalStrategy({
-      passReqToCallback : true
-    },
-    function (req, username, password, done) {
-      var findOrCreateUser = function(){
-        
-        db.users.findOne({'username': username}, function (err, user) {
-        
-         if (err){
-          
-           return done(err);
-         }
 
-         if (user) {
-          
-           return done(null, false, 
-             req.flash('message', 'User Already Exists'));
 
-         } else {
-           
-          //if there is no user with that email
-          // create the user
-          var newUser = {};
-          var calendar = {}
-
-          // set the user's local credentials
-          newUser.username = username;
-          newUser.password = createHash(password);
-
-          // set calendar default name
-          calendar.name = 'Default name';
-
-           // save the user
-          db.users.insert(newUser, function (err, newDoc) {
-            
-            if (err) {
-              return done(err);
-            } else {
-
-              // insert the calendar
-              calendar.userId = newDoc._id;
-              db.calendars.insert(calendar);
-
-              return done(null, newDoc);  
-            }
-          });
-
-         }
-        });
-      } // findorcreateuser
-
-      process.nextTick(findOrCreateUser);
-
-    }
-  ));
 
   
-
-  
-
-  app.post('/signup', passport.authenticate('signup', {
-    successRedirect: '/dashboard',
-    failureRedirect: '/signup',
-    failureFlash : true
-  }));
-
-  app.post('/signin', signin.signin);
 
   // Logout
   app.get('/signout', function(req, res) {
