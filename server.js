@@ -122,11 +122,14 @@ module.exports = (function() {
 
   app.get('/dashboard', isAuthenticated , dashboard.view);
 
+  var signup = require('./app/controllers/signup.js')(config, db);
+
 
   // passport signup / login
   passport.serializeUser(function(user, done) {
 
     done(null, user._id);
+
   });
    
   passport.deserializeUser(function(userId, done) {
@@ -203,9 +206,6 @@ module.exports = (function() {
         
       db.users.findOne({'username': username}, function (err, user) {
 
-        console.log('\n\n\n');
-        console.log(user);
-        console.log('\n\n\n');
         if (err){
 
          return done(err);
@@ -213,19 +213,12 @@ module.exports = (function() {
 
         if (!user) {
 
-          console.log('\n\n\n');
-          console.log('!user');
-          console.log('\n\n\n');
-
          return done(null, false, 
            req.flash('message', 'User does not exist'));
 
         }
 
         if (!isValidPassword(user, password)) {
-          console.log('\n\n\n');
-          console.log('!isValidPassword');
-          console.log('\n\n\n');
           return done(null, false, 
             req.flash('message', 'Invalid Password'));
         }
@@ -238,17 +231,7 @@ module.exports = (function() {
   ));
 
   // signup routes
-  app.get('/signup', function(req, res, next) {
-
-    res.render('signup', {
-      info: req.flash("message"),
-      userr: {
-        name: 'sebi.kovacs+' + new Date().getTime() + '@gmail.com',
-        pass: 'passpass'
-      }
-    });
-
-  });
+  app.get('/signup', signup.view);
 
   app.post('/signup', passport.authenticate('signup', {
     successRedirect: '/dashboard',

@@ -13,12 +13,16 @@ module.exports = function(config, db) {
   var moment = require('moment');
 
   var nexmo = require('easynexmo');
+
   nexmo.initialize(
     config.gateway.key,
     config.gateway.secret,
     config.gateway.protocol,
     config.gateway.debug
   );
+
+  
+
 
   var create = function(req, res, next) {
 

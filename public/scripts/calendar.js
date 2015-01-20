@@ -48,7 +48,7 @@ $(document).ready(function () {
       height: function () {
         return 500;
       },
-      businessHours: {start: 8, end: 21, limitDisplay: true},
+      //businessHours: {start: 8, end: 21, limitDisplay: true},
       firstDayOfWeek: 1,
       daysToShow: 5,
       use24Hour: true,
