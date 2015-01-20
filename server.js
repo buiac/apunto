@@ -122,7 +122,15 @@ module.exports = (function() {
 
   app.get('/dashboard', isAuthenticated , dashboard.view);
 
+
+  // signup routes
   var signup = require('./app/controllers/signup.js')(config, db);
+
+  app.get('/signup', signup.view);
+
+  // signin routes
+  var signin = require('./app/controllers/signin.js')(config, db);
+  app.get('/signin', signin.view);
 
 
   // passport signup / login
@@ -231,7 +239,7 @@ module.exports = (function() {
   ));
 
   // signup routes
-  app.get('/signup', signup.view);
+  
 
   app.post('/signup', passport.authenticate('signup', {
     successRedirect: '/dashboard',
@@ -240,12 +248,7 @@ module.exports = (function() {
   }));
 
 
-  // signin routes
-  app.get('/signin', function(req, res, next) {
 
-    res.render('signin', {info: req.flash("message")});
-    
-  });
 
   app.post('/signin', passport.authenticate('signin', {
     successRedirect: '/dashboard',
