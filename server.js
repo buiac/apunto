@@ -130,6 +130,7 @@ module.exports = (function() {
 
   // signin routes
   var signin = require('./app/controllers/signin.js')(config, db);
+
   app.get('/signin', signin.view);
 
 
@@ -238,7 +239,6 @@ module.exports = (function() {
     }
   ));
 
-  // signup routes
   
 
   app.post('/signup', passport.authenticate('signup', {
@@ -246,9 +246,6 @@ module.exports = (function() {
     failureRedirect: '/signup',
     failureFlash : true
   }));
-
-
-
 
   app.post('/signin', passport.authenticate('signin', {
     successRedirect: '/dashboard',
@@ -261,6 +258,8 @@ module.exports = (function() {
     req.logout();
     res.redirect('/signin');
   });
+
+  
 
   // start express server
   app.listen(config.port, config.ipAddress, function() {
