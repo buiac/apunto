@@ -11,9 +11,6 @@ module.exports = (function() {
   // validation library for whatever comes in through the forms
   var expressValidator = require('express-validator');
 
-  // cryptation library
-  var bCrypt = require('bcrypt-nodejs');
-
 
   //var async = require('async');
   var fs = require('fs');
@@ -48,8 +45,6 @@ module.exports = (function() {
         res.redirect("/signin"); 
      }
   };
-
-  
 
   // configs
   var config = require('./config/config.js');
@@ -88,7 +83,6 @@ module.exports = (function() {
   var Datastore = require('nedb');
   var db = {};
 
-
   db.alerts = new Datastore({
     filename: config.dataDir + config.dbDir + '/alerts.db',
     autoload: true
@@ -118,50 +112,22 @@ module.exports = (function() {
   app.get('/dashboard', isAuthenticated , dashboard.view);
 
 
-  // signup routes
-  var signup = require('./app/controllers/signup.js')(config, db);
+  // auth routes
+  var auth = require('./app/controllers/authenticate.js')(config, db);
 
-  app.get('/signup', signup.view);
+  app.get('/signup', auth.signupView);
 
-  app.post('/signup', signup.signup);
+  app.post('/signup', auth.signup);
 
-  // signin routes
-  var signin = require('./app/controllers/signin.js')(config, db);
+  app.get('/signin', auth.signinView);
 
-  app.get('/signin', signin.view);
-
-  app.post('/signin', signin.signin);
-
-
-  // passport signup / login
-  passport.serializeUser(function(user, done) {
-
-    done(null, user._id);
-
-  });
-   
-  passport.deserializeUser(function(userId, done) {
-
-    db.users.findOne({'_id':userId}, function (err, newUser) {
-      
-      done(err, newUser);
-
-    });
-
-  });
-
-
-
-
-  
+  app.post('/signin', auth.signin);
 
   // Logout
   app.get('/signout', function(req, res) {
     req.logout();
     res.redirect('/signin');
   });
-
-
 
   // start express server
   app.listen(config.port, config.ipAddress, function() {
