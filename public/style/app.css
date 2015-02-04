@@ -92,3 +92,32 @@ html,
 	border-bottom: 1px solid #ccc;
 	padding-bottom: 15px;
 }
+
+.delete-event{
+	display: block;
+	color: #fff;
+	display: block;
+	color: #fff;
+	position: absolute;
+	bottom: 5px;
+	right: 4px;
+	font-size: 18px;
+	display: none;
+	cursor: pointer;
+	z-index: 4;
+}
+
+.delete-event:hover {
+	color: #FFF;
+	text-decoration: none;
+	opacity: .8;
+}
+
+.fc-event {
+	background: #1d9d74;
+	border: 1px solid #1d9d74;
+}
+
+.fc-event:hover .delete-event {
+	display: block;
+}

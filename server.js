@@ -103,13 +103,22 @@ module.exports = (function() {
 
   app.get('/api/1/alerts/:calendarId', alerts.list);
   app.get('/api/1/alerts/send-all', alerts.sendAll);
-  app.post('/api/1/alerts/:calendarId', alerts.create);
+  
   app.get('/api/1/alert/:alertId', alerts.get);
+  app.post('/api/1/:calendarId/alerts/', alerts.create);
+  app.put('/api/1/:calendarId/alerts/:alertId', alerts.update);
+  app.delete('/api/1/:calendarId/alerts/:alertId', alerts.remove);
 
   // dashboard routes
   var dashboard = require('./app/controllers/dashboard.js')(config, db);
 
+  //app.get('/dashboard', isAuthenticated , dashboard.view);
+
   app.get('/dashboard', isAuthenticated , dashboard.view);
+
+  var test = require('./app/controllers/test.js')(config, db);
+  
+  app.get('/test', isAuthenticated , test.action);
 
 
   // auth routes

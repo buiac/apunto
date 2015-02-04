@@ -21,46 +21,108 @@ module.exports = function(config, db) {
     config.gateway.debug
   );
 
-  
-
-
   var create = function(req, res, next) {
 
+    req.checkBody('name', 'Title should not be empty').notEmpty();
     req.checkBody('number', 'Number should not be empty.').notEmpty();
-    req.checkBody('date', 'Date should not be empty.').notEmpty();
     req.checkBody('message', 'Message should not be empty.').notEmpty();
+    req.checkBody('start', 'Start date should not be empty.').notEmpty();
+    req.checkBody('end', 'End date should not be empty.').notEmpty();
+    //req.checkBody('calendarId', 'Looks like there is no calendar selected.').notEmpty();
 
+    var name = req.body.name.trim();
     var number = req.body.number.replace(/[-() ]/gi, '');
-
     var message = req.body.message.trim();
+    var startDate = Date.create(req.body.start);
+    var endDate = Date.create(req.body.end);
 
-    console.log(req.body.date);
-
-    var date = Date.create(req.body.date);
-
-    date = moment(date).toDate();
+    startDate = moment(startDate).toDate();
+    endDate = moment(endDate).toDate();
 
     // TODO add multiple validations after transforms
 
     var errors = req.validationErrors();
+
     if (errors) {
-      res.send(util.inspect(errors), 400);
+      res.json(util.inspect(errors), 400);
       return;
     }
 
     var alert = {
-      sent: false,
+      status: false,
+      name: name,
+      title: name,
       number: number,
-      date: date,
+      start: startDate,
+      end: endDate,
       message: message,
       calendarId: req.params.calendarId
     };
 
-    db.alerts.insert(alert);
+    db.alerts.insert(alert, function (err, newAlert) {
 
-    res.redirect('/dashboard');
+      res.json({
+        message: 'Create successful.',
+        alert: newAlert
+      });
+
+    });
 
   };
+
+  var update = function (req, res, next) {
+    req.checkBody('name', 'Title should not be empty').notEmpty();
+    req.checkBody('number', 'Number should not be empty.').notEmpty();
+    req.checkBody('message', 'Message should not be empty.').notEmpty();
+    req.checkBody('start', 'Start date should not be empty.').notEmpty();
+    req.checkBody('end', 'End date should not be empty.').notEmpty();
+    req.checkBody('id', 'ID should not be empty.').notEmpty();
+    //req.checkBody('calendarId', 'Looks like there is no calendar selected.').notEmpty();
+
+    var name = req.body.name.trim();
+    var number = req.body.number.replace(/[-() ]/gi, '');
+    var message = req.body.message.trim();
+    var startDate = Date.create(req.body.start);
+    var endDate = Date.create(req.body.end);
+    var alertId = req.body.id;
+
+    startDate = moment(startDate).toDate();
+    endDate = moment(endDate).toDate();
+
+    // TODO add multiple validations after transforms
+
+    var errors = req.validationErrors();
+
+    if (errors) {
+      res.json(util.inspect(errors), 400);
+      return;
+    }
+
+    var alert = {
+      status: false,
+      name: name,
+      title: name,
+      number: number,
+      start: startDate,
+      end: endDate,
+      message: message,
+      calendarId: req.params.calendarId
+    };
+
+    db.alerts.update({'_id': alertId}, alert, function (err, num, newAlert) {
+
+      if (num > 0) {
+        db.alerts.findOne({'_id': alertId}, function (err, doc) {
+          res.json({
+            message: 'Update successfull.',
+            alert: doc
+          });
+        });        
+      }
+      
+
+    });
+  }
 
   var list = function(req, res, next) {
 
@@ -99,6 +161,22 @@ module.exports = function(config, db) {
       }
 
       res.json(alert);
+
+    });
+
+  };
+
+  var remove = function(req, res, next) {
+    var id = req.params.alertId;
+    db.alerts.remove({
+      _id: req.params.alertId
+    },function (err, num) {
+
+      if(err) {
+        return res.send(err, 400);
+      }
+
+      res.json({message: 'Delete successful ' + id, num: num});
 
     });
 
@@ -164,7 +242,9 @@ module.exports = function(config, db) {
     create: create,
     list: list,
     sendAll: sendAll,
-    get: get
+    get: get,
+    remove: remove,
+    update: update
   };
 
 };

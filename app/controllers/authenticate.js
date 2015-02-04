@@ -112,7 +112,6 @@ module.exports = function(config, db) {
     return bCrypt.compareSync(password, user.password);
   };
 
-
   // passport signin method
   passport.use('signin', new LocalStrategy({
       passReqToCallback : true
@@ -145,8 +144,6 @@ module.exports = function(config, db) {
 
     }
   ));
-
-
 
   var signin = passport.authenticate('signin', {
     successRedirect: '/dashboard',

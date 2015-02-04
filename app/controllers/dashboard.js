@@ -39,7 +39,7 @@ module.exports = function(config, db) {
   // });
 
   // client.makeCall({
-  //   to:'+40746213760',
+  //   to:'+40743307087',
   //   from:'+13475146545',
   //   url:'http://demo.twilio.com/welcome/voice/'
   // }, function(err, call) {
@@ -60,7 +60,7 @@ module.exports = function(config, db) {
         request
         .get(config.ipAddress + ':' + config.port + '/api/1/alerts/' + calendar._id)
         .end(function(err, response){
-
+          
           res.render('dashboard', {
             alerts: response.body,
             user: req.user,
@@ -72,9 +72,6 @@ module.exports = function(config, db) {
       }
 
     });
-
-    
-
   };
 
   return {
