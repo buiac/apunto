@@ -122,17 +122,22 @@ $(document).ready(function () {
 
     event.message = config.message;
 
+    console.log('dsa');
+
     $.ajax({
       type: 'PUT',
       url: '/api/1/' + config.calendarId + '/events/' + event._id,
       data: event
     }).done(function (res) {
+      console.log(res)
       
       calendar.fullCalendar( 'refetchEvents');
 
       // close modal
       $('#create-modal').modal('hide');
 
+    }).fail(function (err) {
+      console.log(err);
     });
 
   });
@@ -169,17 +174,19 @@ $(document).ready(function () {
     }
   };
 
+  // Resize and move around
   var eventUpdate = function (event, delta, revertFunc, jsEvent, ui, view) {
+    console.log(event);
     $.ajax({
       type: 'PUT',
-      url: '/api/1/' + config.calendarId + '/events/' + event._id,
+      url: '/api/1/' + config.calendarId + '/events/',
       data: {
         start: event.start.toDate(),
         end: event.end.toDate(),
         name: event.title,
         number: event.number,
         message: event.message,
-        id: event._id
+        _id: event._id
       }
     }).done(function (res) {
 

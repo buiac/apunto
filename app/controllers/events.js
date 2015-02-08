@@ -28,7 +28,6 @@ module.exports = function(config, db) {
     req.checkBody('message', 'Message should not be empty.').notEmpty();
     req.checkBody('start', 'Start date should not be empty.').notEmpty();
     req.checkBody('end', 'End date should not be empty.').notEmpty();
-    //req.checkBody('calendarId', 'Looks like there is no calendar selected.').notEmpty();
 
     var name = req.body.name.trim();
     var number = req.body.number.replace(/[-() ]/gi, '');
@@ -48,7 +47,7 @@ module.exports = function(config, db) {
       return;
     }
 
-    var alert = {
+    var event = {
       status: false,
       name: name,
       title: name,
@@ -59,11 +58,11 @@ module.exports = function(config, db) {
       calendarId: req.params.calendarId
     };
 
-    db.alerts.insert(alert, function (err, newAlert) {
+    db.events.insert(event, function (err, newEvent) {
 
       res.json({
         message: 'Create successful.',
-        alert: newAlert
+        event: newEvent
       });
 
     });
@@ -76,15 +75,14 @@ module.exports = function(config, db) {
     req.checkBody('message', 'Message should not be empty.').notEmpty();
     req.checkBody('start', 'Start date should not be empty.').notEmpty();
     req.checkBody('end', 'End date should not be empty.').notEmpty();
-    req.checkBody('id', 'ID should not be empty.').notEmpty();
-    //req.checkBody('calendarId', 'Looks like there is no calendar selected.').notEmpty();
+    req.checkBody('_id', 'ID should not be empty.').notEmpty();
 
     var name = req.body.name.trim();
     var number = req.body.number.replace(/[-() ]/gi, '');
     var message = req.body.message.trim();
     var startDate = Date.create(req.body.start);
     var endDate = Date.create(req.body.end);
-    var alertId = req.body.id;
+    var eventId = req.body._id;
 
     startDate = moment(startDate).toDate();
     endDate = moment(endDate).toDate();
@@ -98,7 +96,7 @@ module.exports = function(config, db) {
       return;
     }
 
-    var alert = {
+    var event = {
       status: false,
       name: name,
       title: name,
@@ -109,38 +107,45 @@ module.exports = function(config, db) {
       calendarId: req.params.calendarId
     };
 
-    db.alerts.update({'_id': alertId}, alert, function (err, num, newAlert) {
-
+    db.events.update({'_id': eventId}, event, function (err, num, newEvent) {
+      
       if (num > 0) {
-        db.alerts.findOne({'_id': alertId}, function (err, doc) {
+        
+        db.events.findOne({'_id': eventId}, function (err, doc) {
+
           res.json({
             message: 'Update successfull.',
-            alert: doc
+            event: doc
           });
-        });        
+
+        });
+
+      } else {
+
+        res.json(util.inspect(errors), 400);
+
       }
-      
 
     });
   }
 
   var list = function(req, res, next) {
 
-    db.alerts.find({
+    db.events.find({
       calendarId: req.params.calendarId
     }).sort({
       date: -1
-    }).exec(function (err, alerts) {
+    }).exec(function (err, events) {
 
       if(err) {
         return res.send(err, 400);
       }
 
-      if (!alerts.length) {
-        alerts = [];
+      if (!events.length) {
+        events = [];
       }
 
-      res.json(alerts);
+      res.json(events);
 
     });
 
@@ -148,19 +153,19 @@ module.exports = function(config, db) {
 
   var get = function(req, res, next) {
 
-    db.alerts.findOne({
-      _id: req.params.alertId
-    }).exec(function (err, alert) {
+    db.events.findOne({
+      _id: req.params.eventId
+    }).exec(function (err, event) {
 
       if(err) {
         return res.send(err, 400);
       }
 
       if (!alert) {
-        alerts = {};
+        event = {};
       }
 
-      res.json(alert);
+      res.json(event);
 
     });
 
@@ -168,8 +173,8 @@ module.exports = function(config, db) {
 
   var remove = function(req, res, next) {
     var id = req.params.alertId;
-    db.alerts.remove({
-      _id: req.params.alertId
+    db.events.remove({
+      _id: req.params.eventId
     },function (err, num) {
 
       if(err) {

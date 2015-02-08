@@ -107,10 +107,10 @@ module.exports = (function() {
   var events = require('./app/controllers/events.js')(config, db);
 
   app.get('/api/1/events/:calendarId', events.list);
-  app.get('/api/1/events/:alertId', events.get);
+  app.get('/api/1/events/:eventId', events.get);
   app.post('/api/1/:calendarId/events/', events.create);
-  app.put('/api/1/:calendarId/events/:alertId', events.update);
-  app.delete('/api/1/:calendarId/events/:alertId', events.remove);
+  app.put('/api/1/:calendarId/events/', events.update);
+  app.delete('/api/1/:calendarId/events/:eventId', events.remove);
 
   // send reminders
   app.get('/api/1/alerts/send-all', events.sendAll);
