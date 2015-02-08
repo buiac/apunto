@@ -1,12 +1,27 @@
+// Helper methods
+$.fn.serializeObject = function() {
+  var o = {};
+  var a = this.serializeArray();
+  $.each(a, function() {
+      if (o[this.name] !== undefined) {
+          if (!o[this.name].push) {
+              o[this.name] = [o[this.name]];
+          }
+          o[this.name].push(this.value || '');
+      } else {
+          o[this.name] = this.value || '';
+      }
+  });
+  return o;
+};
+
 $(document).ready(function () {
   var calendar = null;
   var eventEditTemplate = null;
-
   var config = {
-    calendarId: $('.calendar').data('calendarid')
+    calendarId: $('.calendar').data('calendarid'),
+    apiUrl: ''
   };
-
-  var alerts = [];
 
   if(
     document.domain.indexOf('localhost') !== -1 ||
@@ -14,15 +29,12 @@ $(document).ready(function () {
     document.domain.indexOf('10.0.2.2') !== -1
   ) {
 
-  config.env = 'local';
-  config.message = 'ahoy hoy! Testing Twilio and node.js';
-    //config.url.apiDev = 'https://api.livetest.savvyads.com';
+    config.env = 'local';
+    config.message = 'ahoy hoy! Testing Twilio and node.js';
 
   }
 
-  // ejs.render(, data)
-
-  // Get modal template
+  // Get templates
   $.ajax({
     method: 'GET',
     url: 'templates/event-edit.ejs'
@@ -32,48 +44,67 @@ $(document).ready(function () {
 
   });
 
-  $.fn.serializeObject = function() {
-    var o = {};
-    var a = this.serializeArray();
-    $.each(a, function() {
-        if (o[this.name] !== undefined) {
-            if (!o[this.name].push) {
-                o[this.name] = [o[this.name]];
-            }
-            o[this.name].push(this.value || '');
-        } else {
-            o[this.name] = this.value || '';
-        }
-    });
-    return o;
+  var showCreateModal = function (start, end, jsEvent, view) {
+    var modal = $('#create-modal');
+    var modalContent = modal.find('.modal-content');
+
+    var data = {
+      modal: {
+        title: 'Add Event',
+        idName: 'create'
+      },
+      event: {
+        start: start.toDate(),
+        end: end.toDate(),
+        name: '',
+        title: '',
+        number: '',
+        _id: ''
+      }
+    };
+
+    var temp = ejs.render(eventEditTemplate, data);
+
+    modalContent.html('');
+    modalContent.append(temp)
+    modal.modal();
   };
 
-  // Create/update
-  $('body').on('click', '.create', function (e) {
+  var showUpdateModal = function (event) {
+    var data = {};
+    var modal = $('#create-modal');
+    var modalContent = modal.find('.modal-content');
 
+    data.modal = {
+      idName: 'update',
+      title: 'Update event'
+    };
+
+    data.event = event;
+
+    var temp = ejs.render(eventEditTemplate, data);
+
+    modalContent.html('');
+    modalContent.append(temp);
+    modal.modal();
+
+  };
+
+  // Modal Create Event
+  $('body').on('click', '.create', function (e) {
+    
     e.preventDefault();
 
-    var type = 'POST';
-    var eventObj = $('.create-update').serializeObject();
-    var url = '/api/1/' + config.calendarId + '/alerts/';
-
-    eventObj.message = config.message;
-
-    if (eventObj.id){
-      type = 'PUT';
-      url = url + eventObj.id;
-      eventObj._id = eventObj.id;
-    }
+    var event = $('.create-update').serializeObject();
+    event.message = config.message;
 
     $.ajax({
-      type: type,
-      url: url,
-      data: eventObj
+      type: 'POST',
+      url: '/api/1/' + config.calendarId + '/events/',
+      data: event
     }).done(function (res) {
       
-      if (res.alert) {
-        calendar.fullCalendar( 'renderEvent', res.alert );
-      }
+      calendar.fullCalendar( 'refetchEvents');
 
       // close modal
       $('#create-modal').modal('hide');
@@ -82,13 +113,36 @@ $(document).ready(function () {
 
   });
 
-  // Delete
+  // Modal Update Event
+  $('body').on('click', '.update', function (e) {
+    
+    e.preventDefault();
 
+    var event = $('.create-update').serializeObject();
+
+    event.message = config.message;
+
+    $.ajax({
+      type: 'PUT',
+      url: '/api/1/' + config.calendarId + '/events/' + event._id,
+      data: event
+    }).done(function (res) {
+      
+      calendar.fullCalendar( 'refetchEvents');
+
+      // close modal
+      $('#create-modal').modal('hide');
+
+    });
+
+  });
+
+  // Delete Event
   var deleteEvent = function (event) {
     
     $.ajax({
       type: 'DELETE',
-      url: '/api/1/' + config.calendarId+'/alert/' + event._id
+      url: '/api/1/' + config.calendarId+'/events/' + event._id
     }).done(function (res) {
       
       calendar.fullCalendar('removeEvents', event._id);
@@ -97,33 +151,11 @@ $(document).ready(function () {
 
   };
 
-  var showCreateModal = function (start, end, jsEvent, view) {
-    
-    var data = {
-      modal: {
-        title: 'Add Event',
-        ctaLabel: 'Create Event'
-      },
-      event: {
-        start: start.toDate(),
-        end: end.toDate(),
-        name: '',
-        title: '',
-        number: '',
-        id: ''
-      }
-    };
-
-    var temp = ejs.render(eventEditTemplate, data);
-
-    $('#create-modal').find('.modal-content').html('');
-    $('#create-modal').find('.modal-content').append(temp)
-    $('#create-modal').modal();
-  };
-
+  // When user clicks on an existing event in calendar
   var eventClick = function (event, jsEvent, view) {
-    var data = {};
 
+
+    // figure out if this is a DELETE or an UPDATE event
     if ($(jsEvent.target).hasClass('delete-event')) {
 
       jsEvent.preventDefault();
@@ -132,26 +164,35 @@ $(document).ready(function () {
 
     } else {
 
-      data.modal = {
-        title: 'Update Event',
-        ctaLabel: 'Update Event'
-      };
+      showUpdateModal(event);
 
-      data.event = event;
-      data.event.id = event._id;
-
-      var temp = ejs.render(eventEditTemplate, data);
-
-      $('#create-modal').find('.modal-content').html('');
-      $('#create-modal').find('.modal-content').append(temp);
-      $('#create-modal').modal();
     }
-
-    
   };
 
-  var eventDrop = function (event, delta, revertFunc, jsEvent, ui, view) {
-    console.log(event.start.toDate(), event.end.toDate());
+  var eventUpdate = function (event, delta, revertFunc, jsEvent, ui, view) {
+    $.ajax({
+      type: 'PUT',
+      url: '/api/1/' + config.calendarId + '/events/' + event._id,
+      data: {
+        start: event.start.toDate(),
+        end: event.end.toDate(),
+        name: event.title,
+        number: event.number,
+        message: event.message,
+        id: event._id
+      }
+    }).done(function (res) {
+
+    });
+
+  };
+
+  // Before rendering the event on the calendar
+  var eventRender = function (event, element, view) {
+
+    var deleteBtn = $('<a href="" class="delete-event fa fa-trash" data-id="' + event._id + '"></a>');
+    $(element).append(deleteBtn);
+
   };
 
   var createCalendar = function () {
@@ -162,29 +203,17 @@ $(document).ready(function () {
       selectable: true,
       scrollTime: '09:00',
       businessHours: {
-        start: '09:00', // a start time (10am in this example)
-        end: '17:00', // an end time (6pm in this example)
-
+        start: '09:00', 
+        end: '17:00',
         dow: [ 1, 2, 3, 4, 5 ]
-        // days of week. an array of zero-based day of week integers (0=Sunday)
-        // (Monday-Thursday in this example)
       },
       editable: true,
-      eventMouseOver: function() {
-        console.log('mouseover');
-      },
-      eventRender: function (event, element, view) {
-
-        //console.log(event);
-
-        var deleteBtn = $('<a href="" class="delete-event fa fa-trash" data-id="' + event._id + '"></a>');
-
-        $(element).append(deleteBtn);
-      },
+      eventRender: eventRender,
       select: showCreateModal,
       eventClick: eventClick,
-      events: '/api/1/alerts/' + config.calendarId,
-      eventDrop: eventDrop
+      events: '/api/1/events/' + config.calendarId,
+      eventDrop: eventUpdate,
+      eventResize: eventUpdate
     });
 
   };

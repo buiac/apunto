@@ -88,6 +88,11 @@ module.exports = (function() {
     autoload: true
   });
 
+  db.events = new Datastore({
+    filename: config.dataDir + config.dbDir + '/events.db',
+    autoload: true
+  });
+
   db.users = new Datastore({
     filename: config.dataDir + config.dbDir + '/users.db',
     autoload: true
@@ -99,15 +104,16 @@ module.exports = (function() {
   });
 
   // alert routes
-  var alerts = require('./app/controllers/alerts.js')(config, db);
+  var events = require('./app/controllers/events.js')(config, db);
 
-  app.get('/api/1/alerts/:calendarId', alerts.list);
-  app.get('/api/1/alerts/send-all', alerts.sendAll);
-  
-  app.get('/api/1/alert/:alertId', alerts.get);
-  app.post('/api/1/:calendarId/alerts/', alerts.create);
-  app.put('/api/1/:calendarId/alerts/:alertId', alerts.update);
-  app.delete('/api/1/:calendarId/alerts/:alertId', alerts.remove);
+  app.get('/api/1/events/:calendarId', events.list);
+  app.get('/api/1/events/:alertId', events.get);
+  app.post('/api/1/:calendarId/events/', events.create);
+  app.put('/api/1/:calendarId/events/:alertId', events.update);
+  app.delete('/api/1/:calendarId/events/:alertId', events.remove);
+
+  // send reminders
+  app.get('/api/1/alerts/send-all', events.sendAll);
 
   // dashboard routes
   var dashboard = require('./app/controllers/dashboard.js')(config, db);
@@ -115,11 +121,6 @@ module.exports = (function() {
   //app.get('/dashboard', isAuthenticated , dashboard.view);
 
   app.get('/dashboard', isAuthenticated , dashboard.view);
-
-  var test = require('./app/controllers/test.js')(config, db);
-  
-  app.get('/test', isAuthenticated , test.action);
-
 
   // auth routes
   var auth = require('./app/controllers/authenticate.js')(config, db);

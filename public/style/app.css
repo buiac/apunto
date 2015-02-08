@@ -121,3 +121,19 @@ html,
 .fc-event:hover .delete-event {
 	display: block;
 }
+
+#create .create {
+	display: inline-block;
+}
+
+#create .update {
+	display: none;
+}
+
+#update .create {
+	display: none;
+}
+
+#update .update {
+	display: inline-block;
+}
