@@ -44,6 +44,15 @@ $(document).ready(function () {
 
   });
 
+  $.ajax({
+    method: 'GET',
+    url: 'api/1/event/remind'
+  }).done(function (res) {
+    
+    console.log(res);
+
+  });
+
   var showCreateModal = function (start, end, jsEvent, view) {
     var modal = $('#create-modal');
     var modalContent = modal.find('.modal-content');
@@ -122,14 +131,11 @@ $(document).ready(function () {
 
     event.message = config.message;
 
-    console.log('dsa');
-
     $.ajax({
       type: 'PUT',
-      url: '/api/1/' + config.calendarId + '/events/' + event._id,
+      url: '/api/1/' + config.calendarId + '/events/',
       data: event
     }).done(function (res) {
-      console.log(res)
       
       calendar.fullCalendar( 'refetchEvents');
 
@@ -205,7 +211,7 @@ $(document).ready(function () {
   var createCalendar = function () {
     calendar = $('.calendar').fullCalendar({
       defaultView: 'agendaWeek',
-      slotDuration: '00:15:00',
+      slotDuration: '00:10:00',
       firstDay: 1,
       selectable: true,
       scrollTime: '09:00',

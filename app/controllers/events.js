@@ -9,6 +9,7 @@ module.exports = function(config, db) {
   var async = require('async');
   var fs = require('fs');
   var util = require('util');
+  var twilio = require('twilio');
 
   var moment = require('moment');
 
@@ -21,6 +22,9 @@ module.exports = function(config, db) {
     config.gateway.debug
   );
 
+  var twilio = require('twilio');
+  var client = new twilio.RestClient('AC843270d590f2988caf4993adb06e0294', 'bada3f2f91251f3c0f6edefe94022366');
+
   var create = function(req, res, next) {
 
     req.checkBody('name', 'Title should not be empty').notEmpty();
@@ -32,14 +36,10 @@ module.exports = function(config, db) {
     var name = req.body.name.trim();
     var number = req.body.number.replace(/[-() ]/gi, '');
     var message = req.body.message.trim();
-    var startDate = Date.create(req.body.start);
-    var endDate = Date.create(req.body.end);
-
-    startDate = moment(startDate).toDate();
-    endDate = moment(endDate).toDate();
+    var startDate = new Date(req.body.start);
+    var endDate = new Date(req.body.end);
 
     // TODO add multiple validations after transforms
-
     var errors = req.validationErrors();
 
     if (errors) {
@@ -62,7 +62,10 @@ module.exports = function(config, db) {
 
       res.json({
         message: 'Create successful.',
-        event: newEvent
+        event: newEvent,
+        client: startDate.getTime(),
+        server: new Date(newEvent.start),
+        serverTime: new Date()
       });
 
     });
@@ -187,59 +190,137 @@ module.exports = function(config, db) {
 
   };
 
+  var remind = function (req, res, next) {
+    var serverTz = 2;
+    
+    // var lte = moment().add(serverTz + 1, 'hours').toDate();
+    // var gte = moment().add(serverTz, 'hours').toDate();
+
+    var lte = moment().add(1, 'hours').toDate();
+    var gte = moment().toDate();
+    
+    db.events.find({
+      calendarId: req.params.calendarId,
+      sent: {
+        $ne: true
+      }
+    }).sort(
+    {
+      start: -1
+    }
+    ).exec(function (err, alerts) {
+      var a = [];
+      alerts.forEach(function (alert) {
+        a.push({name: alert.name, start: alert.start, date: new Date(), comp: new Date(alert.start) > new Date()});
+      });
+      res.json( { alerts: a} );
+    });
+
+  };
+
   var sendAll = function(req, res, next) {
 
     // find alerts that had to be sent in the last two minutes
     // and have not been already sent
+    
+    console.log('send-all');
+    res.json({resp: 'send-all'});
 
-    db.alerts.find({
-      date: {
-        $gte: moment().subtract(2, 'minutes').toDate(),
-        $lte: moment().toDate()
-      },
-      sent: {
-        $ne: true
-      }
-    }).sort({
-      date: -1
-    }).exec(function (err, alerts) {
+    // db.alerts.find({
+    //   start: {
+    //     $gte: moment().subtract(2, 'minutes').toDate(),
+    //     $lte: moment().toDate()
+    //   },
+    //   set: {
+    //     $ne: true
+    //   }
+    // }).sort({
+    //   $ne: true
+    // }).exec(function (err, alerts) {
+    //   console.log(alerts);
+    // });
 
-      if(err) {
-        return res.send(err, 400);
-      }
+    // db.alerts.find({
+    //   start: {
+    //     $gte: moment().subtract(2, 'minutes').toDate(),
+    //     $lte: moment().toDate()
+    //   },
+    //   sent: {
+    //     $ne: true
+    //   }
+    // }).sort({
+    //   date: -1
+    // }).exec(function (err, alerts) {
 
-      // TODO integrate gateway and send alert
-      // on success set sent true
+    //   if(err) {
+    //     return res.send(err, 400);
+    //   }
 
-      alerts.forEach(function(alert) {
+    //   // TODO integrate gateway and send alert
+    //   // on success set sent true
 
-        nexmo.sendTextMessage(
-          config.sender,
-          alert.number,
-          alert.message,
-          {},
-          function(err, response) {
+    //   alerts.forEach(function(alert) {
 
-            // set sent to true in db
-            db.alerts.update({
-              _id: alert._id
-            }, {
-              $set: {
-                sent: true
-              }
-            }, {}, function(err, alert) {
+    //     client.sms.messages.create({
+    //         to:'+40755052956',
+    //         from:'+13475146545',
+    //         body:'ahoy hoy! Testing Twilio and node.js'
+    //     }, function(error, message) {
+    //         // The HTTP request to Twilio will run asynchronously. This callback
+    //         // function will be called when a response is received from Twilio
+    //         // The "error" variable will contain error information, if any.
+    //         // If the request was successful, this value will be "falsy"
+    //         if (!error) {
+    //             // The second argument to the callback will contain the information
+    //             // sent back by Twilio for the request. In this case, it is the
+    //             // information about the text messsage you just sent:
+    //             console.log('Success! The SID for this SMS message is:');
+    //             console.log(message.sid);
+         
+    //             console.log('Message sent on:');
+    //             console.log(message.dateCreated);
+    //         } else {
+    //             console.log(error);
+    //             console.log('Oops! There was an error.');
+    //         }
+    //     });
 
-              //console.log(alert);
+    //     // client.makeCall({
+    //     //   to:'+40743307087',
+    //     //   from:'+13475146545',
+    //     //   url:'http://demo.twilio.com/welcome/voice/'
+    //     // }, function(err, call) {
+    //     //     console.log('This call\'s unique ID is: ' + call.sid);
+    //     //     console.log('This call was created at: ' + call.dateCreated);
+    //     // });
 
-            });
+    //     // nexmo.sendTextMessage(
+    //     //   config.sender,
+    //     //   alert.number,
+    //     //   alert.message,
+    //     //   {},
+    //     //   function(err, response) {
 
-          });
+    //     //     // set sent to true in db
+    //     //     db.alerts.update({
+    //     //       _id: alert._id
+    //     //     }, {
+    //     //       $set: {
+    //     //         sent: true
+    //     //       }
+    //     //     }, {}, function(err, alert) {
 
-      });
+    //     //       //console.log(alert);
 
-      res.json(alerts);
+    //     //     });
 
-    });
+    //     //   });
+
+    //   });
+
+    //   res.json(alerts);
+
+    // });
 
   };
 
@@ -249,7 +330,8 @@ module.exports = function(config, db) {
     sendAll: sendAll,
     get: get,
     remove: remove,
-    update: update
+    update: update,
+    remind: remind
   };
 
 };
