@@ -201,6 +201,10 @@ module.exports = function(config, db) {
     
     db.events.find({
       calendarId: req.params.calendarId,
+      start: {
+        $lte: lte,
+        $gte: gte
+      },
       sent: {
         $ne: true
       }
@@ -211,7 +215,7 @@ module.exports = function(config, db) {
     ).exec(function (err, alerts) {
       var a = [];
       alerts.forEach(function (alert) {
-        a.push({name: alert.name, start: alert.start, date: new Date(), comp: new Date(alert.start) > new Date()});
+        a.push(alert);
       });
       res.json( { alerts: a} );
     });

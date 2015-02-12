@@ -54,6 +54,7 @@ $(document).ready(function () {
   });
 
   var showCreateModal = function (start, end, jsEvent, view) {
+    console.log(start);
     var modal = $('#create-modal');
     var modalContent = modal.find('.modal-content');
 
@@ -215,6 +216,7 @@ $(document).ready(function () {
       firstDay: 1,
       selectable: true,
       scrollTime: '09:00',
+      timezone: 'local',
       businessHours: {
         start: '09:00', 
         end: '17:00',
