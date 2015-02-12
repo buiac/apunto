@@ -123,9 +123,9 @@ module.exports = (function() {
   // auth routes
   var auth = require('./app/controllers/authenticate.js')(config, db);
 
-  app.get('/signup', auth.signupView);
+  // app.get('/signup', auth.signupView);
 
-  app.post('/signup', auth.signup);
+  // app.post('/signup', auth.signup);
 
   app.get('/signin', auth.signinView);
 
