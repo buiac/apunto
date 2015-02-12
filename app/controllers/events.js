@@ -216,7 +216,7 @@ module.exports = function(config, db) {
           client.sms.messages.create({
               to: alert.number,
               from:'+13475146545',
-              body:'Hello ' + alert.name + '. You have an apt. that starts at ' + alert.start.getHours() + ':' +  alert.start.getMinutes()
+              body:'Hello ' + alert.name + '. You have an apt. that starts at ' + moment(start).add(7, 'hours').format('HH:mm')
           }, function(error, message) {
               // The HTTP request to Twilio will run asynchronously. This callback
               // function will be called when a response is received from Twilio
