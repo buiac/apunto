@@ -197,7 +197,6 @@ module.exports = function(config, db) {
     var gte = moment().toDate();
     
     db.events.find({
-      calendarId: req.params.calendarId,
       start: {
         $lte: lte,
         $gte: gte

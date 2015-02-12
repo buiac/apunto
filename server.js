@@ -113,7 +113,7 @@ module.exports = (function() {
 
   // send reminders
   //app.get('/api/1/event/send-all', events.sendAll);
-  app.get('/api/1/event/remind/:calendarId', events.remind);
+  app.get('/api/1/event/remind/', events.remind);
 
   // dashboard routes
   var dashboard = require('./app/controllers/dashboard.js')(config, db);
