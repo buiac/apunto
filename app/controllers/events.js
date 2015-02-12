@@ -62,10 +62,7 @@ module.exports = function(config, db) {
 
       res.json({
         message: 'Create successful.',
-        event: newEvent,
-        client: startDate.getTime(),
-        server: new Date(newEvent.start),
-        serverTime: new Date()
+        event: newEvent
       });
 
     });
@@ -213,11 +210,55 @@ module.exports = function(config, db) {
       start: -1
     }
     ).exec(function (err, alerts) {
-      var a = [];
-      alerts.forEach(function (alert) {
-        a.push(alert);
-      });
-      res.json( { alerts: a} );
+      
+      if (alerts.length) {
+        alerts.forEach(function (alert) {
+          
+          client.sms.messages.create({
+              to: alert.number,
+              from:'+13475146545',
+              body:'Hello ' + alert.name + '. You have an apt. that starts at ' + alert.start.getHours() + ':' +  alert.start.getMinutes()
+          }, function(error, message) {
+              // The HTTP request to Twilio will run asynchronously. This callback
+              // function will be called when a response is received from Twilio
+              // The "error" variable will contain error information, if any.
+              // If the request was successful, this value will be "falsy"
+              if (!error) {
+                  // The second argument to the callback will contain the information
+                  // sent back by Twilio for the request. In this case, it is the
+                  // information about the text messsage you just sent:
+                  db.events.update({
+                    _id: alert._id
+                  }, {
+                    $set: {
+                      sent: true
+                    }
+                  }, {}, function(err, num, alert) {
+
+                    res.json({
+                      sid: message.sid,
+                      dateCreated: message.dateCreated,
+                      alert: alert
+                    });
+
+                  });
+                  
+
+              } else {
+                  res.json({
+                    error: true,
+                    errorObj: error
+                  });
+                  
+              }
+          });
+        });
+      } else {
+        res.json({
+          alerts: []
+        });
+      }
+
     });
 
   };
