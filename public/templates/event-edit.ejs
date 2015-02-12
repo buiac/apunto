@@ -11,22 +11,7 @@
       <label for="" class="control-label">Number</label>
       <input type="text" name="number" id="" class="form-control" value="<%= event.number %>" required>
 
-      <label for="" class="control-label">Type</label>
       
-      <label for="" class="checkbox">
-        <input type="checkbox" name="call" id="" value="true">
-        Call
-      </label>
-
-      <label for="" class="checkbox">
-        <input type="checkbox" name="sms" id="" value="true">
-        SMS
-      </label>
-
-      <label for="" class="checkbox">
-        <input type="checkbox" name="email" id="" value="true">
-        Email
-      </label>
 
       <input type="hidden" name="_id" value="<%= event._id %>">
       <input type="hidden" name="start" value="<%= event.start %>">
@@ -34,6 +19,10 @@
       
     
   </div>
-  
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    <a class="btn btn-primary create">Create</a>
+    <a class="btn btn-primary update">Update</a>
+  </div>
 
 </form>
