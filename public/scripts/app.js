@@ -20,7 +20,8 @@ $(document).ready(function () {
   var eventEditTemplate = null;
   var config = {
     calendarId: $('.calendar').data('calendarid'),
-    apiUrl: ''
+    apiUrl: '',
+    message: 'ahoy hoy! Testing Twilio and node.js'
   };
 
   if(
@@ -30,7 +31,7 @@ $(document).ready(function () {
   ) {
 
     config.env = 'local';
-    config.message = 'ahoy hoy! Testing Twilio and node.js';
+    
 
   }
 
@@ -44,17 +45,7 @@ $(document).ready(function () {
 
   });
 
-  $.ajax({
-    method: 'GET',
-    url: 'api/1/event/remind'
-  }).done(function (res) {
-    
-    console.log(res);
-
-  });
-
   var showCreateModal = function (start, end, jsEvent, view) {
-    console.log(start);
     var modal = $('#create-modal');
     var modalContent = modal.find('.modal-content');
 
