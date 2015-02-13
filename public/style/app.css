@@ -6,6 +6,22 @@ html,
 	font-family: 'Lato', sans-serif;
 }
 
+/* Sign-in
+*/
+
+.sign-in {
+	padding: 0;
+	height: auto;
+}
+.sign-in:before {
+	content: '';
+	display: block;
+	width: 100%;
+	height: 100%;
+	background: url(../images/london.jpg) 50% 50%;
+	position: absolute;
+}
+
 /* Header
 */
 
@@ -106,19 +122,28 @@ html,
 }
 
 .brand {
-	margin: 20px auto 30px;
-	width: 210px;
+	padding: 20px 0;
+	margin: 0px auto 30px;
+	background: rgba(255,255,255, .9);
+	position: relative;
+	border-radius: 3px;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+	width: 261px;
 }
 
 .brand img {
-	width: 100%;
+	width: 210px;
+	display: block;
+	margin: 0 auto 10px;
 }
 
 .form-wrap {
-	border: 1px solid #ccc;
+	border: 1px solid #FFF;
 	border-radius: 3px;
 	padding: 15px;
 	margin-bottom: 10px;
+	background: #FFF;
 }
 
 .form-wrap h1 {
@@ -161,4 +186,19 @@ html,
 
 div.test3 {
 	height: 800px;
+}
+
+p.text-white {
+	color: #FFF;
+}
+
+.white-block {
+	background: #fff;
+	border-radius: 3px;
+	padding: 10px 10px 5px;
+	text-align: center;
+}
+
+.shadow {
+	box-shadow: rgba(0,0,0, .9) 0 0 5px;
 }
