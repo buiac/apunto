@@ -3,24 +3,38 @@ html,
 #calendar,
 .container-fluid {
 	height: 100%;
+	font-family: 'Lato', sans-serif;
 }
 
 /* Header
 */
 
-.navbar .navbar-brand {
-	padding: 0;
-	height: auto;
-	margin: 11px 0 6px 0;
+.navbar-inverse {
+	background: #D05F9F;
+	border-bottom: 0;
+	margin-bottom: 0;
 }
+.navbar>.container-fluid .navbar-brand {
+	width: 93px;
+	height: 35px;
+	display: block;
+	position: absolute;
+	left: 50%;
+	top: 10px;
+	margin-left: -47.5px;
+	padding: 0;
+	top: 8px;
+}
+
 .navbar .logo {
 	width: 93px;
 	height: 35px;
-	background-image: url(../images/logo-white.png);
+	background-image: url(../images/logo-white-2.png);
 	-webkit-background-size: 93px 35px;
 	background-size: 93px 35px;
 	text-indent: -10000px;
 	display: block;
+
 }
 
 .logout {
@@ -35,63 +49,8 @@ html,
 	color: #FFF;
 }
 
-/* Alerts form
+/* Full callendar
 */
-
-.form-alerts {
-	margin-bottom: 40px;
-}
-
-
-/* Weekly callendar
-*/
-
-.ui-widget-header {
-	background: transparent;
-	border: transparent;
-}
-.ui-widget-header h1{
-	font-size: 20px;
-}
-
-.ui-widget-header .wc-nav.ui-buttonset {
-	position: absolute;
-	right: 35px;
-	margin: 0;
-}
-
-.wc-time-header-cell {
-	height: 79px !important;
-	font-size: 14px;
-}
-
-.home	{
-	width: 800px;
-	margin: 0 auto;
-	text-align: center;
-}
-
-.brand {
-	margin: 20px auto 30px;
-	width: 210px;
-}
-
-.brand img {
-	width: 100%;
-}
-
-.form-wrap {
-	border: 1px solid #ccc;
-	border-radius: 3px;
-	padding: 15px;
-	margin-bottom: 10px;
-}
-
-.form-wrap h1 {
-	font-size: 20px;
-	border-bottom: 1px solid #ccc;
-	padding-bottom: 15px;
-}
 
 .delete-event{
 	display: block;
@@ -136,4 +95,70 @@ html,
 
 #update .update {
 	display: inline-block;
+}
+
+/* Homepage
+*/
+.home	{
+	width: 800px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.brand {
+	margin: 20px auto 30px;
+	width: 210px;
+}
+
+.brand img {
+	width: 100%;
+}
+
+.form-wrap {
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	padding: 15px;
+	margin-bottom: 10px;
+}
+
+.form-wrap h1 {
+	font-size: 20px;
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 15px;
+}
+
+.fc-toolbar {
+	background: #F1F5F8;
+	margin-bottom: 0;
+	color: #646464;
+	position: relative;
+}
+
+.fc-toolbar .fc-center{
+	padding: 7px 0 4px 0;
+}
+
+.fc-toolbar .fc-right {
+	position: absolute;
+	right: 10px;
+	top: 9px;
+}
+
+.test {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background: red;
+	padding: 50px 0 0;
+}
+
+.test1 {
+	background: blue;
+	width: 100%;
+	height: 100%;
+	overflow: scroll;
+}
+
+div.test3 {
+	height: 800px;
 }

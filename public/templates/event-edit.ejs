@@ -5,12 +5,15 @@
   </div>
   <div class="modal-body">
    
-      <label for="" class="control-label">Client Name</label>
-      <input type="text" name="name" id="" class="form-control" value="<%= event.title %>" required>
+      <div class="form-group">
+        <label for="" class="control-label">Client Name</label>
+        <input type="text" name="name" id="" class="form-control" value="<%= event.title %>" required>
+      </div>
 
-      <label for="" class="control-label">Number</label>
-      <input type="text" name="number" id="" class="form-control" value="<%= event.number %>" required>
-
+      <div class="form-group">
+        <label for="" class="control-label">Number</label>
+        <input type="text" name="number" id="" class="form-control" value="<%= event.number %>" required>
+      </div>
       
 
       <input type="hidden" name="_id" value="<%= event._id %>">

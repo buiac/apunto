@@ -202,22 +202,36 @@ $(document).ready(function () {
 
   var createCalendar = function () {
     calendar = $('.calendar').fullCalendar({
+      
+      // get events from
+      events: '/api/1/events/' + config.calendarId,
+      
+      // layout and general settings
       defaultView: 'agendaWeek',
-      slotDuration: '00:10:00',
+      allDaySlot: false,
+      editable: true,
+      slotDuration: '00:15:00',
       firstDay: 1,
       selectable: true,
       scrollTime: '09:00',
       timezone: 'local',
+      height: 650,
+      contentHeight: 650,
       businessHours: {
         start: '09:00', 
         end: '17:00',
         dow: [ 1, 2, 3, 4, 5 ]
       },
-      editable: true,
+      header: {
+        left: '',
+        center: 'title',
+        right:  'today prev,next'
+      },
+      
+      // methods
       eventRender: eventRender,
       select: showCreateModal,
       eventClick: eventClick,
-      events: '/api/1/events/' + config.calendarId,
       eventDrop: eventUpdate,
       eventResize: eventUpdate
     });
