@@ -1,7 +1,7 @@
 <form action="" class="create-update" id="<%= modal.idName %>">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <h4 class="modal-title" id="myModalLabel"><%= modal.title %></h4>
+    <h4 class="modal-title" id="myModalLabel"><%= modal.title %> - <%= modal.start %> to <%= modal.end %></h4>
   </div>
   <div class="modal-body">
    
@@ -11,9 +11,15 @@
       </div>
 
       <div class="form-group">
-        <label for="" class="control-label">Number</label>
+        <label for="" class="control-label">Client Phone Number (Ex: +40765432123 - no spaces, no dashes, just numbers)</label>
         <input type="text" name="number" id="" class="form-control" value="<%= event.number %>" required>
       </div>
+
+      <p><strong>What happens next?</strong></p>
+      <p>One hour (1h) before the scheduled appointment an SMS reminder will be sent to the person's phone number.</p>
+      <p>The default message is: <br> Notification: meeting at [time] with [your company name]. Sent with care by Apunto.</p>
+      <p class="text-muted">Changing the default message is not possible yet but if you need somenthing specific we are here to help: <a href="mailto:contact@getapunto.com">contact@getapunto.com</a>.</p>
+
       
 
       <input type="hidden" name="_id" value="<%= event._id %>">

@@ -112,7 +112,6 @@ module.exports = (function() {
   app.delete('/api/1/:calendarId/events/:eventId', events.remove);
 
   // send reminders
-  //app.get('/api/1/event/send-all', events.sendAll);
   app.get('/api/1/event/remind/', events.remind);
 
   // dashboard routes
@@ -130,6 +129,12 @@ module.exports = (function() {
   app.get('/signin', auth.signinView);
 
   app.post('/signin', auth.signin);
+
+  var settings = require('./app/controllers/settings.js')(config, db);
+
+  app.get('/settings', isAuthenticated, settings.view);
+
+  app.post('/settings', isAuthenticated, settings.update);
 
   // Logout
   app.get('/signout', function(req, res) {

@@ -11,8 +11,6 @@ module.exports = function(config, db) {
   var util = require('util');
   var passport = require('passport');
 
-  
-
   var view = function(req, res, next) {
 
     db.calendars.findOne({'userId': req.user._id}, function (err, calendar) {

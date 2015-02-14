@@ -53,16 +53,11 @@ html,
 
 }
 
-.logout {
-	color: #fff;
-	text-decoration: none;
-	margin: 15px 15px 0 0;
-}
-
-.logout:hover {
-	opacity: .8;
-	text-decoration: none;
+.navbar .dropdown .btn {
+	background: #D05F9F;
+	border: 1px solid #fff;
 	color: #FFF;
+	margin-top: 8px;
 }
 
 /* Full callendar

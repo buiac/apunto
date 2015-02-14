@@ -51,8 +51,10 @@ $(document).ready(function () {
 
     var data = {
       modal: {
-        title: 'Add Event',
-        idName: 'create'
+        title: 'Schedule an event',
+        idName: 'create',
+        start: start.format('HH:mm'),
+        end: end.format('HH:mm')
       },
       event: {
         start: start.toDate(),
