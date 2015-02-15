@@ -103,6 +103,11 @@ module.exports = (function() {
     autoload: true
   });
 
+  db.contacts = new Datastore({
+    filename: config.dataDir + config.dbDir + '/contacts.db',
+    autoload: true
+  });
+
   // alert routes
   var events = require('./app/controllers/events.js')(config, db);
 
@@ -130,11 +135,24 @@ module.exports = (function() {
 
   app.post('/signin', auth.signin);
 
+  
+
+  /* Settings routes
+  */ 
   var settings = require('./app/controllers/settings.js')(config, db);
 
   app.get('/settings', isAuthenticated, settings.view);
 
   app.post('/settings', isAuthenticated, settings.update);
+
+  
+
+  /* Contacts Routes
+  */ 
+  var contacts = require('./app/controllers/contacts.js')(config, db);
+
+  app.get('/api/1/contacts/:calendarId', isAuthenticated, contacts.list);
+
 
   // Logout
   app.get('/signout', function(req, res) {

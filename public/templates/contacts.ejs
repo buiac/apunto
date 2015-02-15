@@ -1,0 +1,9 @@
+<ul class="list list-unstyled">
+
+<% for(var i = 0; i < contacts.length; i++) {%>
+  
+  <li class="drag-item" data-duration="01:00" data-event='{"title": "<%= contacts[i].title %>", "number": "<%= contacts[i].number %>"}'><%= contacts[i].title %></li>
+
+<% } %>
+
+</ul>

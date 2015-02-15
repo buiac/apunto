@@ -20,6 +20,7 @@ $(document).ready(function () {
   var eventEditTemplate = null;
   var config = {
     calendarId: $('.calendar').data('calendarid'),
+    userId: $('.contacts-list').data('userid'),
     apiUrl: '',
     message: 'ahoy hoy! Testing Twilio and node.js'
   };
@@ -31,7 +32,6 @@ $(document).ready(function () {
   ) {
 
     config.env = 'local';
-    
 
   }
 
@@ -235,10 +235,21 @@ $(document).ready(function () {
       select: showCreateModal,
       eventClick: eventClick,
       eventDrop: eventUpdate,
-      eventResize: eventUpdate
+      eventResize: eventUpdate,
+      
+      droppable: true,
+
+      drop: function(date, jsEvent, ui) {
+        console.log(ui);
+      },
+      // eventReceive: function (event) {
+      //   console.log(event);
+      // },
     });
 
   };
+
+
 
   createCalendar();
 

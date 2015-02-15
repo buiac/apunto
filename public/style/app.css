@@ -197,3 +197,90 @@ p.text-white {
 .shadow {
 	box-shadow: rgba(0,0,0, .9) 0 0 5px;
 }
+
+/* Search
+*/
+body .calendar {
+	width: 100%;
+}
+body.search-active .calendar{
+	-webkit-transition: width .1s ease-in-out;
+  -moz-transition: width .1s ease-in-out;
+  -o-transition: width .1s ease-in-out;
+  transition: width .1s ease-in-out;
+
+  width: 80%;
+}
+
+/* Draggable */
+.contacts-list {
+	width: 0;
+	background: #F1F5F8;
+	height: 100%;
+}
+body.search-active .contacts-list{
+	-webkit-transition: width .1s ease-in-out;
+  -moz-transition: width .1s ease-in-out;
+  -o-transition: width .1s ease-in-out;
+  transition: width .1s ease-in-out;
+
+  width: 20%;
+  position: absolute;
+  right: 0;
+  top: 50px;
+}
+
+.contacts-list-header {
+	padding: 0 10px;
+	margin: 15px 0 16px 0;
+	position: relative;
+}
+
+.contacts-list-header h5 {
+	font-size: 17px;
+	margin: 0;
+	color: #646464;
+}
+
+.contacts-list-header h5 i {
+	margin: 0 10px 0 0;
+	color: #646464;
+}
+
+.close {
+	font-size: 20px;
+}
+
+.contacts-list-header .close{
+	position: absolute;
+	right: 13px;
+	top: 0;
+}
+
+.contacts-list-content {
+	padding: 10px;
+}
+
+.contacts-list-content ul {
+	background: #fff;
+	padding: 10px;
+}
+
+.drag-item {
+	width: 100%;
+	border-left: 3px solid #1d9d74;
+	padding: 6px 0 7px 5px;
+	margin-bottom: 2px;
+	background: #FFF;
+}
+
+.drag-item:hover {
+	background: #E8E8E8;
+	cursor: move;
+}
+
+.drag-item.ui-draggable-dragging {
+	z-index: 10000;
+	cursor: move;
+	background: #E8E8E8;
+}

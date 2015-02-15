@@ -67,6 +67,17 @@ module.exports = function(config, db) {
 
     });
 
+    var contact = {
+      name: name,
+      title: name,
+      number: number,
+      calendarId: req.params.calendarId
+    };
+
+    db.contacts.insert(contact, function (err, newContact) {
+      console.log(newContact);
+    });
+
   };
 
   var update = function (req, res, next) {
