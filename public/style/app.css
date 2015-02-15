@@ -217,13 +217,15 @@ body.search-active .calendar{
 	width: 0;
 	background: #F1F5F8;
 	height: 100%;
+	display: none;
 }
 body.search-active .contacts-list{
 	-webkit-transition: width .1s ease-in-out;
   -moz-transition: width .1s ease-in-out;
   -o-transition: width .1s ease-in-out;
   transition: width .1s ease-in-out;
-
+	
+	display: block;
   width: 20%;
   position: absolute;
   right: 0;

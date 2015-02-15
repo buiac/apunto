@@ -21,6 +21,9 @@ $(document).ready(function () {
   var config = {
     calendarId: $('.calendar').data('calendarid'),
     userId: $('.contacts-list').data('userid'),
+    userName: $('.calendar').data('username'),
+    companyName: $('.calendar').data('companyname'),
+    userId: $('.contacts-list').data('userid'),
     apiUrl: '',
     message: 'ahoy hoy! Testing Twilio and node.js'
   };
@@ -99,7 +102,8 @@ $(document).ready(function () {
     e.preventDefault();
 
     var event = $('.create-update').serializeObject();
-    event.message = config.message;
+    event.userName = config.userName;
+    event.companyName = config.companyName;
 
     $.ajax({
       type: 'POST',
@@ -240,11 +244,31 @@ $(document).ready(function () {
       droppable: true,
 
       drop: function(date, jsEvent, ui) {
-        console.log(ui);
+        
       },
-      // eventReceive: function (event) {
-      //   console.log(event);
-      // },
+      eventReceive: function (event) {
+
+        $.ajax({
+          type: 'POST',
+          url: '/api/1/' + config.calendarId + '/events/',
+          data: {
+            userName: config.userName,
+            companyName: config.companyName,
+            start: event.start.toDate(),
+            end: event.end.toDate(),
+            name: event.title,
+            number: event.number
+          }
+        }).done(function (res) {
+          
+          calendar.fullCalendar( 'refetchEvents');
+
+          // // close modal
+          // $('#create-modal').modal('hide');
+
+        });
+
+      },
     });
 
   };

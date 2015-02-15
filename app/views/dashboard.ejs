@@ -69,17 +69,17 @@
 
 
         
-  <div class="calendar" data-calendarid="<%= calendar._id %>">
+  <div class="calendar" data-calendarid="<%= calendar._id %>" data-companyname="<%= user.companyName %>" data-username="<%= user.name %>">
     
   </div>
 
-  <div class="contacts-list" data-userid="<%= user._id %>">
+  <div class="contacts-list" data-userid="<%= user._id %>" >
 
     <div class="contacts-list-header">
       <div class="search-input fa fa-search">
         <input type="text" class="form-control" placeholder="Search contacts" name="srch-term" id="srch-term">
       </div><!-- search-input -->
-      
+
       <a href="" class="close"><i class="fa fa-times"></i></a>
     </div>
       

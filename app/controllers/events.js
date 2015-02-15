@@ -29,13 +29,14 @@ module.exports = function(config, db) {
 
     req.checkBody('name', 'Title should not be empty').notEmpty();
     req.checkBody('number', 'Number should not be empty.').notEmpty();
-    req.checkBody('message', 'Message should not be empty.').notEmpty();
     req.checkBody('start', 'Start date should not be empty.').notEmpty();
     req.checkBody('end', 'End date should not be empty.').notEmpty();
 
     var name = req.body.name.trim();
+    var userName = req.body.userName.trim();
+    var companyName = req.body.companyName.trim();
+
     var number = req.body.number.replace(/[-() ]/gi, '');
-    var message = req.body.message.trim();
     var startDate = new Date(req.body.start);
     var endDate = new Date(req.body.end);
 
@@ -50,11 +51,12 @@ module.exports = function(config, db) {
     var event = {
       status: false,
       name: name,
+      userName: userName,
+      companyName: companyName,
       title: name,
       number: number,
       start: startDate,
       end: endDate,
-      message: message,
       calendarId: req.params.calendarId
     };
 
@@ -206,6 +208,8 @@ module.exports = function(config, db) {
 
     var lte = moment().add(1, 'hours').toDate();
     var gte = moment().toDate();
+
+    console.log(lte, gte);
     
     db.events.find({
       start: {
@@ -224,10 +228,15 @@ module.exports = function(config, db) {
       if (alerts.length) {
         alerts.forEach(function (alert) {
           
+          var notification = 'Notification: you have an appointment starting at ' + moment(alert.start).add(7, 'hours').format('HH:mm') + 'with ';
+          notification += alert.companyName ? alert.companyName : alert.userName + ' ';
+          notification += '. Reminded by Apunto.';
+
           client.sms.messages.create({
               to: alert.number,
               from:'+13475146545',
-              body:'Hello ' + alert.name + '. You have an apt. that starts at ' + moment(alert.start).add(7, 'hours').format('HH:mm')
+              //body:'Hello ' + alert.name + '. You have an apt. that starts at ' + moment(alert.start).add(7, 'hours').format('HH:mm')
+              body: notification
           }, function(error, message) {
               // The HTTP request to Twilio will run asynchronously. This callback
               // function will be called when a response is received from Twilio
