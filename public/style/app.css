@@ -232,7 +232,7 @@ body.search-active .contacts-list{
 
 .contacts-list-header {
 	padding: 0 10px;
-	margin: 15px 0 16px 0;
+	margin: 15px 0 0 0;
 	position: relative;
 }
 
@@ -268,10 +268,23 @@ body.search-active .contacts-list{
 
 .drag-item {
 	width: 100%;
-	border-left: 3px solid #1d9d74;
-	padding: 6px 0 7px 5px;
+	
+	padding: 6px 0 7px 8px;
 	margin-bottom: 2px;
 	background: #FFF;
+	position: relative;
+}
+
+.drag-item:before {
+	content: '';
+	display: block;
+	position: absolute;
+	left: 0;
+	top: 0;
+	height: 100%;
+	width: 3px;
+	background: #1d9d74;
+	z-index: 1;
 }
 
 .drag-item:hover {
@@ -282,5 +295,52 @@ body.search-active .contacts-list{
 .drag-item.ui-draggable-dragging {
 	z-index: 10000;
 	cursor: move;
-	background: #E8E8E8;
+	color: #fff;
+
+}
+
+.drag-item.ui-draggable-dragging:before {
+	-webkit-transition: width .5s ease-in-out;
+  -moz-transition: width .5s ease-in-out;
+  -o-transition: width .5s ease-in-out;
+  transition: width .5s ease-in-out;
+  
+	z-index: -1;
+  width: 100%;
+}
+
+.show-clients,
+.show-clients:focus {
+	border: 1px solid #fff;
+	color: #fff;
+		margin: 8px 0 0 10px;
+	padding: 6px 10px;
+	border-radius: 4px;
+}
+
+
+.show-clients:hover {
+	color: #fff;
+	opacity: .8;
+}
+
+body.search-active .show-clients {
+	color: #D05F9F;
+	background: #fff;
+}
+
+.search-input {
+
+	margin: 35px 0 0;
+	position: relative;
+}
+
+.search-input:before {
+
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	color: #000;
+	opacity: .2;
+
 }

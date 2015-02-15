@@ -92,7 +92,7 @@ String.prototype.score = function(abbreviation,offset) {
     }
   }
   return 0.0
-}
+};
 
 jQuery.fn.liveUpdate = function(list){
 
@@ -138,8 +138,7 @@ jQuery.fn.liveUpdate = function(list){
 $(document).ready(function () {
 
   var contactsTemplate = '';
-
-  
+  var searchToggle = false;
 
   // Get templates
   $.ajax({
@@ -170,19 +169,23 @@ $(document).ready(function () {
       
     });
 
-    
   };
 
-  $('.navbar-form #srch-term').focus(function () {
+  $('.show-clients').click(function (e) {
+    e.preventDefault();
     
-    $('body').addClass('search-active');
-
+    searchToggle ? $('body').removeClass('search-active') : $('body').addClass('search-active');
+    
+    searchToggle = !searchToggle;
+    
     getContacts();
 
   });
 
   $('.contacts-list-header .close').on('click', function (e) {
     e.preventDefault();
+
+    searchToggle = !searchToggle;
 
     $('body').removeClass('search-active');
 
