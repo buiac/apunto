@@ -208,8 +208,6 @@ module.exports = function(config, db) {
 
     var lte = moment().add(1, 'hours').toDate();
     var gte = moment().toDate();
-
-    console.log(lte, gte);
     
     db.events.find({
       start: {
@@ -228,7 +226,7 @@ module.exports = function(config, db) {
       if (alerts.length) {
         alerts.forEach(function (alert) {
           
-          var notification = 'Notification: you have an appointment starting at ' + moment(alert.start).add(7, 'hours').format('HH:mm') + 'with ';
+          var notification = 'Notification: you have an appointment starting at ' + moment(alert.start).add(7, 'hours').format('HH:mm') + ' with ';
           notification += alert.companyName ? alert.companyName : alert.userName + ' ';
           notification += '. Reminded by Apunto.';
 
