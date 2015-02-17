@@ -85,14 +85,12 @@ module.exports = function(config, db) {
   var update = function (req, res, next) {
     req.checkBody('name', 'Title should not be empty').notEmpty();
     req.checkBody('number', 'Number should not be empty.').notEmpty();
-    req.checkBody('message', 'Message should not be empty.').notEmpty();
     req.checkBody('start', 'Start date should not be empty.').notEmpty();
     req.checkBody('end', 'End date should not be empty.').notEmpty();
     req.checkBody('_id', 'ID should not be empty.').notEmpty();
 
     var name = req.body.name.trim();
     var number = req.body.number.replace(/[-() ]/gi, '');
-    var message = req.body.message.trim();
     var startDate = Date.create(req.body.start);
     var endDate = Date.create(req.body.end);
     var eventId = req.body._id;
@@ -116,7 +114,6 @@ module.exports = function(config, db) {
       number: number,
       start: startDate,
       end: endDate,
-      message: message,
       calendarId: req.params.calendarId
     };
 

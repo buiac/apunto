@@ -72,8 +72,13 @@ $(document).ready(function () {
     var temp = ejs.render(eventEditTemplate, data);
 
     modalContent.html('');
-    modalContent.append(temp)
+    modalContent.append(temp);
     modal.modal();
+    
+    $(".mobile-number").intlTelInput({
+      defaultCountry: 'auto',
+      utilsScript: '/bower_components/intl-tel-input/lib/libphonenumber/build/utils.js'
+    });
   };
 
   var showUpdateModal = function (event) {
@@ -94,6 +99,11 @@ $(document).ready(function () {
     modalContent.append(temp);
     modal.modal();
 
+    $(".mobile-number").intlTelInput({
+      defaultCountry: 'auto',
+      utilsScript: '/bower_components/intl-tel-input/lib/libphonenumber/build/utils.js'
+    });
+
   };
 
   // Modal Create Event
@@ -104,6 +114,8 @@ $(document).ready(function () {
     var event = $('.create-update').serializeObject();
     event.userName = config.userName;
     event.companyName = config.companyName;
+    event.number = $(".mobile-number").intlTelInput('getNumber');
+
 
     $.ajax({
       type: 'POST',
@@ -126,8 +138,7 @@ $(document).ready(function () {
     e.preventDefault();
 
     var event = $('.create-update').serializeObject();
-
-    event.message = config.message;
+    event.number = $(".mobile-number").intlTelInput('getNumber');
 
     $.ajax({
       type: 'PUT',

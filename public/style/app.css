@@ -346,3 +346,9 @@ body.search-active .show-clients {
 	opacity: .2;
 
 }
+
+/* Modal
+*/
+.create-update .control-label {
+	display: block;
+}
