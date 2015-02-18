@@ -77,7 +77,7 @@ module.exports = function(config, db) {
     };
 
     db.contacts.insert(contact, function (err, newContact) {
-      console.log(newContact);
+
     });
 
   };
@@ -223,7 +223,28 @@ module.exports = function(config, db) {
       if (alerts.length) {
         alerts.forEach(function (alert) {
           
-          var notification = 'Notification: you have an appointment starting at ' + moment(alert.start).add(7, 'hours').format('HH:mm') + ' with ';
+          var notification = 'Notification: you have an appointment starting at ' + moment(alert.start).add(7, 'hours').format('HH:mm');
+          
+          if (alert.userName) {
+            notification += ' with ' + alert.userName;
+          } else {
+            notification += '';
+          }
+
+          if (alert.userName && alert.companyName) {
+            
+            notification += ' from ' + alert.companyName;
+          
+          } else if (!alert.userName && alert.companyName) {
+
+            notification += ' with ' + alert.companyName;
+
+          } else {
+
+            notification += '.';
+
+          }
+
           notification += alert.companyName ? alert.companyName : alert.userName + ' ';
           notification += '. Reminded by Apunto.';
 
@@ -242,7 +263,8 @@ module.exports = function(config, db) {
                   // sent back by Twilio for the request. In this case, it is the
                   // information about the text messsage you just sent:
                   db.events.update({
-                    _id: alert._id
+                    _id: alert._id,
+                    message: message
                   }, {
                     $set: {
                       sent: true
