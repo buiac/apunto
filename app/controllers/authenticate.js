@@ -98,11 +98,7 @@ module.exports = function(config, db) {
   var signupView = function(req, res, next) {
 
     res.render('signup', {
-      info: req.flash("message"),
-      userr: {
-        name: 'sebi.kovacs+' + new Date().getTime() + '@gmail.com',
-        pass: 'passpass'
-      }
+      info: req.flash("message")
     });
 
   };

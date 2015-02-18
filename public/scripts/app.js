@@ -282,6 +282,16 @@ $(document).ready(function () {
       },
     });
 
+    // start polling 
+    // var doPoll = function (){
+      
+    //   calendar.fullCalendar( 'refetchEvents');  // process results here
+      
+    //   setTimeout(doPoll,5000); 
+    // };
+
+    // doPoll();
+
   };
 
 
