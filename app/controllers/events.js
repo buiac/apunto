@@ -76,8 +76,24 @@ module.exports = function(config, db) {
       calendarId: req.params.calendarId
     };
 
-    db.contacts.insert(contact, function (err, newContact) {
+    db.contacts.findOne({'name': contact.name, 'number': contact.number, 'calendarId': contact.calendarId}, function (err, doc) {
 
+      if (err) {
+        res.json(util.inspect(errors), 400);
+        return;
+      }
+
+      if (!doc) {
+
+        db.contacts.insert(contact, function (err, newContact) {
+          
+          if (err) {
+            res.json(util.inspect(errors), 400);
+            return;
+          }
+
+        });
+      }
     });
 
   };
@@ -198,7 +214,6 @@ module.exports = function(config, db) {
   };
 
   var remind = function (req, res, next) {
-    var serverTz = 2;
     
     // var lte = moment().add(serverTz + 1, 'hours').toDate();
     // var gte = moment().add(serverTz, 'hours').toDate();
@@ -219,41 +234,58 @@ module.exports = function(config, db) {
       start: -1
     }
     ).exec(function (err, alerts) {
-      
+
       if (alerts.length) {
+
         alerts.forEach(function (alert) {
           
-          var notification = 'Notification: you have an appointment starting at ' + moment(alert.start).add(7, 'hours').format('HH:mm');
-          
-          if (alert.userName) {
-            notification += ' with ' + alert.userName;
+          // since the server is UTC - 5 (Detroig)
+
+          var hours = 5 - (parseInt(alert.tzoffset) / 60);
+          var eventTimeInTz = '';
+
+          if ( hours < 0 ) {
+            
+            eventTimeInTz = moment(alert.start).subtract(hours * -1, 'hours').format('HH:mm');
+
           } else {
-            notification += '';
+
+            eventTimeInTz = moment(alert.start).subtract(hours * -1, 'hours').format('HH:mm');
+
           }
 
-          if (alert.userName && alert.companyName) {
+          var notification = 'Notification: you have an appointment starting at ' + eventTimeInTz;
+          
+          if (alert.userName && alert.userName != 'undefined') {
+
+            notification += ' with ' + alert.userName;
+
+          } else {
+
+            notification += '';
+            
+          }
+
+          if (alert.userName && alert.companyName && alert.userName != 'undefined' && alert.companyName != 'undefined') {
             
             notification += ' from ' + alert.companyName;
           
-          } else if (!alert.userName && alert.companyName) {
+          } else if ((!alert.userName || alert.userName == 'undefined')  && alert.companyName) {
 
             notification += ' with ' + alert.companyName;
 
-          } else {
+          } 
 
-            notification += '.';
-
-          }
-
-          notification += alert.companyName ? alert.companyName : alert.userName + ' ';
           notification += '. Reminded by Apunto.';
 
           client.sms.messages.create({
+              
               to: alert.number,
               from:'+13475146545',
-              //body:'Hello ' + alert.name + '. You have an apt. that starts at ' + moment(alert.start).add(7, 'hours').format('HH:mm')
               body: notification
+
           }, function(error, message) {
+
               // The HTTP request to Twilio will run asynchronously. This callback
               // function will be called when a response is received from Twilio
               // The "error" variable will contain error information, if any.
@@ -263,11 +295,11 @@ module.exports = function(config, db) {
                   // sent back by Twilio for the request. In this case, it is the
                   // information about the text messsage you just sent:
                   db.events.update({
-                    _id: alert._id,
-                    message: message
+                    _id: alert._id
                   }, {
                     $set: {
-                      sent: true
+                      sent: true,
+                      twilioRes: message
                     }
                   }, {}, function(err, num, alert) {
 
@@ -281,13 +313,16 @@ module.exports = function(config, db) {
                   
 
               } else {
-                  res.json({
-                    error: true,
-                    errorObj: error
-                  });
+                
+                res.json({
+                  error: true,
+                  errorObj: error
+                });
                   
               }
+
           });
+
         });
       } else {
         res.json({

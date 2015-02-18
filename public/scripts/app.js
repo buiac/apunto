@@ -16,6 +16,7 @@ $.fn.serializeObject = function() {
 };
 
 $(document).ready(function () {
+
   var calendar = null;
   var eventEditTemplate = null;
   var config = {
@@ -25,6 +26,7 @@ $(document).ready(function () {
     companyName: $('.calendar').data('companyname'),
     userId: $('.contacts-list').data('userid'),
     apiUrl: '',
+    tzoffset: new Date().getTimezoneOffset(),
     message: 'ahoy hoy! Testing Twilio and node.js'
   };
 
@@ -112,9 +114,11 @@ $(document).ready(function () {
     e.preventDefault();
 
     var event = $('.create-update').serializeObject();
+    event.message = '';
     event.userName = config.userName;
     event.companyName = config.companyName;
     event.number = $(".mobile-number").intlTelInput('getNumber');
+    event.tzoffset = config.tzoffset;
 
 
     $.ajax({
@@ -139,6 +143,7 @@ $(document).ready(function () {
 
     var event = $('.create-update').serializeObject();
     event.number = $(".mobile-number").intlTelInput('getNumber');
+    event.tzoffset = config.tzoffset;
 
     $.ajax({
       type: 'PUT',
@@ -215,9 +220,10 @@ $(document).ready(function () {
     var deleteBtn = $('<a href="" class="delete-event fa fa-trash" data-id="' + event._id + '"></a>');
     $(element).append(deleteBtn);
 
-  };
+  };  
 
   var createCalendar = function () {
+    
     calendar = $('.calendar').fullCalendar({
       
       // get events from
@@ -268,7 +274,8 @@ $(document).ready(function () {
             start: event.start.toDate(),
             end: event.end.toDate(),
             name: event.title,
-            number: event.number
+            number: event.number,
+            message: ''
           }
         }).done(function (res) {
           

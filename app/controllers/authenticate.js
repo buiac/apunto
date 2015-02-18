@@ -55,7 +55,10 @@ module.exports = function(config, db) {
            
           //if there is no user with that email
           // create the user
-          var newUser = {};
+          var newUser = {
+            timecreated: new Date()
+          };
+
           var calendar = {}
 
           // set the user's local credentials
