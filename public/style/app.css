@@ -464,6 +464,10 @@ body.search-active .show-clients {
 	margin: 0 auto 30px;
 }
 
+.onboarding .step2 .image-wrap img {
+	max-width: 100%;
+}
+
 .onboarding .step2 .btn {
 	display: block;
 	max-width: 200px;
