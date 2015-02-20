@@ -8,7 +8,7 @@ $(document).ready(function () {
 		
 		$.extend(user, res.user);
 
-		if (!user.onboarding /*&& !user.name && !user.companyName*/) {
+		if (!user.onboarding && !user.name && !user.companyName) {
 			setTimeout(function () {
 				$('.calendar').hide();
 				$('.onboarding').show(300);
@@ -49,6 +49,11 @@ $(document).ready(function () {
 
 
 	});
+
+	$('body').on('click', '.hide-onboarding', function (e) {
+		e.preventDefault();
+		window.location.reload();
+	})
 
 	
 });

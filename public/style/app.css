@@ -451,3 +451,18 @@ body.search-active .show-clients {
 .onboarding label {
 	font-size: 20px;
 }
+
+.onboarding .step2 h1 {
+	margin-bottom: 50px;
+}
+
+.onboarding .step2 .image-wrap {
+	max-width: 910px;
+	margin: 0 auto 30px;
+}
+
+.onboarding .step2 .btn {
+	display: block;
+	max-width: 200px;
+	margin: 0 auto;
+}
