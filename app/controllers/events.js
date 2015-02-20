@@ -243,15 +243,12 @@ module.exports = function(config, db) {
 
         alerts.forEach(function (alert) {
           
-          // since the server is UTC - 5 (Detroig)
-
-          
-
+        
           client.sms.messages.create({
               
               to: alert.number,
               from:'+13475146545',
-              body: alert.message
+              body: alert.message.append(' Reminded by Apunto')
 
           }, function(error, message) {
 
