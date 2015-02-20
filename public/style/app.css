@@ -452,6 +452,9 @@ body.search-active .show-clients {
 	font-size: 20px;
 }
 
+.onboarding .step2 {
+	display: none;
+}
 .onboarding .step2 h1 {
 	margin-bottom: 50px;
 }
