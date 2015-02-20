@@ -1,4 +1,7 @@
 // Helper methods
+
+var Apunto = {};
+
 $.fn.serializeObject = function() {
   var o = {};
   var a = this.serializeArray();
@@ -19,12 +22,11 @@ $(document).ready(function () {
 
   var calendar = null;
   var eventEditTemplate = null;
-  var config = {
+  Apunto.config = {
     calendarId: $('.calendar').data('calendarid'),
     userId: $('.contacts-list').data('userid'),
     userName: $('.calendar').data('username'),
     companyName: $('.calendar').data('companyname'),
-    userId: $('.contacts-list').data('userid'),
     apiUrl: '',
     tzoffset: new Date().getTimezoneOffset(),
     message: 'ahoy hoy! Testing Twilio and node.js'
@@ -36,7 +38,7 @@ $(document).ready(function () {
     document.domain.indexOf('10.0.2.2') !== -1
   ) {
 
-    config.env = 'local';
+    Apunto.config.env = 'local';
 
   }
 
@@ -67,6 +69,7 @@ $(document).ready(function () {
         name: '',
         title: '',
         number: '',
+        message: 'Notification: you have an appointment starting at ' + start.format('HH:mm') + ' with ' + Apunto.config.userName + ' from ' + Apunto.config.companyName+ '.',
         _id: ''
       }
     };
@@ -81,6 +84,8 @@ $(document).ready(function () {
       defaultCountry: 'auto',
       utilsScript: '/bower_components/intl-tel-input/lib/libphonenumber/build/utils.js'
     });
+
+
   };
 
   var showUpdateModal = function (event) {
@@ -114,16 +119,14 @@ $(document).ready(function () {
     e.preventDefault();
 
     var event = $('.create-update').serializeObject();
-    event.message = '';
-    event.userName = config.userName;
-    event.companyName = config.companyName;
+    event.userName = Apunto.config.userName;
+    event.companyName = Apunto.config.companyName;
     event.number = $(".mobile-number").intlTelInput('getNumber');
-    event.tzoffset = config.tzoffset;
-
+    event.tzoffset = Apunto.config.tzoffset;
 
     $.ajax({
       type: 'POST',
-      url: '/api/1/' + config.calendarId + '/events/',
+      url: '/api/1/' + Apunto.config.calendarId + '/events/',
       data: event
     }).done(function (res) {
       
@@ -143,11 +146,11 @@ $(document).ready(function () {
 
     var event = $('.create-update').serializeObject();
     event.number = $(".mobile-number").intlTelInput('getNumber');
-    event.tzoffset = config.tzoffset;
+    event.tzoffset = Apunto.config.tzoffset;
 
     $.ajax({
       type: 'PUT',
-      url: '/api/1/' + config.calendarId + '/events/',
+      url: '/api/1/' + Apunto.config.calendarId + '/events/',
       data: event
     }).done(function (res) {
       
@@ -162,12 +165,38 @@ $(document).ready(function () {
 
   });
 
+  var enableTextarea = function (e) {
+    $(this).parent().find('textarea').removeAttr('readonly').focus();
+    $(this).hide();
+  };
+
+  var disableTextarea = function (e) {
+    
+    $(this).attr('readonly', 'true');
+    $('.textarea-cover').show();
+
+  };
+
+  $('body').on('click', '.textarea-cover', enableTextarea);
+  $('body').on('blur' , '.modal-message-preview textarea', disableTextarea);
+
+  $('body').on('keyup', '.modal-message-preview textarea', function () {
+    var max = 160;
+    var len = $(this).val().length;
+    if (len >= max) {
+      $('#charNum').text(' you have reached the limit');
+    } else {
+      var charc = max - len;
+      $('#charNum').text(charc + ' characters left');
+    }
+  });
+
   // Delete Event
   var deleteEvent = function (event) {
     
     $.ajax({
       type: 'DELETE',
-      url: '/api/1/' + config.calendarId+'/events/' + event._id
+      url: '/api/1/' + Apunto.config.calendarId+'/events/' + event._id
     }).done(function (res) {
       
       calendar.fullCalendar('removeEvents', event._id);
@@ -199,7 +228,7 @@ $(document).ready(function () {
     console.log(event);
     $.ajax({
       type: 'PUT',
-      url: '/api/1/' + config.calendarId + '/events/',
+      url: '/api/1/' + Apunto.config.calendarId + '/events/',
       data: {
         start: event.start.toDate(),
         end: event.end.toDate(),
@@ -222,12 +251,15 @@ $(document).ready(function () {
 
   };  
 
+
+  
+
   var createCalendar = function () {
     
     calendar = $('.calendar').fullCalendar({
       
       // get events from
-      events: '/api/1/events/' + config.calendarId,
+      events: '/api/1/events/' + Apunto.config.calendarId,
       
       // layout and general settings
       defaultView: 'agendaWeek',
@@ -267,10 +299,10 @@ $(document).ready(function () {
 
         $.ajax({
           type: 'POST',
-          url: '/api/1/' + config.calendarId + '/events/',
+          url: '/api/1/' + Apunto.config.calendarId + '/events/',
           data: {
-            userName: config.userName,
-            companyName: config.companyName,
+            userName: Apunto.config.userName,
+            companyName: Apunto.config.companyName,
             start: event.start.toDate(),
             end: event.end.toDate(),
             name: event.title,

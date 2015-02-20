@@ -134,7 +134,6 @@ module.exports = (function() {
   app.get('/signin', auth.signinView);
 
   app.post('/signin', auth.signin);
-
   
 
   /* Settings routes
@@ -144,7 +143,10 @@ module.exports = (function() {
   app.get('/settings', isAuthenticated, settings.view);
 
   app.post('/settings', isAuthenticated, settings.update);
-
+  
+  app.post('/onboarding', isAuthenticated, settings.updateOnboarding);
+  
+  app.get('/api/1/settings/:userId', isAuthenticated, settings.getUser);
   
 
   /* Contacts Routes

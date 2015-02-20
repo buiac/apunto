@@ -352,3 +352,102 @@ body.search-active .show-clients {
 .create-update .control-label {
 	display: block;
 }
+
+.reminder {
+	margin: 18px 0;
+}
+
+
+.remind-label {
+	float: left;
+	margin: 8px 0 0 0;
+}
+
+.reminder .input-group input.form-control {
+	display: inline-block;
+	width: 60px;
+}
+
+.reminder .input-group select.form-control{
+	display: inline-block;
+	width: 105px;
+}
+
+.reminder .input-group {
+	float: left;
+	margin: 0 13px 0 25px;
+
+}
+
+.cf:before,
+.cf:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.cf:after {
+    clear: both;
+}
+
+/**
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+.cf {
+    *zoom: 1;
+}
+
+.modal-dialog {
+	width: 500px;
+}
+.intl-tel-input {
+	width: 100%;
+}
+
+
+.modal-message-preview {
+	position: relative;
+}
+.modal-message-preview textarea {
+	height: 75px;
+	resize: none;
+}
+
+.textarea-cover {
+	width: 100%;
+	height: 30px;
+	position: absolute;
+	left: 0;
+	top: 25px;
+	height: 75px;
+	background: transparent;
+}
+
+#charNum {
+	float: right;
+	font-size: 11px;
+	font-family: monospace;
+	margin-top: 5px;
+}
+
+.onboarding {
+	width: 100%;
+	height: 100%;
+	background: #FFF;
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 10000;
+	display: none;
+}
+
+.onboarding h1 {
+	font-family: 'Gloria Hallelujah', cursive;
+	margin-bottom: 60px;
+	text-align: center;
+	margin: 100px 0;
+}
+
+.onboarding label {
+	font-size: 20px;
+}

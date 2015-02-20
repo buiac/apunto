@@ -1,24 +1,74 @@
 <form action="" class="create-update" id="<%= modal.idName %>">
+  
   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      
+      <span aria-hidden="true">&times;</span>
+
+    </button>
+    
     <h4 class="modal-title" id="myModalLabel"><%= modal.title %> - <%= modal.start %> to <%= modal.end %></h4>
+
   </div>
+
   <div class="modal-body">
    
+      
+
       <div class="form-group">
+        
         <label for="" class="control-label">Client Name</label>
+        
         <input type="tel" name="name" id="" class="form-control" value="<%= event.title %>" required>
-      </div>
 
+      </div>
+      
+    
+      
       <div class="form-group">
+        
         <label for="" class="control-label">Client Phone Number </label>
+        
         <input type="tel" name="number" id="" class="form-control mobile-number" value="<%= event.number %>" required>
+
       </div>
 
-      <p><strong>What happens next?</strong></p>
+      <div class="modal-message-preview cf">
+        <label for="" class="control-label">Message Preview</label>
+        <div class="textarea-cover"></div>
+        <textarea readonly="true" name="message" id="" cols="30" rows="10" class="form-control"><%= event.message %></textarea>
+        <span id="charNum"></span>
+      </div>
+
+
+
+      <!-- <div class="reminder cf">
+        <label for="" class="control-label">Reminder</label>
+
+        <span class="remind-label">Send reminder</span>
+
+        <div class="input-group">
+
+          <input type="number" min="1" max="24" name="remind-amount" id="" value="1" class="form-control">
+
+          <select name="remind-time" id="" class="form-control">
+            <option value="">hours</option>
+            <option value="">days</option>
+          </select>
+
+        </div>
+
+        <span class="remind-label">before the event</span>
+        
+      </div> -->
+
+      
+
+      <!-- <p><strong>What happens next?</strong></p>
       <p>One hour (1h) before the scheduled appointment an SMS reminder will be sent to the person's phone number.</p>
       <p>The default message is: <br> Notification: meeting at [time] with [your company name]. Sent with care by Apunto.</p>
-      <p class="text-muted">Changing the default message is not possible yet but if you need somenthing specific we are here to help: <a href="mailto:contact@getapunto.com">contact@getapunto.com</a>.</p>
+      <p class="text-muted">Changing the default message is not possible yet but if you need somenthing specific we are here to help: <a href="mailto:contact@getapunto.com">contact@getapunto.com</a>.</p> -->
 
       
 

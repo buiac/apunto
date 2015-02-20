@@ -31,10 +31,13 @@ module.exports = function(config, db) {
     req.checkBody('number', 'Number should not be empty.').notEmpty();
     req.checkBody('start', 'Start date should not be empty.').notEmpty();
     req.checkBody('end', 'End date should not be empty.').notEmpty();
+    req.checkBody('message', 'Message should not be empty.').notEmpty();
 
     var name = req.body.name.trim();
     var userName = req.body.userName.trim();
-    var companyName = req.body.companyName.trim();
+    var companyName = req.body.message.trim();
+
+    var message = req.body.message.trim();
 
     var number = req.body.number.replace(/[-() ]/gi, '');
     var startDate = new Date(req.body.start);
@@ -44,7 +47,7 @@ module.exports = function(config, db) {
     var errors = req.validationErrors();
 
     if (errors) {
-      res.json(util.inspect(errors), 400);
+      res.status(400).json(errors);
       return;
     }
 
@@ -57,7 +60,8 @@ module.exports = function(config, db) {
       number: number,
       start: startDate,
       end: endDate,
-      calendarId: req.params.calendarId
+      calendarId: req.params.calendarId,
+      message: message
     };
 
     db.events.insert(event, function (err, newEvent) {
@@ -103,12 +107,14 @@ module.exports = function(config, db) {
     req.checkBody('number', 'Number should not be empty.').notEmpty();
     req.checkBody('start', 'Start date should not be empty.').notEmpty();
     req.checkBody('end', 'End date should not be empty.').notEmpty();
+    req.checkBody('message', 'Message should not be empty.').notEmpty();
     req.checkBody('_id', 'ID should not be empty.').notEmpty();
 
     var name = req.body.name.trim();
     var number = req.body.number.replace(/[-() ]/gi, '');
     var startDate = Date.create(req.body.start);
     var endDate = Date.create(req.body.end);
+    var message = req.body.message;
     var eventId = req.body._id;
 
     startDate = moment(startDate).toDate();
@@ -130,7 +136,8 @@ module.exports = function(config, db) {
       number: number,
       start: startDate,
       end: endDate,
-      calendarId: req.params.calendarId
+      calendarId: req.params.calendarId,
+      message: message
     };
 
     db.events.update({'_id': eventId}, event, function (err, num, newEvent) {
@@ -214,9 +221,6 @@ module.exports = function(config, db) {
   };
 
   var remind = function (req, res, next) {
-    
-    // var lte = moment().add(serverTz + 1, 'hours').toDate();
-    // var gte = moment().add(serverTz, 'hours').toDate();
 
     var lte = moment().add(1, 'hours').toDate();
     var gte = moment().toDate();
@@ -241,48 +245,13 @@ module.exports = function(config, db) {
           
           // since the server is UTC - 5 (Detroig)
 
-          var hours = 5 - (parseInt(alert.tzoffset) / 60);
-          var eventTimeInTz = '';
-
-          if ( hours < 0 ) {
-            
-            eventTimeInTz = moment(alert.start).subtract(hours * -1, 'hours').format('HH:mm');
-
-          } else {
-
-            eventTimeInTz = moment(alert.start).subtract(hours * -1, 'hours').format('HH:mm');
-
-          }
-
-          var notification = 'Notification: you have an appointment starting at ' + eventTimeInTz;
           
-          if (alert.userName && alert.userName != 'undefined') {
-
-            notification += ' with ' + alert.userName;
-
-          } else {
-
-            notification += '';
-            
-          }
-
-          if (alert.userName && alert.companyName && alert.userName != 'undefined' && alert.companyName != 'undefined') {
-            
-            notification += ' from ' + alert.companyName;
-          
-          } else if ((!alert.userName || alert.userName == 'undefined')  && alert.companyName) {
-
-            notification += ' with ' + alert.companyName;
-
-          } 
-
-          notification += '. Reminded by Apunto.';
 
           client.sms.messages.create({
               
               to: alert.number,
               from:'+13475146545',
-              body: notification
+              body: alert.message
 
           }, function(error, message) {
 
