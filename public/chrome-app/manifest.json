@@ -1,0 +1,17 @@
+ {
+	"manifest_version": 2,
+	"name": "Apunto",
+	"description": "Remind your clients that they have a meeting by sending them an automated SMS message.",
+	"version": "1.0.2",
+	"icons": {
+		"16": "bizcardmaker-icon-16.png",
+		"48": "bizcardmaker-icon-48.png",
+		"128": "bizcardmaker-icon-128.png"
+	},
+	"app": {
+		"launch": {
+			"web_url": "http://www.bizcardmaker.com/?utm_source=chromewebstore&utm_medium=app&utm_campaign=chromewebstore"
+		}
+	},
+	"permissions": []
+}
