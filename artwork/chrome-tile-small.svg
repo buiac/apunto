@@ -7,17 +7,53 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="360.18469mm"
-   height="360.19351mm"
-   viewBox="0 0 1276.245 1276.2762"
+   width="440"
+   height="280"
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="apunto-logo.svg">
+   sodipodi:docname="chrome-tile-small.svg"
+   inkscape:export-filename="/home/mokush/dev/apunto/artwork/chrome-tile-small.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
   <defs
      id="defs4">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath3870">
+      <path
+         mask="none"
+         sodipodi:nodetypes="cccccccc"
+         inkscape:connector-curvature="0"
+         id="path3872"
+         d="M 61.349337,687.7096 -165.71098,914.7699 52.939695,1129.2158 280,902.15544 254.77106,876.92653 69.758977,889.54099 l 0,-201.83139 z"
+         style="opacity:0.61702127;fill:url(#linearGradient3874);fill-opacity:1;stroke:none" />
+    </clipPath>
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3831"
+       id="radialGradient3837"
+       cx="663.58038"
+       cy="187.32571"
+       fx="663.58038"
+       fy="187.32571"
+       r="460"
+       gradientTransform="matrix(-0.9103665,0.4138029,-0.43478255,-0.95652173,1349.1277,162.50357)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       id="linearGradient3831">
+      <stop
+         style="stop-color:#2e384a;stop-opacity:1;"
+         offset="0"
+         id="stop3833" />
+      <stop
+         style="stop-color:#212834;stop-opacity:1;"
+         offset="1"
+         id="stop3835" />
+    </linearGradient>
     <clipPath
        id="clipPath4016"
        clipPathUnits="userSpaceOnUse">
@@ -60,21 +96,32 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.24748737"
-     inkscape:cx="489.46221"
-     inkscape:cy="599.03584"
+     inkscape:zoom="0.7"
+     inkscape:cx="244.0874"
+     inkscape:cy="77.856187"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
-     showgrid="false"
-     fit-margin-top="0"
-     fit-margin-left="0"
-     fit-margin-right="0"
-     fit-margin-bottom="0"
+     showgrid="true"
      inkscape:window-width="1238"
      inkscape:window-height="800"
      inkscape:window-x="42"
      inkscape:window-y="0"
-     inkscape:window-maximized="1" />
+     inkscape:window-maximized="1"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:snap-bbox="true">
+    <inkscape:grid
+       type="xygrid"
+       id="grid3012"
+       empspacing="5"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true" />
+  </sodipodi:namedview>
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -83,7 +130,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -91,28 +138,19 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(518.89436,161.6894)">
+     transform="translate(-63.580357,-517.91394)">
+    <rect
+       style="fill:#ef4348;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3906"
+       width="440"
+       height="280"
+       x="63.580357"
+       y="517.91394" />
     <g
-       id="g4116">
+       id="g6198"
+       transform="matrix(1.306182,0,0,1.306182,-93.282657,-199.30935)">
       <g
-         transform="matrix(1.25,0,0,-1.25,-814.64286,1427.0051)"
-         id="g4012">
-        <g
-           clip-path="url(#clipPath4016)"
-           id="g4014">
-          <g
-             transform="translate(236.5988,479.6996)"
-             id="g4020">
-            <path
-               inkscape:connector-curvature="0"
-               id="path4022"
-               style="fill:#ef4348;fill-opacity:1;fill-rule:nonzero;stroke:none"
-               d="m 0,0 c 0,-126.898 103.476,-229.765 231.118,-229.765 l 558.76,0.099 c 127.636,0 231.118,102.886 231.118,229.765 l 0,561.373 c 0,126.898 -103.475,229.784 -231.118,229.784 l -558.76,-0.112 C 103.482,791.144 0,688.271 0,561.367 L 0,0 Z" />
-          </g>
-        </g>
-      </g>
-      <g
-         transform="matrix(1.25,0,0,-1.25,-814.64286,1427.0051)"
+         transform="matrix(0.24807075,0,0,-0.24807075,98.533218,843.41527)"
          id="g4024">
         <g
            id="g4026">
@@ -121,16 +159,17 @@
             <g
                id="g4034">
               <path
+                 sodipodi:nodetypes="ccccccccccccccccc"
                  inkscape:connector-curvature="0"
                  id="path4042"
                  style="fill:url(#linearGradient4036);stroke:none"
-                 d="m 960.902,879.655 c 1.203,2.634 -4.207,5.112 -4.207,5.112 l 0,0 4.207,-5.112 z M 945.833,874.833 972,712 941,611 840.324,521 712,504 555.716,548.861 799.94,249.993 l 226.537,0.04 c 127.635,0 231.117,102.886 231.117,229.765 l 0,0 0,39.364 -296.692,360.493 c -0.808,-1.772 -4.611,-3.615 -15.069,-4.822" />
+                 d="m 960.902,879.655 c 1.203,2.634 -4.207,5.112 -4.207,5.112 l 0,0 z M 945.833,874.833 972,712 941,611 840.324,521 712,504 555.716,548.861 992.80288,41.520984 l 226.53702,0.04 c 127.635,0 231.117,102.885996 231.117,229.765006 l 0,0 0,39.364 L 960.902,879.655 c -0.808,-1.772 -4.611,-3.615 -15.069,-4.822" />
             </g>
           </g>
         </g>
       </g>
       <g
-         transform="matrix(1.25,0,0,-1.25,-814.64286,1427.0051)"
+         transform="matrix(0.24807075,0,0,-0.24807075,98.533218,843.41527)"
          id="g4044">
         <g
            clip-path="url(#clipPath4048)"
