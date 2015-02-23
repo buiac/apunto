@@ -13,8 +13,15 @@ body {
 	color: #000;
 	opacity: .8;
 	line-height: 130%;
-	margin: 0 0 60px;
+	margin: 0 0 30px;
 }
+
+.home h3 {
+	width: 510px;
+	line-height: 140%;
+	margin: 0 auto 50px;
+}
+
 
 .brand {
 	margin: 50px auto 30px;
@@ -23,4 +30,104 @@ body {
 
 .brand img {
 	width: 100%;
+}
+
+.ctas span {
+	margin: 0 10px;
+}
+
+.ctas .free{
+	display: block;
+	text-align: center;
+	margin: 15px 0 0;
+}
+
+
+
+.faq  h1{
+	margin: 90px 0 40px;
+	text-align: center;
+}
+
+.faq dd{
+	margin: 0 0 30px;
+}
+
+.faq .img-wrap {
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	padding: 10px;
+	margin: 15px auto;
+	width: 100%;
+}
+
+.faq .img-wrap img {
+	max-width: 100%;
+}
+
+.team {
+
+}
+
+
+.cf:before,
+.cf:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.cf:after {
+    clear: both;
+}
+
+/**
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+.cf {
+    *zoom: 1;
+}
+
+.team {
+	text-align: center;
+}
+
+.team-member {
+	width: 30%;
+	display: inline-block;
+}
+
+
+.team-image {
+	border-radius: 90px;
+	overflow: hidden;
+	width: 80%;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.team-image a{
+	display: block;
+	width: 100%;
+}
+
+.team-image img {
+	max-width: 100%;
+}
+
+.team-desc {
+	text-align: center;
+	margin-top: 10px;
+}
+
+.team-joint-desc {
+	display: block;
+	clear: both;
+	margin: 0 0 150px;
+	text-align: center;
+}
+
+.faq h3 {
+	text-align: center;
+	margin: 50px 0;
 }
