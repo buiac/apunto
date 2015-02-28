@@ -1,17 +1,18 @@
  {
 	"manifest_version": 2,
 	"name": "Apunto",
-	"description": "Remind your clients that they have a meeting by sending them an automated SMS message.",
-	"version": "1.0.2",
+	"short_name": "We save time. You save Money",
+	"description": "Apunto helps businesses save money by making sure clients don't forget about meetings.",
+	"version": "0.0.2",
 	"icons": {
-		"16": "bizcardmaker-icon-16.png",
-		"48": "bizcardmaker-icon-48.png",
-		"128": "bizcardmaker-icon-128.png"
+		"16": "apunto-icon-16.png",
+		"48": "apunto-icon-48.png",
+		"128": "apunto-icon-128.png"
 	},
 	"app": {
 		"launch": {
-			"web_url": "http://www.bizcardmaker.com/?utm_source=chromewebstore&utm_medium=app&utm_campaign=chromewebstore"
+			"web_url": "http://www.getapunto.com/?utm_source=chromewebstore&utm_medium=app&utm_campaign=chromewebstore"
 		}
 	},
 	"permissions": []
-}
+}	

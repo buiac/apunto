@@ -248,7 +248,7 @@ module.exports = function(config, db) {
               
               to: alert.number,
               from:'+13475146545',
-              body: alert.message.append(' Reminded by Apunto')
+              body: alert.message + ' Reminded by Apunto'
 
           }, function(error, message) {
 

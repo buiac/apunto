@@ -85,7 +85,8 @@ html,
 
 .fc-event {
 	background: #1d9d74;
-	border: 1px solid #1d9d74;
+	border: none;
+	border-radius: 0;
 }
 
 .fc-event:hover .delete-event {

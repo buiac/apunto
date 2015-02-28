@@ -124,6 +124,12 @@ $(document).ready(function () {
     event.number = $(".mobile-number").intlTelInput('getNumber');
     event.tzoffset = Apunto.config.tzoffset;
 
+    var interval = (new Date(event.end).getTime() - new Date(event.start).getTime()) / 60000;
+
+    if (interval < 60) {
+      event.end = moment(event.start).add(1, 'hour').toDate();
+    }
+
     $.ajax({
       type: 'POST',
       url: '/api/1/' + Apunto.config.calendarId + '/events/',
@@ -225,7 +231,7 @@ $(document).ready(function () {
 
   // Resize and move around
   var eventUpdate = function (event, delta, revertFunc, jsEvent, ui, view) {
-    console.log(event);
+    
     $.ajax({
       type: 'PUT',
       url: '/api/1/' + Apunto.config.calendarId + '/events/',
@@ -272,6 +278,7 @@ $(document).ready(function () {
       timezone: 'local',
       height: 650,
       contentHeight: 650,
+      defaultEventMinutes: 60,
       businessHours: {
         start: '09:00', 
         end: '17:00',
