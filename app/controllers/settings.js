@@ -65,7 +65,6 @@ module.exports = function(config, db) {
     var userName = req.body.userName.trim();
     var userId = req.body._id;
 
-
     db.users.update({
       _id: userId
     }, {
@@ -80,9 +79,18 @@ module.exports = function(config, db) {
         res.send({error: err}, 400);
       }
 
-      res.json({
-        user: user
+      db.users.findOne({_id: userId}, function (err, user) {
+        if (err) {
+          res.send({error: err}, 400);
+        }
+
+        res.render('settings', {
+          user: user,
+        });
+
       });
+
+      
 
     });
   };
