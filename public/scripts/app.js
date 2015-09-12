@@ -285,6 +285,57 @@ $(document).ready(function () {
 
   };  
 
+  var setTimeline = function() {
+    setTimeout(function () {
+      var curTime = new Date();
+      if(curTime.getHours() == 0 && curTime.getMinutes() <= 5) // Because I am calling this function every 5 minutes
+      {// the day has changed
+
+          var todayElem = $(".fc-today");
+          todayElem.removeClass("fc-today");
+          todayElem.removeClass("fc-state-highlight");
+
+          todayElem.next().addClass("fc-today");
+          todayElem.next().addClass("fc-state-highlight");
+      }
+
+      var parentDiv = $(".fc-time-grid");
+      var timeline = parentDiv.children(".timeline");
+      if (timeline.length == 0) { //if timeline isn't there, add it
+        timeline = $("<hr>").addClass("timeline");
+        parentDiv.prepend(timeline);
+      }
+
+      var curCalView = $('.calendar').fullCalendar("getView");
+
+      if (curCalView.start < curTime && curCalView.end > curTime) {
+          timeline.show();
+
+      } else {
+          timeline.hide();
+      }
+
+      var curSeconds = (curTime.getHours() * 60 * 60) + (curTime.getMinutes() * 60) + curTime.getSeconds();
+      var percentOfDay = curSeconds / 86400; //24 * 60 * 60 = 86400, # of seconds in a day
+      var topLoc = Math.floor(parentDiv.height() * percentOfDay);
+
+      timeline.css("top", topLoc + "px");
+
+      if (curCalView.name == "agendaWeek") { //week view, don't want the timeline to go the whole way across
+          var dayCol = $(".fc-today:visible");
+          if(dayCol.position() != null)
+          {
+              var left = dayCol.position().left + 1;
+              var width = dayCol.width();
+              timeline.css({
+                  left: left + "px",
+                  width: width + "px"
+              });
+          }
+      }
+
+    }, 10);
+  };
 
   
 
@@ -330,6 +381,15 @@ $(document).ready(function () {
       drop: function(date, jsEvent, ui) {
         
       },
+
+      viewRender: function (view) {
+        
+        timelineInterval = window.setInterval(setTimeline, 1000 * 60);
+
+        try {
+          setTimeline();
+        } catch(err) { console.log('error: ' + err); }
+      },
       eventReceive: function (event) {
 
         var message = Apunto.config.template;
@@ -370,19 +430,7 @@ $(document).ready(function () {
       },
     });
 
-    // start polling 
-    // var doPoll = function (){
-      
-    //   calendar.fullCalendar( 'refetchEvents');  // process results here
-      
-    //   setTimeout(doPoll,5000); 
-    // };
-
-    // doPoll();
-
   };
-
-
 
   createCalendar();
 
