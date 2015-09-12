@@ -31,7 +31,6 @@ module.exports = function(config, db) {
   };
 
   var getUser = function (req, res, next) {
-    
 
     db.users.findOne({'_id': req.params.userId}, function (err, user) {
 
@@ -59,11 +58,15 @@ module.exports = function(config, db) {
   var update = function (req, res, next) {
     req.checkBody('name', 'Name should not be empty').notEmpty();
     req.checkBody('userName', 'User name should not be empty').notEmpty();
+    req.checkBody('template', 'Template should not be empty').notEmpty();
 
     var name = req.body.name.trim();
     var companyName = req.body.companyName.trim();
+    var template = req.body.template.trim();
     var userName = req.body.userName.trim();
     var userId = req.body._id;
+
+    console.log(template);
 
     db.users.update({
       _id: userId
@@ -71,7 +74,8 @@ module.exports = function(config, db) {
       $set: {
         name: name,
         companyName: companyName,
-        username: userName
+        username: userName,
+        template: template
       }
     }, {}, function(err, num, user) {
 
@@ -89,9 +93,7 @@ module.exports = function(config, db) {
         });
 
       });
-
       
-
     });
   };
 

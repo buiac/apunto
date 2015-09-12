@@ -22,10 +22,23 @@ $(document).ready(function () {
 
   var calendar = null;
   var eventEditTemplate = null;
+
+
+  var getWordsBetweenCurlies = function (str) {
+    var results = []
+    var re = /{([^}]+)}/g
+    var text
+    while (text = re.exec(str)) {
+      results.push(text[1])
+    }
+    return results
+  };
+
   Apunto.config = {
     calendarId: $('.calendar').data('calendarid'),
     userId: $('.contacts-list').data('userid'),
     userName: $('.calendar').data('username'),
+    template: $('.calendar').data('template'),
     companyName: $('.calendar').data('companyname'),
     apiUrl: '',
     tzoffset: new Date().getTimezoneOffset(),
@@ -55,6 +68,21 @@ $(document).ready(function () {
   var showCreateModal = function (start, end, jsEvent, view) {
     var modal = $('#create-modal');
     var modalContent = modal.find('.modal-content');
+    // 'Notification: you have an appointment starting at ' + start.format('HH:mm') + ' with ' + Apunto.config.userName + ' from ' + Apunto.config.companyName+ '.'
+    var message = Apunto.config.template;
+
+    var obj = {
+      time: start.format('HH:mm'),
+      full_name: Apunto.config.userName,
+      company_name: Apunto.config.companyName
+    };
+
+    var replaceArray = getWordsBetweenCurlies(message);
+
+    replaceArray.forEach(function (item) {
+      // replace the parameter e.g.:{year} with the value of #year select
+      message = message.replace(new RegExp('{' + item + '}', 'gi'), obj[item]);
+    });
 
     var data = {
       modal: {
@@ -69,7 +97,7 @@ $(document).ready(function () {
         name: '',
         title: '',
         number: '',
-        message: 'Notification: you have an appointment starting at ' + start.format('HH:mm') + ' with ' + Apunto.config.userName + ' from ' + Apunto.config.companyName+ '.',
+        message: message,
         _id: ''
       }
     };
@@ -304,6 +332,20 @@ $(document).ready(function () {
       },
       eventReceive: function (event) {
 
+        var message = Apunto.config.template;
+        var obj = {
+          time: event.start.format('HH:mm'),
+          full_name: Apunto.config.userName,
+          company_name: Apunto.config.companyName
+        };
+
+        var replaceArray = getWordsBetweenCurlies(message);
+
+        replaceArray.forEach(function (item) {
+          // replace the parameter e.g.:{year} with the value of #year select
+          message = message.replace(new RegExp('{' + item + '}', 'gi'), obj[item]);
+        });
+
         $.ajax({
           type: 'POST',
           url: '/api/1/' + Apunto.config.calendarId + '/events/',
@@ -314,7 +356,7 @@ $(document).ready(function () {
             end: event.end.toDate(),
             name: event.title,
             number: event.number,
-            message: ''
+            message: message
           }
         }).done(function (res) {
           
