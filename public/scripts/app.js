@@ -22,6 +22,7 @@ $(document).ready(function () {
 
   var calendar = null;
   var eventEditTemplate = null;
+  var templates = null;
 
 
   var getWordsBetweenCurlies = function (str) {
@@ -45,6 +46,11 @@ $(document).ready(function () {
     message: 'ahoy hoy! Testing Twilio and node.js'
   };
 
+  var obj = {
+    full_name: Apunto.config.userName,
+    company_name: Apunto.config.companyName
+  };
+
   if(
     document.domain.indexOf('localhost') !== -1 ||
     document.domain.indexOf('localtunnel') !== -1 ||
@@ -58,7 +64,7 @@ $(document).ready(function () {
   // Get templates
   $.ajax({
     method: 'GET',
-    url: 'templates/event-edit.ejs'
+    url: '/templates/event-edit.ejs'
   }).done(function (res) {
 
     eventEditTemplate = res;
@@ -66,78 +72,117 @@ $(document).ready(function () {
   });
 
   var showCreateModal = function (start, end, jsEvent, view) {
+
     var modal = $('#create-modal');
     var modalContent = modal.find('.modal-content');
-    // 'Notification: you have an appointment starting at ' + start.format('HH:mm') + ' with ' + Apunto.config.userName + ' from ' + Apunto.config.companyName+ '.'
-    var message = Apunto.config.template;
 
-    var obj = {
-      time: start.format('HH:mm'),
-      full_name: Apunto.config.userName,
-      company_name: Apunto.config.companyName
-    };
 
-    var replaceArray = getWordsBetweenCurlies(message);
+    // select templates
+    $.ajax({
+      method: 'get',
+      url: '/t/templatesJson/' + Apunto.config.userId
+    }).done(function (res) {
+      
+      templates = res.templates;
 
-    replaceArray.forEach(function (item) {
-      // replace the parameter e.g.:{year} with the value of #year select
-      message = message.replace(new RegExp('{' + item + '}', 'gi'), obj[item]);
-    });
+      var message = templates[0].message;
 
-    var data = {
-      modal: {
-        title: 'Schedule an event',
-        idName: 'create',
-        start: start.format('HH:mm'),
-        end: end.format('HH:mm')
-      },
-      event: {
-        start: start.toDate(),
-        end: end.toDate(),
-        name: '',
-        title: '',
-        number: '',
-        message: message,
-        _id: ''
-      }
-    };
+      var replaceArray = getWordsBetweenCurlies(message);
 
-    var temp = ejs.render(eventEditTemplate, data);
+      obj.time = start.format('HH:mm');
 
-    modalContent.html('');
-    modalContent.append(temp);
-    modal.modal();
+      replaceArray.forEach(function (item) {
+        // replace the parameter e.g.:{year} with the value of #year select
+        message = message.replace(new RegExp('{' + item + '}', 'gi'), obj[item]);
+      });
+
+      var data = {
+        modal: {
+          title: 'Schedule an event',
+          idName: 'create',
+          start: start.format('HH:mm'),
+          end: end.format('HH:mm')
+        },
+        event: {
+          start: start.toDate(),
+          end: end.toDate(),
+          name: '',
+          title: '',
+          number: '',
+          message: message,
+          templates: templates,
+          _id: ''
+        }
+      };
+
+      var temp = ejs.render(eventEditTemplate, data);
+
+      modalContent.html('');
+      modalContent.append(temp);
+      modal.modal();
+      
+      $(".mobile-number").intlTelInput({
+        defaultCountry: 'auto',
+        utilsScript: '/bower_components/intl-tel-input/lib/libphonenumber/build/utils.js'
+      });
+
+    })
     
-    $(".mobile-number").intlTelInput({
-      defaultCountry: 'auto',
-      utilsScript: '/bower_components/intl-tel-input/lib/libphonenumber/build/utils.js'
-    });
 
 
   };
+
+  var changeTemplate = function (e) {
+    var template = templates[this.value]
+    
+    var replaceArray = getWordsBetweenCurlies(template.message);
+
+    replaceArray.forEach(function (item) {
+      // replace the parameter e.g.:{year} with the value of #year select
+      template.message = template.message.replace(new RegExp('{' + item + '}', 'gi'), obj[item]);
+    });
+
+    $(this).parents('.modal-body').find('[name=message]').html(template.message)
+
+  }
 
   var showUpdateModal = function (event) {
     var data = {};
     var modal = $('#create-modal');
     var modalContent = modal.find('.modal-content');
 
-    data.modal = {
-      idName: 'update',
-      title: 'Update event'
-    };
+    obj.time = event.start.format('HH:mm');
 
-    data.event = event;
+    $.ajax({
+      method: 'get',
+      url: '/t/templatesJson/' + Apunto.config.userId
+    }).done(function (res) {
 
-    var temp = ejs.render(eventEditTemplate, data);
+      templates = res.templates;
 
-    modalContent.html('');
-    modalContent.append(temp);
-    modal.modal();
+      data.modal = {
+        idName: 'update',
+        title: 'Update event',
+        start: event.start.format('HH:mm'),
+        end: event.end.format('HH:mm')
+      };
 
-    $(".mobile-number").intlTelInput({
-      defaultCountry: 'auto',
-      utilsScript: '/bower_components/intl-tel-input/lib/libphonenumber/build/utils.js'
+      data.event = event;
+      data.event.templates = templates
+
+      var temp = ejs.render(eventEditTemplate, data);
+
+      modalContent.html('');
+      modalContent.append(temp);
+      modal.modal();
+
+      $(".mobile-number").intlTelInput({
+        defaultCountry: 'auto',
+        utilsScript: '/bower_components/intl-tel-input/lib/libphonenumber/build/utils.js'
+      });
     });
+
+    
 
   };
 
@@ -337,6 +382,32 @@ $(document).ready(function () {
     }, 10);
   };
 
+  var updateTemplateForm = function (e) {
+    e.preventDefault();
+
+    var $parent = $(this).parent();
+    var $templateForm = $('.template-edit');
+    var $submitButton = $templateForm.find('[type=submit]');
+    var $deleteButton = $('<a href="" class="btn btn-danger"></a>').html('Delete template')
+    
+    // data
+    var name = $parent.data('name');
+    var message = $parent.data('message');
+    var id = $parent.data('id');
+
+    // update elements values
+    $templateForm.find('[name=name]').val(name)
+    $templateForm.find('[name=message]').val(message)
+    $templateForm.find('[name=templateId]').val(id)
+
+    // update html
+    $deleteButton.attr('href', '/settings/templates/' + id)
+    $submitButton.html('Update template')
+    $submitButton.before($deleteButton)
+  };
+
+  $('body').on('change', '.modal-template-select', changeTemplate)
+  $('body').on('click', '.template-list a', updateTemplateForm)
   
 
   var createCalendar = function () {

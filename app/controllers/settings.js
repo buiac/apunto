@@ -30,6 +30,92 @@ module.exports = function(config, db) {
     });
   };
 
+  var templatesView = function (req, res, next) {
+
+    db.users.findOne({'_id': req.user._id}, function (err, user) {
+
+      if (!user) {
+        res.send({error: err}, 400);
+      }
+      
+      if (user) {
+        
+        db.templates.find({}, function (err, templates) {
+          
+          if (err) {
+            res.send({error: err}, 400);
+          }
+
+          res.render('settings/templates', {
+            user: user,
+            templates: templates
+          });
+
+        })
+
+      }
+
+    });
+  };
+
+  var templatesJson = function (req, res, next) {
+    var userId = req.params.userId;
+
+    db.templates.find({
+      userId: userId 
+    }, function (err, templates) {
+      
+      res.json({
+        templates: templates
+      })
+    })
+  }
+
+  var addTemplate = function (req, res, next) {
+    var name = req.body.name;
+    var message = req.body.message;
+    var userId = req.body.userId;
+    var templateId = req.body.templateId;
+
+
+    if (templateId) {
+
+      // perform an update
+      db.templates.update({
+        _id: templateId
+      },{
+        $set: {
+          name: name,
+          message: message
+        }
+      }, function (err, num) {
+        
+        res.redirect('/settings/templates')
+      })
+
+    } else {
+      // create a new template
+      db.templates.insert({
+        name: name,
+        message: message,
+        userId: userId
+      }, function (err, newDoc) {
+        
+        res.redirect('/settings/templates')
+      })
+    }
+  };
+
+  var deleteTemplate = function (req, res, next) {
+    var id = req.params.id
+
+    db.templates.remove({
+      _id: id
+    }, function (err, num) {
+      res.redirect('/settings/templates')
+    })
+  }
+
   var getUser = function (req, res, next) {
 
     db.users.findOne({'_id': req.params.userId}, function (err, user) {
@@ -65,8 +151,6 @@ module.exports = function(config, db) {
     var template = req.body.template.trim();
     var userName = req.body.userName.trim();
     var userId = req.body._id;
-
-    console.log(template);
 
     db.users.update({
       _id: userId
@@ -138,8 +222,6 @@ module.exports = function(config, db) {
         });
       }
 
-      
-
     });
 
   };
@@ -148,7 +230,11 @@ module.exports = function(config, db) {
     view: view,
     update: update,
     getUser: getUser,
-    updateOnboarding: updateOnboarding
+    updateOnboarding: updateOnboarding,
+    templatesView: templatesView,
+    addTemplate: addTemplate,
+    deleteTemplate: deleteTemplate,
+    templatesJson: templatesJson
   };
 
 };

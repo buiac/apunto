@@ -39,11 +39,24 @@ module.exports = (function() {
 
   // Chekcs if user is authenticated
   var isAuthenticated = function (req,res,next){
+    if (req.hostname === 'localhost') { // req.hostname === 'localhost'
+     db.users.findOne({
+       username: 'sebi.kovacs+123@gmail.com'
+     }, function (err, user) {
+
+       req.user = user;
+       return next()
+       
+     })
+
+    } else {
+
      if (req.isAuthenticated()){
-        return next(); 
+       return next();
      } else {
-        res.redirect("/signin"); 
+       res.redirect("/signin"); 
      }
+    }
   };
 
   // configs
@@ -108,6 +121,11 @@ module.exports = (function() {
     autoload: true
   });
 
+  db.templates = new Datastore({
+    filename: config.dataDir + config.dbDir + '/templates.db',
+    autoload: true
+  });
+
   // alert routes
   var events = require('./app/controllers/events.js')(config, db);
 
@@ -140,14 +158,20 @@ module.exports = (function() {
   */ 
   var settings = require('./app/controllers/settings.js')(config, db);
 
-  app.get('/settings', isAuthenticated, settings.view);
+  app.get('/settings/account', isAuthenticated, settings.view);
 
-  app.post('/settings', isAuthenticated, settings.update);
+  app.post('/settings/account', isAuthenticated, settings.update);
   
   app.post('/onboarding', isAuthenticated, settings.updateOnboarding);
   
   app.get('/api/1/settings/:userId', isAuthenticated, settings.getUser);
-  
+
+  /* Backend templates routes
+  */
+  app.get('/settings/templates', isAuthenticated, settings.templatesView)
+  app.post('/settings/templates', isAuthenticated, settings.addTemplate)
+  app.get('/settings/templates/:id', isAuthenticated, settings.deleteTemplate)
+  app.get('/t/templatesJson/:userId', isAuthenticated, settings.templatesJson)
 
   /* Contacts Routes
   */ 

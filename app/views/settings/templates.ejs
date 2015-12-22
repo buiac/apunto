@@ -49,56 +49,55 @@
             </ul>
           </div>
 
-          
-
         </div> <!-- col -->
+
       </div> <!-- row -->
+
     </div> <!-- container-fluid -->
+
   </nav>
-  
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-6 col-md-offset-4">
-        <h2>Account info</h2>
 
-        <div class="row">
-          
-          <div class="col-md-10">
+  <div class="container">
+    <div class="col-md-4">
+
+    </div>
+    <div class="col-md-8">
+      <h2>Templates</h2>
+      
+      <div class="row">
+        <div class="col-md-4">
+          <ul class="list-unstyled template-list">
+            <% templates.forEach(function(template){ %>
+              <li data-name="<%= template.name %>" data-message="<%= template.message %>" data-id="<%= template._id %>">
+                <a href=""><%= template.name %></a>
+              </li>
+
+            <% }) %>
+          </ul>
+        </div>
+        <div class="col-md-8">
+          <form action="/settings/templates" method="post" class="template-edit">
             
-            <form action="/settings/account" method="POST">
-              <div class="form-group">
-                <label for="" class="control-label">Full Name</label>
-                <input type="text" name="name" id="" class="form-control"value="<%= user.name %>">
-              </div>
+            <div class="form-group">
+              <label for="">Template Name</label>
+              <input type="text" name="name" id="" class="form-control" required>
+            </div>
 
-              <div class="form-group">
-                <label for="" class="control-label">Company Name</label>
-                <input type="text" name="companyName" id="" class="form-control" value="<%= user.companyName %>">
-              </div>
+            <div class="form-group">
+              <label for="">Template Message</label>
+              <textarea required name="message" id="" cols="10" rows="3" class="form-control">Notification: you have an appointment starting at {time} with {full_name} from {company_name}.</textarea>
+            </div>
 
-              <div class="form-group">
-                <label for="" class="control-label">Username/Email</label>
-                <input type="text" name="userName" id="" class="form-control" value="<%= user.username %>">
-              </div>
+            <input type="hidden" value="<%= user._id %>" name="userId">
+            <input type="hidden" value="" name="templateId">
 
-              <div class="form-group">
-                <label for="" class="control-label">Message template</label>
-                <textarea class="form-control" name="template" id="" cols="30" rows="4"><%= user.template %></textarea>
-              </div>
+            <button type="submit" class="btn btn-primary">Save Template</button>
 
-              <input type="hidden" name="_id" value="<%= user._id %>">
-
-              <button href="" class="btn btn-primary" type="submit">Update Account</button>
-
-            </form>
-
-          </div>
-
+          </form>
         </div>
       </div>
     </div>
   </div>
-
 
   <!-- BEGIN JIVOSITE CODE {literal} -->
   <script type='text/javascript'>

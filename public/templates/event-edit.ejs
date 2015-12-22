@@ -13,9 +13,6 @@
   </div>
 
   <div class="modal-body">
-   
-      
-
       <div class="form-group">
         
         <label for="" class="control-label">Client Name</label>
@@ -32,42 +29,22 @@
 
       </div>
 
+      <div class="form-group">
+        <label for="">Select template</label>
+        <select name="" id="" class="modal-template-select form-control" >
+          <% event.templates.forEach(function(template, i){ %>
+            <option value="<%= i %>"><%= template.name %></option>
+          <% }) %>
+        </select>
+      </div>
+
+
       <div class="modal-message-preview cf">
         <label for="" class="control-label">Message Preview</label>
         <div class="textarea-cover"></div>
         <textarea name="message" id="" cols="30" rows="10" class="form-control"><%= event.message %></textarea>
         <span id="charNum"></span>
       </div>
-
-
-
-      <!-- <div class="reminder cf">
-        <label for="" class="control-label">Reminder</label>
-
-        <span class="remind-label">Send reminder</span>
-
-        <div class="input-group">
-
-          <input type="number" min="1" max="24" name="remind-amount" id="" value="1" class="form-control">
-
-          <select name="remind-time" id="" class="form-control">
-            <option value="">hours</option>
-            <option value="">days</option>
-          </select>
-
-        </div>
-
-        <span class="remind-label">before the event</span>
-        
-      </div> -->
-
-      
-
-      <!-- <p><strong>What happens next?</strong></p>
-      <p>One hour (1h) before the scheduled appointment an SMS reminder will be sent to the person's phone number.</p>
-      <p>The default message is: <br> Notification: meeting at [time] with [your company name]. Sent with care by Apunto.</p>
-      <p class="text-muted">Changing the default message is not possible yet but if you need somenthing specific we are here to help: <a href="mailto:contact@getapunto.com">contact@getapunto.com</a>.</p> -->
-
       
 
       <input type="hidden" name="_id" value="<%= event._id %>">
@@ -76,10 +53,15 @@
       
     
   </div>
+  
   <div class="modal-footer">
+    
     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    
     <a class="btn btn-primary create">Create</a>
+    
     <a class="btn btn-primary update">Update</a>
+
   </div>
 
 </form>
