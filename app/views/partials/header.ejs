@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>
+    Apunto Dashboard
+  </title>
+  
+  <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+  
+  <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="/bower_components/moment/min/moment.min.js"></script> 
+  <script src="/bower_components/fullcalendar/dist/fullcalendar.js"></script>
+  <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="/bower_components/ejs/ejs.js"></script>
+
+  <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="/bower_components/fontawesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/bower_components/fullcalendar/dist/fullcalendar.css">
+  
+  <link rel="stylesheet" href="/style/app.css">
+  <script src="/scripts/app.js"></script>
+</head>
+<body>
+
+  <nav class="navbar navbar-inverse navbar-static-top">
+    
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          
+          <div class="navbar-header">
+            
+            <a href="/dashboard" class="navbar-brand">
+              <span class="logo"></span>
+            </a>
+
+          </div> <!-- navbar-header -->
+
+          <div class="dropdown pull-right">
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+              <%= user.name %>
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="/settings/account"><i class="fa fa-cog"></i> Settings</a></li>
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="/signout"> <i class="fa fa-power-off"></i> Log out</a></li>
+            </ul>
+          </div>
+
+          
+
+        </div> <!-- col -->
+      </div> <!-- row -->
+    </div> <!-- container-fluid -->
+  </nav>
