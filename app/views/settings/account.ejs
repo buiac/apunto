@@ -1,0 +1,61 @@
+  <%- include ../partials/header %>
+  
+  <div class="container settings">
+    
+    <div class="row">
+      
+      <div class="col-md-3">
+        
+        <ul class="nav nav-pills nav-stacked">
+          
+          <li class="active"><a href="/settings/account">Account</a></li>
+          
+          <li><a href="/settings/templates">Templates</a></li>
+
+        </ul>
+
+      </div>
+
+      <div class="col-md-6">
+        
+        <h2>Account info</h2>
+
+        <div class="row">
+          
+          <div class="col-md-10">
+            
+            <form action="/settings/account" method="POST">
+              
+              <div class="form-group">
+                <label for="" class="control-label">Full Name</label>
+                <input type="text" name="name" id="" class="form-control"value="<%= user.name %>">
+              </div>
+
+              <div class="form-group">
+                <label for="" class="control-label">Company Name</label>
+                <input type="text" name="companyName" id="" class="form-control" value="<%= user.companyName %>">
+              </div>
+
+              <div class="form-group">
+                <label for="" class="control-label">Username/Email</label>
+                <input type="text" name="userName" id="" class="form-control" value="<%= user.username %>">
+              </div>
+
+              <input type="hidden" name="_id" value="<%= user._id %>">
+
+              <button href="" class="btn btn-primary" type="submit">Update Account</button>
+
+            </form>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <%- include ../partials/footer %>
+  

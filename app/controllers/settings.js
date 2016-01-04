@@ -21,7 +21,7 @@ module.exports = function(config, db) {
       
       if (user) {
         
-        res.render('settings', {
+        res.render('settings/account', {
           user: user,
         });
 
@@ -31,6 +31,11 @@ module.exports = function(config, db) {
   };
 
   var templatesView = function (req, res, next) {
+    console.log('\n\n\n\n')
+    console.log('--------')
+    console.log(req.user)
+    console.log('--------')
+    console.log('\n\n\n\n')
 
     db.users.findOne({'_id': req.user._id}, function (err, user) {
 
@@ -40,7 +45,9 @@ module.exports = function(config, db) {
       
       if (user) {
         
-        db.templates.find({}, function (err, templates) {
+        db.templates.find({
+          userId: req.user._id
+        }, function (err, templates) {
           
           if (err) {
             res.send({error: err}, 400);
@@ -172,7 +179,7 @@ module.exports = function(config, db) {
           res.send({error: err}, 400);
         }
 
-        res.render('settings', {
+        res.render('settings/account', {
           user: user,
         });
 

@@ -85,11 +85,20 @@ $(document).ready(function () {
       
       templates = res.templates;
 
+      if (!templates.length) {
+        templates = [{
+          userId: Apunto.config.userId,
+          name: 'Default template',
+          message: 'Reminder: you have an appointment on {date} starting at {time} with {full_name} from {company_name}.'
+        }]
+      }
+
       var message = templates[0].message;
 
       var replaceArray = getWordsBetweenCurlies(message);
 
       obj.time = start.format('HH:mm');
+      obj.date = start.format('DD/MM/YYYY');
 
       replaceArray.forEach(function (item) {
         // replace the parameter e.g.:{year} with the value of #year select
@@ -159,6 +168,14 @@ $(document).ready(function () {
     }).done(function (res) {
 
       templates = res.templates;
+
+      if (!templates.length) {
+        templates = [{
+          userId: Apunto.config.userId,
+          name: 'Default template',
+          message: 'Reminder: you have an appointment starting at {time} with {full_name} from {company_name}.'
+        }]
+      }
 
       data.modal = {
         idName: 'update',
@@ -386,9 +403,9 @@ $(document).ready(function () {
     e.preventDefault();
 
     var $parent = $(this).parent();
-    var $templateForm = $('.template-edit');
+    var $templateForm = $('.form-template');
     var $submitButton = $templateForm.find('[type=submit]');
-    var $deleteButton = $('<a href="" class="btn btn-danger"></a>').html('Delete template')
+    var $deleteButton = $templateForm.find('.template-remove')
     
     // data
     var name = $parent.data('name');
@@ -400,14 +417,24 @@ $(document).ready(function () {
     $templateForm.find('[name=message]').val(message)
     $templateForm.find('[name=templateId]').val(id)
 
+    // show delete button
+    $templateForm.addClass('form-template--update')
+
     // update html
     $deleteButton.attr('href', '/settings/templates/' + id)
     $submitButton.html('Update template')
     $submitButton.before($deleteButton)
   };
 
+  var showTemplateForm = function (e) {
+    e.preventDefault()
+
+    $('.form-template').addClass('form-template--new')
+  }
+
   $('body').on('change', '.modal-template-select', changeTemplate)
   $('body').on('click', '.template-list a', updateTemplateForm)
+  $('body').on('click', '.template-add-new', showTemplateForm)
   
 
   var createCalendar = function () {

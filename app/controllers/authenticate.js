@@ -65,8 +65,6 @@ module.exports = function(config, db) {
           newUser.username = username;
           newUser.password = createHash(password);
 
-          // set a default template
-          newUser.template = 'Notification: you have an appointment starting at {time} with {full_name} from {company_name}.';
           
           // set calendar default name
           calendar.name = 'Default name';
@@ -77,6 +75,12 @@ module.exports = function(config, db) {
             if (err) {
               return done(err);
             } else {
+
+              db.templates.insert({
+                name: 'Default template',
+                message: 'Reminder: you have an appointment on {date} starting at {time} with {full_name} from {company_name}.',
+                userId: newDoc._id
+              })
 
               // insert the calendar
               calendar.userId = newDoc._id;

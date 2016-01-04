@@ -485,3 +485,69 @@ body .timeline {
   padding: 0;
   z-index: 999;
 }
+
+.settings {
+
+}
+
+.settings .nav-stacked {
+	margin-top: 30px;
+	border-right: 1px solid #ccc;
+	padding-right: 15px;
+}
+
+.settings h2 {
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 15px;
+	margin-bottom: 30px;
+}
+
+.template-list {
+	border-bottom: 1px solid #ccc;
+}
+
+.template-list li {
+	border: 1px solid #ccc;
+	border-bottom: 0;
+}
+
+.template-list li a {
+	color: #333;
+	font-size: 18px;
+}
+
+
+.template-list a {
+	display: block;
+	padding: 15px;
+}
+
+.form-empty {
+	text-align: center;
+}
+
+.form-template .form-fields {
+	display: none;
+}
+
+.form-template .form-fields .btn-primary {
+	margin-left: 15px;
+}
+
+.form-template--update .form-fields,
+.form-template--new .form-fields {
+	display: block;
+}
+
+.form-template--update .form-empty,
+.form-template--new .form-empty {
+	display: none;
+}
+
+.form-template .btn-danger {
+	display: none;
+}
+
+.form-template--update .btn-danger {
+	display: block;
+}

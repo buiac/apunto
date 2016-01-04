@@ -1,119 +1,84 @@
-<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>
-    Apunto Dashboard
-  </title>
-  
-  <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
-  
-  <script src="/bower_components/jquery/dist/jquery.min.js"></script>
-  <script src="/bower_components/moment/min/moment.min.js"></script> 
-  <script src="/bower_components/fullcalendar/dist/fullcalendar.js"></script>
-  <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-  <script src="/bower_components/ejs/ejs.js"></script>
+  <%- include ../partials/header %>
 
-  <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-  <link rel="stylesheet" href="/bower_components/fontawesome/css/font-awesome.min.css">
-  <link rel="stylesheet" href="/bower_components/fullcalendar/dist/fullcalendar.css">
-  
-  <link rel="stylesheet" href="/style/app.css">
-  <script src="/scripts/app.js"></script>
-</head>
-<body>
-
-  <nav class="navbar navbar-inverse navbar-static-top">
+  <div class="container settings">
     
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-12">
+    <div class="row">
+      <div class="col-md-3">
           
-          <div class="navbar-header">
+        <ul class="nav nav-pills nav-stacked">
+          
+          <li><a href="/settings/account">Account</a></li>
+          
+          <li class="active"><a href="/settings/templates">Templates</a></li>
+
+        </ul>
+
+      </div>
+      <div class="col-md-8">
+        
+        <h2>Templates</h2>
+        
+        <div class="row">
+          
+          <div class="col-md-4">
             
-            <a href="/dashboard" class="navbar-brand">
-              <span class="logo"></span>
-            </a>
+            <ul class="list-unstyled template-list">
+              
+              <% templates.forEach(function(template){ %>
+                
+                <li data-name="<%= template.name %>" data-message="<%= template.message %>" data-id="<%= template._id %>">
+                  <a href=""><%= template.name %></a>
+                </li>
 
-          </div> <!-- navbar-header -->
+              <% }) %>
 
-          <div class="dropdown pull-right">
-            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-              <%= user.username %>
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-              <li role="presentation"><a role="menuitem" tabindex="-1" href="/settings/account"><i class="fa fa-cog"></i> Settings</a></li>
-              <li role="presentation"><a role="menuitem" tabindex="-1" href="/signout"> <i class="fa fa-power-off"></i> Log out</a></li>
             </ul>
+
+            <a href="" class="btn btn-primary btn-small template-add-new">Add new template</a>
+
           </div>
 
-        </div> <!-- col -->
+          <div class="col-md-8">
 
-      </div> <!-- row -->
+            <form action="/settings/templates" method="post" class="form-template">
+              
+              <div class="form-empty">
+                <a href="" class="template-add-new">Click here to create a new template</a>
+              </div>
 
-    </div> <!-- container-fluid -->
+              <div class="form-fields">
 
-  </nav>
+                <div class="form-group">
+                  <label for="">Template Name</label>
+                  <input type="text" name="name" id="" class="form-control" required>
+                </div>
 
-  <div class="container">
-    <div class="col-md-4">
+                <div class="form-group">
+                  <label for="">Template Message</label>
+                  <textarea required name="message" id="" cols="10" rows="3" class="form-control">Reminder: you have an appointment on {date} starting at {time} with {full_name} from {company_name}.</textarea>
+                </div>
 
-    </div>
-    <div class="col-md-8">
-      <h2>Templates</h2>
-      
-      <div class="row">
-        <div class="col-md-4">
-          <ul class="list-unstyled template-list">
-            <% templates.forEach(function(template){ %>
-              <li data-name="<%= template.name %>" data-message="<%= template.message %>" data-id="<%= template._id %>">
-                <a href=""><%= template.name %></a>
-              </li>
+                <input type="hidden" value="<%= user._id %>" name="userId">
+                <input type="hidden" value="" name="templateId">
+                
 
-            <% }) %>
-          </ul>
+                <button type="submit" class="btn btn-primary pull-right">Save Template</button>
+
+                <a href="" class="btn btn-default pull-right">Cancel</a>
+
+                <a href="" class="btn btn-danger pull-left template-remove">Delete Template</a>
+
+              </div>
+
+            </form>
+
+          </div>
+
         </div>
-        <div class="col-md-8">
-          <form action="/settings/templates" method="post" class="template-edit">
-            
-            <div class="form-group">
-              <label for="">Template Name</label>
-              <input type="text" name="name" id="" class="form-control" required>
-            </div>
 
-            <div class="form-group">
-              <label for="">Template Message</label>
-              <textarea required name="message" id="" cols="10" rows="3" class="form-control">Notification: you have an appointment starting at {time} with {full_name} from {company_name}.</textarea>
-            </div>
-
-            <input type="hidden" value="<%= user._id %>" name="userId">
-            <input type="hidden" value="" name="templateId">
-
-            <button type="submit" class="btn btn-primary">Save Template</button>
-
-          </form>
-        </div>
       </div>
     </div>
+
   </div>
 
-  <!-- BEGIN JIVOSITE CODE {literal} -->
-  <script type='text/javascript'>
-  (function(){ var widget_id = 'CrZt9f212R';
-  var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = '//code.jivosite.com/script/widget/'+widget_id; var ss = document.getElementsByTagName('script')[0]; ss.parentNode.insertBefore(s, ss);})();</script>
-  <!-- {/literal} END JIVOSITE CODE -->
-
-  <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-2294103-9', 'auto');
-  ga('send', 'pageview');
-
-</script>
-</body>
-</html>
+  <%- include ../partials/footer %>

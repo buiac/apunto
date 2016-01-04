@@ -222,82 +222,87 @@ module.exports = function(config, db) {
 
   var remind = function (req, res, next) {
 
-    var lte = moment().add(1, 'hours').toDate();
-    var gte = moment().toDate();
+    var date = new Date()
+
+    if (date.getHours() === 4) { //date.getHours === 4
+      var lte = moment().add(1, 'day').endOf('day').toDate()
+      var gte = moment().add(1, 'day').startOf('day').toDate()
     
-    db.events.find({
-      start: {
-        $lte: lte,
-        $gte: gte
-      },
-      sent: {
-        $ne: true
+      db.events.find({
+        start: {
+          $lte: lte,
+          $gte: gte
+        },
+        sent: {
+          $ne: true
+        }
+      }).sort(
+      {
+        start: -1
       }
-    }).sort(
-    {
-      start: -1
-    }
-    ).exec(function (err, alerts) {
+      ).exec(function (err, alerts) {
 
-      if (alerts.length) {
+        if (alerts.length) {
 
-        alerts.forEach(function (alert) {
+          alerts.forEach(function (alert) {
+            
           
-        
-          client.sms.messages.create({
-              
-              to: alert.number,
-              from:'+13475146545',
-              body: alert.message + ' Reminded by Apunto'
-
-          }, function(error, message) {
-
-              // The HTTP request to Twilio will run asynchronously. This callback
-              // function will be called when a response is received from Twilio
-              // The "error" variable will contain error information, if any.
-              // If the request was successful, this value will be "falsy"
-              if (!error) {
-                  // The second argument to the callback will contain the information
-                  // sent back by Twilio for the request. In this case, it is the
-                  // information about the text messsage you just sent:
-                  db.events.update({
-                    _id: alert._id
-                  }, {
-                    $set: {
-                      sent: true,
-                      twilioRes: message
-                    }
-                  }, {}, function(err, num, alert) {
-
-                    res.json({
-                      sid: message.sid,
-                      dateCreated: message.dateCreated,
-                      alert: alert
-                    });
-
-                  });
-                  
-
-              } else {
+            client.sms.messages.create({
                 
-                res.json({
-                  error: true,
-                  errorObj: error
-                });
+                to: alert.number,
+                from:'+13475146545',
+                body: alert.message + ' Reminded by Apunto'
+
+            }, function(error, message) {
+
+                // The HTTP request to Twilio will run asynchronously. This callback
+                // function will be called when a response is received from Twilio
+                // The "error" variable will contain error information, if any.
+                // If the request was successful, this value will be "falsy"
+                if (!error) {
+                    // The second argument to the callback will contain the information
+                    // sent back by Twilio for the request. In this case, it is the
+                    // information about the text messsage you just sent:
+                    db.events.update({
+                      _id: alert._id
+                    }, {
+                      $set: {
+                        sent: true,
+                        twilioRes: message
+                      }
+                    }, {}, function(err, num, alert) {
+
+                      res.json({
+                        sid: message.sid,
+                        dateCreated: message.dateCreated,
+                        alert: alert
+                      });
+
+                    });
+                    
+
+                } else {
                   
-              }
+                  res.json({
+                    error: true,
+                    errorObj: error
+                  });
+                    
+                }
+
+            });
 
           });
+        } else {
+          res.json({
+            alerts: []
+          });
+        }
 
-        });
-      } else {
-        res.json({
-          alerts: []
-        });
-      }
+      });
 
-    });
-
+    }
+    
   };
 
   return {
