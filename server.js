@@ -186,7 +186,7 @@ module.exports = (function() {
   });
 
   // start express server
-  app.listen(config.port,  function() {
+  app.listen(config.port, config.ipAddress, function() {
     console.log(
       '%s: Node server started on %s:%d ...',
       Date(Date.now()),
