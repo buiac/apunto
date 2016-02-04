@@ -26,7 +26,7 @@ html,
 */
 
 .navbar-inverse {
-	background: #D05F9F;
+	background: #436FD2;
 	border-bottom: 0;
 	margin-bottom: 0;
 }
@@ -54,7 +54,7 @@ html,
 }
 
 .navbar .dropdown .btn {
-	background: #D05F9F;
+	background: #436FD2;
 	border: 1px solid #fff;
 	color: #FFF;
 	margin-top: 8px;

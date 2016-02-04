@@ -1,87 +1,118 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>
-    Apunto Signup
-  </title>
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="bower_components/jquery-ui/themes/smoothness/jquery-ui.min.css">
-  <link rel="stylesheet" href="libs/jquery.weekcalendar/jquery.weekcalendar.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+  <!--title-->
+    <title>Apunto - apointment reminder with SMS</title>
   
-  <script src="//code.jquery.com/jquery-1.8.0.min.js "></script>
-
-
-  <link rel="stylesheet" href="style/app.css">
-</head>
-<body class="sign-in">
-
-  <div class="home">
+  <!--CSS-->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="bower_components/fontawesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="css/magnific-popup.css" rel="stylesheet">
+  <link href="css/owl.carousel.css" rel="stylesheet">
+  <link href="css/animate.css" rel="stylesheet">
+  <link href="css/main.css" rel="stylesheet">
+  <link href="css/preset/dark.css" rel="stylesheet">
+  <link href="css/responsive.css" rel="stylesheet">   
+  
+  <!--Google Fonts-->
+  <link href='https://fonts.googleapis.com/css?family=Ubuntu:400,300,500,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
+  
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.js"></script>
+      <script src="js/respond.min.js"></script>
+    <![endif]-->       
+    <link rel="shortcut icon" href="images/ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
+</head><!--/head-->
+<body class="account">
+    <!-- Page Loader -->
+  <div class="preloader">
+        <div id="loaderImage"></div>
+    </div>  
     
-    <div class="brand shadow">
-      
-      <img src="images/logo.png" alt="">
+  <div id="home-section" class="image-bg">
+    
+    <div class="container">
 
+      <div class="home-content padding cf">
+
+        
+        <div class="col-md-6">
+          <a href="/"><img class="img-responsive" src="images/logo-white-new.png" alt="" /></a>
+              
+          <h2>Notificări automate pentru clienții tăi</h2>
+
+        </div>
+
+        <div class="col-md-4 col-md-offset-2">
+          
+          <h1>Creează un cont</h1>
+
+          <p>Gratuit primele 30 de zile</p>
+
+          <form action="/signup" method="POST">
+            <% if (info.length) { %>
+              <div class="alert alert-danger">
+                <%= info %>
+              </div>
+            <% } %>
+            <div class="form-group">
+              <label for="" class="control-label">Email</label>
+              <input type="text" class="form-control" name="username" value="">
+            </div>
+
+            <div class="form-group">
+              <label for="" class="control-label">Password</label>
+              <input type="password" class="form-control" name="password" value="">
+            </div>
+
+            <a href="/signin">Am deja cont</a>
+
+            <button type="submit" class="btn btn-primary btn-animated">Submit</button>
+
+          </form>
+        </div>
+        
+      </div>
     </div>
-
-  </div> <!-- home -->
-
+  </div><!--/#home-section--> 
   
-
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-8 col-md-offset-2">
-
-        <div class="row">
-          <div class="col-md-4 col-md-offset-4 ">
-            
-
-            <div class="form-wrap">
-              <h1>Signup</h1>
-              <form action="/signup" method="POST">
-                <% if (info.length) { %>
-                  <div class="alert alert-danger">
-                    <%= info %>
-                  </div>
-                <% } %>
-                <div class="form-group">
-                  <label for="" class="control-label">Email</label>
-                  <input type="text" class="form-control" name="username" value="">
-                </div>
-
-                <div class="form-group">
-                  <label for="" class="control-label">Password</label>
-                  <input type="password" class="form-control" name="password" value="">
-                </div>
-
-                <button type="submit" class="btn btn-primary">Submit</button>
-
-              </form>
-            </div>
-
-            <div class="white-block shadow">
-              <p>Already have a account? <a href="/signin">Sign In</a></p>
-            </div>
-
-          </div> <!-- col -->
-
-        </div> <!-- row -->
-
-      </div> <!-- col -->
-    </div> <!-- row -->
-  </div> <!-- container -->
-
-  <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-2294103-9', 'auto');
-  ga('send', 'pageview');
-
-</script>
+  <!-- <footer id="footer">
+    <div class="overlay-bg"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-7">
+          <p>© Copyright 2015 <a href="/">Apunto</a>.</p>
+        </div>
+        <div class="col-sm-5">
+          <ul class="list-inline footer-menu text-right">
+            <li><a href="#">English(us)</a></li>
+            <li><a href="#">Termeni si Conditii</a></li>
+            <li><a href="#">Cookie-uri</a></li>
+          </ul>
+        </div>  
+      </div>
+    </div>
+  </footer> -->
+  
+  <!--/#scripts--> 
+  <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="js/jquery.magnific-popup.min.js"></script>
+  <script type="text/javascript" src="js/jquery.nav.js"></script> 
+  <script type="text/javascript" src="js/canvas.js"></script> 
+  <script type="text/javascript" src="js/preloader.js"></script> 
+  <script type="text/javascript" src="js/owl.carousel.min.js"></script> 
+  <script type="text/javascript" src="js/wow.min.js"></script> 
+  <script type="text/javascript" src="js/main.js"></script> 
+  
 
 </body>
-</html>

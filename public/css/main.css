@@ -1,3 +1,30 @@
+/**
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *    contenteditable attribute is included anywhere else in the document.
+ *    Otherwise it causes space to appear at the top and bottom of elements
+ *    that are clearfixed.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *    `:before` to contain the top-margins of child elements.
+ */
+.cf:before,
+.cf:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.cf:after {
+    clear: both;
+}
+
+/**
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+.cf {
+    *zoom: 1;
+}
+
 /*
   Theme Name: Nap App
   Theme URL: http://demo.themeregion.com/nap-app
@@ -93,7 +120,7 @@ h5 {
 h1, h2, h3, h4, h5, h6 {
 	font-family: 'Ubuntu', sans-serif;
 	font-weight:500;
-	text-transform:capitalize;
+	/*text-transform:capitalize;*/
 }
 
 .padding{	
@@ -110,7 +137,7 @@ h1, h2, h3, h4, h5, h6 {
 	font-size:48px;
 	font-weight:700;
 	margin-bottom:0;
-	text-transform:capitalize;
+	/*text-transform:capitalize;*/
 	color:#43575d;
 }
 
@@ -266,7 +293,7 @@ textarea.form-control {
 ================================*/
 
 #home-section {
-	background-color:#5896D4;
+	background-color:#436FD2;
 	color:#fff;
 	height:700px;
 }
@@ -285,6 +312,14 @@ textarea.form-control {
 .home-content .btn-primary{
 	margin-right:25px;
 	margin-bottom:50px;
+}
+
+.home-content .pull-left {
+	width: 480px;
+}
+
+.home-content .pull-right img {
+	margin-top: -120px;
 }
 
 .app-icons li a {
@@ -354,9 +389,13 @@ textarea.form-control {
 =========whatsit-section=========
 ================================*/
 
+#whatsit {
+	position: relative;
+}
+
 .whatsit {
 	padding: 30px 0 30px 30px;
-    text-align: justify;
+  text-align: justify;
 }
 
 .whatsit h1 {
@@ -380,7 +419,7 @@ textarea.form-control {
 
 #whats-special {
 	position:relative;
-	background-image:url(../images/bg/special-bg.jpg);
+	/*background-image:url(../images/bg/special-bg.jpg);*/
 	padding-bottom:0;
 	overflow:hidden;
 }
@@ -405,6 +444,9 @@ textarea.form-control {
 /*================================
 =========compatibility-section====
 ================================*/
+#compatibility {
+	position: relative;
+}
 
 .compatibility {
 	padding:40px 0;
@@ -610,14 +652,14 @@ textarea.form-control {
 ================================*/
 
 #price {
-	background-image:url(../images/bg/price-bg.jpg);
+	/*background-image:url(../images/bg/price-bg.jpg);*/
 }
 
 .price {
 	background-color:#fff;
 	color:#4f4f4f;
 	padding-top:30px;
-	padding-bottom:60px;
+	padding-bottom:40px;
 }
 
 .price h1 {
@@ -669,6 +711,11 @@ textarea.form-control {
 .price.featured .btn-primary:hover {
 	color:#a0d48c;
 	border-color:#a0d48c;
+}
+
+.price p.note {
+	margin-top: 20px;
+	font-weight: bold;
 }
 
 
@@ -737,15 +784,15 @@ textarea.form-control {
 =========Team Section ====
 ================================*/
 #team {
-	background-image:url(../images/bg/team-bg.jpg);
+	/*background-image:url(../images/bg/team-bg.jpg);*/
 	padding-bottom:25px;
 }
 
 .team-info {
 	font-weight:700;
 	font-size:14px;
-	opacity:0;
-	-webkit-transition: all 0.5s ease-in-out;
+	opacity:1;
+	/*-webkit-transition: all 0.5s ease-in-out;
 	-moz-transition: all 0.5s ease-in-out;
 	-ms-transition: all 0.5s ease-in-out;
 	-o-transition: all 0.5s ease-in-out;
@@ -754,17 +801,17 @@ textarea.form-control {
 	-webkit-transform: translateY(78px);
 	-o-transform: translateY(78px);
 	-ms-transform: translateY(78px);
-	transform: translateY(78px);
+	transform: translateY(78px);*/
 }
 
-.team:hover .team-info {
+/*.team:hover .team-info {
 	opacity:1;
 	-moz-transform: translateY(0px);
 	-webkit-transform: translateY(0px);
 	-o-transform: translateY(0px);
 	-ms-transform: translateY(0px);
 	transform: translateY(0px);
-}
+}*/
 
 .team img {
 	display:inline-block;
@@ -869,7 +916,7 @@ textarea.form-control {
 ================================*/
 
 #download-apps {
-	background-image:url(../images/bg/apps-bg.jpg);
+	/*background-image:url(../images/bg/apps-bg.jpg);*/
 }
 
 #download-apps .overlay-bg {
@@ -1075,4 +1122,29 @@ img.mfp-img {
 
 .demo-chooser-inner ul li.active a {
 	cursor:default;
+}
+
+/* Signin
+*/
+.account .home-content h1 {
+	text-align: center;
+	/*margin-bottom: 30px;*/
+}
+
+.account .home-content p {
+	margin-bottom: 30px;
+	text-align: center;
+}
+
+.account .home-content form .btn-animated {
+	display: block;
+	margin: 0 auto;
+	max-width: 200px
+}
+
+.account .home-content form a {
+	text-align: center;
+	text-decoration: underline;
+	display: block;
+	margin-bottom: 20px;
 }
