@@ -37,10 +37,10 @@ module.exports = (function() {
 
   // Chekcs if user is authenticated
   var isAuthenticated = function (req,res,next){
-    if (false) { // req.hostname === 'localhost'
+    if (req.hostname === 'localhost') { // req.hostname === 'localhost'
      
      db.users.findOne({
-       username: 'sebi.kovacs+123@gmail.com'
+       username: 'sebi.kovacs+102@gmail.com'
      }, function (err, user) {
 
        req.user = user;
@@ -177,6 +177,7 @@ module.exports = (function() {
   var contacts = require('./app/controllers/contacts.js')(config, db);
 
   app.get('/api/1/contacts/:calendarId', isAuthenticated, contacts.list);
+  app.get('/api/1/contacts/:calendarId/delete/:contactId', isAuthenticated, contacts.deleteContact);
 
 
   // Logout

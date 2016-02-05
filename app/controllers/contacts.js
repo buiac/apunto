@@ -46,9 +46,25 @@ module.exports = function(config, db) {
 
   };
 
+  var deleteContact = function (req, res, next) {
+
+    db.contacts.remove({
+      _id: req.params.contactId
+    }, function (err, num) {
+      
+      if (!err) {
+        res.json({
+          message: 'done'
+        });
+      }
+
+    })
+  }
+
   return {
     // view: view,
-    list: list
+    list: list,
+    deleteContact: deleteContact
   };
 
 };

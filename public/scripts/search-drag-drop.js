@@ -157,6 +157,9 @@ $(document).ready(function () {
       url: 'api/1/contacts/' + $('.calendar').data('calendarid'),
     }).done(function (res) {
 
+      // add calendar id to the response
+      res.calendarId = $('.calendar').data('calendarid');
+
       var temp = ejs.render(contactsTemplate, res);
       $('.contacts-list-content').html(temp);
 
@@ -190,5 +193,62 @@ $(document).ready(function () {
     $('body').removeClass('search-active');
 
   });
+
+  // swal({   title: "Are you sure?",   text: "You will not be able to recover this imaginary file!",   type: "warning",   showCancelButton: true,   confirmButtonColor: "#DD6B55",   confirmButtonText: "Yes, delete it!",   closeOnConfirm: false }, function(){   swal("Deleted!", "Your imaginary file has been deleted.", "success"); });
+
+
+  $('body').on('click', '.delete-contact', function (e) {
+    
+
+  });
+
+  $('body').on('click', '.btn-confirm', function (e) {
+    e.preventDefault();
+
+    var $deleteButton = $(this);
+    var $contact = $deleteButton.parent();
+    var $container = $contact.parent()
+
+    swal({
+      title: "Are you sure?",
+      text: "You will not be able to recover this information!",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#DD6B55",
+      confirmButtonText: "Yes, delete it!",
+      closeOnConfirm: false 
+    }, function (isConfirm) {
+      
+      if (isConfirm) {
+
+        var url = e.target.href;
+
+        $.ajax({
+          method: 'GET',
+          url: url,
+        }).done(function (res) {
+
+          // remove item form list
+          $contact.remove()
+
+          if (!$container.children().length) {
+            // append alert with message
+            $container.parent().html('<div class="alert alert-info"><p>You have no contacts yet.</p></div>')
+          }
+
+          // show success modal
+          swal("Deleted!", "The data has been deleted.", "success");
+
+        });
+
+      } else {
+
+        swal("Cancelled", "Your data is safe", "error");
+
+      }
+
+    });
+
+  })
   
 });

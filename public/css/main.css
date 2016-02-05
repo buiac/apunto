@@ -295,7 +295,7 @@ textarea.form-control {
 #home-section {
 	background-color:#436FD2;
 	color:#fff;
-	height:700px;
+	height:656px;
 }
 
 .home-content.padding{
@@ -318,7 +318,7 @@ textarea.form-control {
 	width: 480px;
 }
 
-.home-content .pull-right img {
+.home-content img.mobile-phone {
 	margin-top: -120px;
 }
 
