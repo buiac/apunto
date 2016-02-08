@@ -155,9 +155,14 @@ module.exports = function(config, db) {
 
     var name = req.body.name.trim();
     var companyName = req.body.companyName.trim();
-    var template = req.body.template.trim();
+    
     var userName = req.body.userName.trim();
     var userId = req.body._id;
+
+
+    if (req.body.template) {
+      var template = req.body.template.trim();
+    }
 
     db.users.update({
       _id: userId
