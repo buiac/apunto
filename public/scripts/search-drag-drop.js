@@ -147,6 +147,8 @@ $(document).ready(function () {
   }).done(function (res) {
 
     contactsTemplate = res;
+
+    $('#srch-term').liveUpdate('.contacts-list-content ul');
     
   });
 
