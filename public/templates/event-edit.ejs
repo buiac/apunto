@@ -1,4 +1,6 @@
 <form action="" class="create-update" id="<%= modal.idName %>">
+
+
   
   <div class="modal-header">
     
@@ -13,6 +15,8 @@
   </div>
 
   <div class="modal-body">
+      <div class="alert alert-danger"></div>
+      
       <div class="form-group">
         
         <label for="" class="control-label">Client Name</label>
@@ -33,7 +37,7 @@
         <label for="">Select template</label>
         <select name="" id="" class="modal-template-select form-control" >
           <% event.templates.forEach(function(template, i){ %>
-            <option value="<%= i %>"><%= template.name %></option>
+            <option value="<%= template._id %>" <% if(template._id === event.templateId){ %>  <% } %>><%= template.name %></option>
           <% }) %>
         </select>
       </div>
@@ -50,6 +54,7 @@
       <input type="hidden" name="_id" value="<%= event._id %>">
       <input type="hidden" name="start" value="<%= event.start %>">
       <input type="hidden" name="end" value="<%= event.end %>">
+      <input type="hidden" name="templateId" value="<%= event.templateId %>">
       
     
   </div>

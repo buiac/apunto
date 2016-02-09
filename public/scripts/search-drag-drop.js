@@ -185,20 +185,14 @@ $(document).ready(function () {
 
   });
 
+  getContacts()
+
   $('.contacts-list-header .close').on('click', function (e) {
     e.preventDefault();
 
     searchToggle = !searchToggle;
 
     $('body').removeClass('search-active');
-
-  });
-
-  // swal({   title: "Are you sure?",   text: "You will not be able to recover this imaginary file!",   type: "warning",   showCancelButton: true,   confirmButtonColor: "#DD6B55",   confirmButtonText: "Yes, delete it!",   closeOnConfirm: false }, function(){   swal("Deleted!", "Your imaginary file has been deleted.", "success"); });
-
-
-  $('body').on('click', '.delete-contact', function (e) {
-    
 
   });
 
@@ -221,7 +215,7 @@ $(document).ready(function () {
       
       if (isConfirm) {
 
-        var url = e.target.href;
+        var url = e.target.parentNode.href;
 
         $.ajax({
           method: 'GET',

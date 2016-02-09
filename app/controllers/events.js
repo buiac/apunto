@@ -27,8 +27,8 @@ module.exports = function(config, db) {
 
   var create = function(req, res, next) {
 
-    req.checkBody('name', 'Title should not be empty').notEmpty();
-    req.checkBody('number', 'Number should not be empty.').notEmpty();
+    req.checkBody('name', 'Please enter the name of your client.').notEmpty();
+    req.checkBody('number', 'Please enter client phone number.').notEmpty();
     req.checkBody('start', 'Start date should not be empty.').notEmpty();
     req.checkBody('end', 'End date should not be empty.').notEmpty();
     req.checkBody('message', 'Message should not be empty.').notEmpty();
@@ -61,7 +61,8 @@ module.exports = function(config, db) {
       start: startDate,
       end: endDate,
       calendarId: req.params.calendarId,
-      message: message
+      message: message,
+      templateId: req.body.templateId
     };
 
     db.events.insert(event, function (err, newEvent) {
@@ -116,6 +117,7 @@ module.exports = function(config, db) {
     var endDate = Date.create(req.body.end);
     var message = req.body.message;
     var eventId = req.body._id;
+    var templateId = req.body.templateId;
 
     startDate = moment(startDate).toDate();
     endDate = moment(endDate).toDate();
@@ -137,7 +139,8 @@ module.exports = function(config, db) {
       start: startDate,
       end: endDate,
       calendarId: req.params.calendarId,
-      message: message
+      message: message,
+      templateId: templateId
     };
 
     db.events.update({'_id': eventId}, event, function (err, num, newEvent) {
@@ -170,6 +173,7 @@ module.exports = function(config, db) {
       date: -1
     }).exec(function (err, events) {
 
+
       if(err) {
         return res.send(err, 400);
       }
@@ -177,6 +181,12 @@ module.exports = function(config, db) {
       if (!events.length) {
         events = [];
       }
+
+      console.log('\n\n\n\n')
+      console.log('--------')
+      console.log(events)
+      console.log('--------')
+      console.log('\n\n\n\n')
 
       res.json(events);
 

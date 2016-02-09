@@ -7,12 +7,12 @@ $.fn.serializeObject = function() {
   var a = this.serializeArray();
   $.each(a, function() {
       if (o[this.name] !== undefined) {
-          if (!o[this.name].push) {
-              o[this.name] = [o[this.name]];
-          }
-          o[this.name].push(this.value || '');
+        if (!o[this.name].push) {
+          o[this.name] = [o[this.name]];
+        }
+        o[this.name].push(this.value || '');
       } else {
-          o[this.name] = this.value || '';
+        o[this.name] = this.value || '';
       }
   });
   return o;
@@ -23,7 +23,6 @@ $(document).ready(function () {
   var calendar = null;
   var eventEditTemplate = null;
   var templates = null;
-
 
   var getWordsBetweenCurlies = function (str) {
     var results = []
@@ -46,6 +45,14 @@ $(document).ready(function () {
     message: 'ahoy hoy! Testing Twilio and node.js'
   };
 
+  // get the message templates created by the user
+  $.ajax({
+    method: 'get',
+    url: '/t/templatesJson/' + Apunto.config.userId
+  }).done(function (res) {
+    templates = res.templates
+  })
+
   var obj = {
     full_name: Apunto.config.userName,
     company_name: Apunto.config.companyName
@@ -61,7 +68,7 @@ $(document).ready(function () {
 
   }
 
-  // Get templates
+  // Get the event edit template
   $.ajax({
     method: 'GET',
     url: '/templates/event-edit.ejs'
@@ -75,7 +82,6 @@ $(document).ready(function () {
 
     var modal = $('#create-modal');
     var modalContent = modal.find('.modal-content');
-
 
     // select templates
     $.ajax({
@@ -120,6 +126,7 @@ $(document).ready(function () {
           number: '',
           message: message,
           templates: templates,
+          templateId: templates[0]._id,
           _id: ''
         }
       };
@@ -130,21 +137,30 @@ $(document).ready(function () {
       modalContent.append(temp);
       modal.modal();
       
-      $(".mobile-number").intlTelInput({
+      $('.mobile-number').intlTelInput({
         defaultCountry: 'auto',
         utilsScript: '/bower_components/intl-tel-input/lib/libphonenumber/build/utils.js'
       });
-
     })
-    
-
-
   };
 
+  // select a different template for the message that will be sent
   var changeTemplate = function (e) {
-    var template = templates[this.value]
-    
+
+    var id = this.value;
+
+    var template = $.grep(templates, function(template){ return template._id == id; });
+    template = template[0]
+
     var replaceArray = getWordsBetweenCurlies(template.message);
+    var date = $(this).parents('.modal-body').find('[name="start"]').val()
+
+    var obj = {
+      time: moment(date).format('HH:mm'),
+      date: moment(date).format('DD/MM/YYYY'),
+      full_name: Apunto.config.userName,
+      company_name: Apunto.config.companyName
+    };
 
     replaceArray.forEach(function (item) {
       // replace the parameter e.g.:{year} with the value of #year select
@@ -152,7 +168,7 @@ $(document).ready(function () {
     });
 
     $(this).parents('.modal-body').find('[name=message]').html(template.message)
-
+    $(this).parents('.modal-body').find('[name=templateId]').val(template._id)
   }
 
   var showUpdateModal = function (event) {
@@ -198,15 +214,14 @@ $(document).ready(function () {
         utilsScript: '/bower_components/intl-tel-input/lib/libphonenumber/build/utils.js'
       });
     });
-
-    
-
   };
 
-  // Modal Create Event
-  $('body').on('click', '.create', function (e) {
+  var createEvent = function (e) {
     
     e.preventDefault();
+
+    var $form = $(this).parents('.create-update');
+    var $alertDanger = $form.find('.alert-danger')
 
     var event = $('.create-update').serializeObject();
     event.userName = Apunto.config.userName;
@@ -220,6 +235,10 @@ $(document).ready(function () {
       event.end = moment(event.start).add(1, 'hour').toDate();
     }
 
+    // clear the error container of messages and hide it
+    $alertDanger.html('')
+    $form.removeClass('errors')
+
     $.ajax({
       type: 'POST',
       url: '/api/1/' + Apunto.config.calendarId + '/events/',
@@ -231,17 +250,34 @@ $(document).ready(function () {
       // close modal
       $('#create-modal').modal('hide');
 
+    }).fail(function (res) {
+      
+      // handle error messages
+      var errors = JSON.parse(res.responseText);
+
+      $.each(errors, function (i, error) {
+        
+
+
+        // update the error container with messages
+        var msg = $('<p></p>').html(error.msg);
+        $alertDanger.append(msg)
+
+        // add a class to the form
+        $form.addClass('errors')
+
+
+      })
     });
+  };
 
-  });
-
-  // Modal Update Event
-  $('body').on('click', '.update', function (e) {
+  // send data to server when user clicks on the update button in the modal
+  var updateEvent = function (e) {
     
     e.preventDefault();
 
     var event = $('.create-update').serializeObject();
-    event.number = $(".mobile-number").intlTelInput('getNumber');
+    event.number = $('.mobile-number').intlTelInput('getNumber');
     event.tzoffset = Apunto.config.tzoffset;
 
     $.ajax({
@@ -258,8 +294,7 @@ $(document).ready(function () {
     }).fail(function (err) {
       console.log(err);
     });
-
-  });
+  };
 
   var enableTextarea = function (e) {
     $(this).parent().find('textarea').removeAttr('readonly').focus();
@@ -267,16 +302,11 @@ $(document).ready(function () {
   };
 
   var disableTextarea = function (e) {
-    
     $(this).attr('readonly', 'true');
     $('.textarea-cover').show();
-
   };
 
-  $('body').on('click', '.textarea-cover', enableTextarea);
-  $('body').on('blur' , '.modal-message-preview textarea', disableTextarea);
-
-  $('body').on('keyup', '.modal-message-preview textarea', function () {
+  var previewMessage = function () {
     var max = 160;
     var len = $(this).val().length;
     if (len >= max) {
@@ -285,7 +315,7 @@ $(document).ready(function () {
       var charc = max - len;
       $('#charNum').text(charc + ' characters left');
     }
-  });
+  }
 
   // Delete Event
   var deleteEvent = function (event) {
@@ -322,6 +352,26 @@ $(document).ready(function () {
   // Resize and move around
   var eventUpdate = function (event, delta, revertFunc, jsEvent, ui, view) {
     
+    var id = event.templateId;
+
+    // get the id of the template
+    var template = $.grep(templates, function(template){ return template._id == id; });
+    var message = template[0].message
+
+    var obj = {
+      time: event.start.format('HH:mm'),
+      date: event.start.format('DD/MM/YYYY'),
+      full_name: Apunto.config.userName,
+      company_name: Apunto.config.companyName
+    };
+
+    var replaceArray = getWordsBetweenCurlies(message);
+
+    replaceArray.forEach(function (item) {
+      // replace the parameter e.g.:{year} with the value of #year select
+      message = message.replace(new RegExp('{' + item + '}', 'gi'), obj[item]);
+    });
+
     $.ajax({
       type: 'PUT',
       url: '/api/1/' + Apunto.config.calendarId + '/events/',
@@ -330,10 +380,13 @@ $(document).ready(function () {
         end: event.end.toDate(),
         name: event.title,
         number: event.number,
-        message: event.message,
+        message: message,
+        templateId: template[0]._id,
         _id: event._id
       }
     }).done(function (res) {
+
+      calendar.fullCalendar( 'refetchEvents');
 
     });
 
@@ -345,7 +398,7 @@ $(document).ready(function () {
     var deleteBtn = $('<a href="" class="delete-event fa fa-trash" data-id="' + event._id + '"></a>');
     $(element).append(deleteBtn);
 
-  };  
+  }; 
 
   var setTimeline = function() {
     setTimeout(function () {
@@ -432,10 +485,70 @@ $(document).ready(function () {
     $('.form-template').addClass('form-template--new')
   }
 
+  var viewRender = function (view) {
+        
+    timelineInterval = window.setInterval(setTimeline, 1000 * 60);
+
+    try {
+      setTimeline();
+    } catch(err) { console.log('error: ' + err); }
+
+  }
+
+  var eventReceive = function (event) {
+
+    $.ajax({
+      method: 'get',
+      url: '/t/templatesJson/' + Apunto.config.userId
+    }).done(function (res) {
+      
+      templates = res.templates
+
+      var message = templates[0].message;
+
+      var obj = {
+        time: event.start.format('HH:mm'),
+        date: event.start.format('DD/MM/YYYY'),
+        full_name: Apunto.config.userName,
+        company_name: Apunto.config.companyName
+      };
+
+      var replaceArray = getWordsBetweenCurlies(message);
+
+      replaceArray.forEach(function (item) {
+        // replace the parameter e.g.:{year} with the value of #year select
+        message = message.replace(new RegExp('{' + item + '}', 'gi'), obj[item]);
+      });
+
+      $.ajax({
+        type: 'POST',
+        url: '/api/1/' + Apunto.config.calendarId + '/events/',
+        data: {
+          userName: Apunto.config.userName,
+          companyName: Apunto.config.companyName,
+          start: event.start.toDate(),
+          end: event.end.toDate(),
+          name: event.title,
+          number: event.number,
+          message: message,
+          templateId: templates[0]._id
+        }
+      }).done(function (res) {
+        
+        calendar.fullCalendar( 'refetchEvents');
+
+      });
+    })
+  };
+
+  $('body').on('click', '#create .create', createEvent);
+  $('body').on('click', '#update .update', updateEvent);
+  $('body').on('click', '.textarea-cover', enableTextarea);
+  $('body').on('blur' , '.modal-message-preview textarea', disableTextarea);
+  $('body').on('keyup', '.modal-message-preview textarea', previewMessage);
   $('body').on('change', '.modal-template-select', changeTemplate)
   $('body').on('click', '.template-list a', updateTemplateForm)
   $('body').on('click', '.template-add-new', showTemplateForm)
-  
 
   var createCalendar = function () {
     
@@ -466,6 +579,7 @@ $(document).ready(function () {
         center: 'title',
         right:  'today prev,next'
       },
+      droppable: true,
       
       // methods
       eventRender: eventRender,
@@ -473,59 +587,8 @@ $(document).ready(function () {
       eventClick: eventClick,
       eventDrop: eventUpdate,
       eventResize: eventUpdate,
-      
-      droppable: true,
-
-      drop: function(date, jsEvent, ui) {
-        
-      },
-
-      viewRender: function (view) {
-        
-        timelineInterval = window.setInterval(setTimeline, 1000 * 60);
-
-        try {
-          setTimeline();
-        } catch(err) { console.log('error: ' + err); }
-      },
-      eventReceive: function (event) {
-
-        var message = Apunto.config.template;
-        var obj = {
-          time: event.start.format('HH:mm'),
-          full_name: Apunto.config.userName,
-          company_name: Apunto.config.companyName
-        };
-
-        var replaceArray = getWordsBetweenCurlies(message);
-
-        replaceArray.forEach(function (item) {
-          // replace the parameter e.g.:{year} with the value of #year select
-          message = message.replace(new RegExp('{' + item + '}', 'gi'), obj[item]);
-        });
-
-        $.ajax({
-          type: 'POST',
-          url: '/api/1/' + Apunto.config.calendarId + '/events/',
-          data: {
-            userName: Apunto.config.userName,
-            companyName: Apunto.config.companyName,
-            start: event.start.toDate(),
-            end: event.end.toDate(),
-            name: event.title,
-            number: event.number,
-            message: message
-          }
-        }).done(function (res) {
-          
-          calendar.fullCalendar( 'refetchEvents');
-
-          // // close modal
-          // $('#create-modal').modal('hide');
-
-        });
-
-      },
+      viewRender: viewRender,
+      eventReceive: eventReceive,
     });
 
   };

@@ -3,46 +3,23 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
   <title>
     Apunto Dashboard
   </title>
   
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
-  
-  <script src="bower_components/jquery/dist/jquery.min.js"></script>
-  
-  <script src="bower_components/moment/min/moment.min.js"></script>
-
-  <script src="bower_components/jquery-ui/ui/core.js"></script>
-  <script src="bower_components/jquery-ui/ui/widget.js"></script>
-  <script src="bower_components/jquery-ui/ui/mouse.js"></script>
-  <script src="bower_components/jquery-ui/ui/draggable.js"></script>
-  
-  <script src="bower_components/fullcalendar/dist/fullcalendar.js"></script>
-  
-  <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-  
-  <script src="bower_components/ejs/ejs.js"></script>
-
-  <script src="bower_components/intl-tel-input/build/js/intlTelInput.js"></script>
-
-  <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-  <link rel="stylesheet" href="bower_components/fontawesome/css/font-awesome.min.css">
-  <link rel="stylesheet" href="bower_components/fullcalendar/dist/fullcalendar.css">
-  
-  <link rel="stylesheet" href="style/app.css">
+  <link rel='stylesheet' href="http://fonts.googleapis.com/css?family=Gloria+Hallelujah" type="text/css">
+  <link rel='stylesheet' href="http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" type="text/css">
   <link rel="stylesheet" href="//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
-  <link href='http://fonts.googleapis.com/css?family=Gloria+Hallelujah' rel='stylesheet' type='text/css'>
-
-  <link rel="stylesheet" href="bower_components/intl-tel-input/build/css/intlTelInput.css">
-
-  <script src="/bower_components/sweetalert/dist/sweetalert.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="/bower_components/sweetalert/dist/sweetalert.css">
-
-  <script src="scripts/app.js"></script>
-  <script src="scripts/search-drag-drop.js"></script>
-   <script src="scripts/onboarding.js"></script>
+  <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css" type='text/css'>
+  <link rel="stylesheet" href="/bower_components/fontawesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/bower_components/fullcalendar/dist/fullcalendar.css">
+  
+  <link rel="stylesheet" href="/bower_components/intl-tel-input/build/css/intlTelInput.css">
+  <link rel="stylesheet" href="/bower_components/sweetalert/dist/sweetalert.css" type="text/css">
+  <link rel="stylesheet" href="style/app.css">
 </head>
+
 <body>
 
   <nav class="navbar navbar-inverse navbar-static-top">
@@ -89,6 +66,8 @@
       </div><!-- search-input -->
 
       <a href="" class="close"><i class="fa fa-times"></i></a>
+
+      <a href="" class="btn btn-primary btn-new-contact"><i class="fa fa-plus-circle"></i> Create new contact</a>
     </div>
       
     
@@ -142,6 +121,17 @@
       
     </div>
   </div>
+
+  <div class="modal" id="contact-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      
+        <div class="modal-content">
+          
+        </div> <!-- modal-content -->
+      
+    </div>
+  </div>
+
   <!-- BEGIN JIVOSITE CODE {literal} -->
   <script type='text/javascript'>
   (function(){ var widget_id = 'CrZt9f212R';
@@ -158,5 +148,22 @@
   ga('send', 'pageview');
 
 </script>
+
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="bower_components/moment/min/moment.min.js"></script>
+  <script src="bower_components/jquery-ui/ui/core.js"></script>
+  <script src="bower_components/jquery-ui/ui/widget.js"></script>
+  <script src="bower_components/jquery-ui/ui/mouse.js"></script>
+  <script src="bower_components/jquery-ui/ui/draggable.js"></script>
+  <script src="bower_components/fullcalendar/dist/fullcalendar.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="bower_components/ejs/ejs.js"></script>
+  <script src="bower_components/intl-tel-input/build/js/intlTelInput.js"></script>
+    <script src="/bower_components/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="scripts/app.js"></script>
+  <script src="scripts/contacts.js"></script>
+  <script src="scripts/search-drag-drop.js"></script>
+  <script src="scripts/onboarding.js"></script>
+
 </body>
 </html>

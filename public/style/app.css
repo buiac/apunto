@@ -6,6 +6,11 @@ html,
 	font-family: 'Lato', sans-serif;
 }
 
+div.clear {
+	display: block;
+	clear: both;
+}
+
 /* Sign-in
 */
 
@@ -204,7 +209,7 @@ p.text-white {
 body .calendar {
 	width: 100%;
 }
-body.search-active .calendar{
+body .calendar{
 	-webkit-transition: width .1s ease-in-out;
   -moz-transition: width .1s ease-in-out;
   -o-transition: width .1s ease-in-out;
@@ -220,7 +225,29 @@ body.search-active .calendar{
 	height: 100%;
 	display: none;
 }
-body.search-active .contacts-list{
+
+.contacts-list .delete-contact {
+	padding: 5px 10px;
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	margin-right: 10px;
+}
+
+.contacts-list li:hover .delete-contact {
+	border: 1px solid #fff;
+	background: #fff;
+}
+
+.contacts-list li .delete-contact:hover {
+	border: 1px solid #DDD;
+	box-shadow: rgba(0,0,0, .5) 0 0 3px;
+}
+
+.contacts-list .delete-contact .fa.fa-trash {
+	margin-right: 0;
+}
+
+body .contacts-list{
 	-webkit-transition: width .1s ease-in-out;
   -moz-transition: width .1s ease-in-out;
   -o-transition: width .1s ease-in-out;
@@ -299,7 +326,10 @@ body.search-active .contacts-list{
 	z-index: 10000;
 	cursor: move;
 	color: #fff;
+}
 
+.drag-item.ui-draggable-dragging .fa-trash {
+	color: #FFF;
 }
 
 .drag-item.ui-draggable-dragging:before {
@@ -316,7 +346,7 @@ body.search-active .contacts-list{
 .show-clients:focus {
 	border: 1px solid #fff;
 	color: #fff;
-		margin: 8px 0 0 10px;
+	margin: 8px 0 0 10px;
 	padding: 6px 10px;
 	border-radius: 4px;
 }
@@ -333,7 +363,7 @@ body.search-active .show-clients {
 }
 
 .search-input {
-
+	width: 100%;
 	margin: 35px 0 0;
 	position: relative;
 }
@@ -350,6 +380,15 @@ body.search-active .show-clients {
 
 /* Modal
 */
+
+.create-update .alert-danger {
+	display: none;
+}
+
+.create-update.errors .alert-danger {
+	display: block;
+}
+
 .create-update .control-label {
 	display: block;
 }
@@ -550,4 +589,16 @@ body .timeline {
 
 .form-template--update .btn-danger {
 	display: block;
+}
+
+.btn-new-contact {
+	display: block;
+	margin: 0 auto;
+	max-width: 180px;
+	margin-top: 30px;
+}
+
+.btn-new-contact i {
+	margin-right: 10px;
+
 }

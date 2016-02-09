@@ -48,6 +48,12 @@ module.exports = function(config, db) {
 
   var deleteContact = function (req, res, next) {
 
+    console.log('\n\n\n\n')
+    console.log('--------')
+    console.log(req.params.contactId)
+    console.log('--------')
+    console.log('\n\n\n\n')
+    
     db.contacts.remove({
       _id: req.params.contactId
     }, function (err, num) {
@@ -61,10 +67,44 @@ module.exports = function(config, db) {
     })
   }
 
+  var updateContact = function (req, res, next) {
+    var contactId = req.params.contactId;
+
+    console.log('\n\n\n\n')
+    console.log('--------')
+    console.log(req.body)
+    console.log('--------')
+    console.log('\n\n\n\n')
+
+    if (contactId) {
+      // update existing contact
+    } else {
+      // create new contact
+
+      db.contacts.insert(req.body, function (err, newContact) {
+        if (!err) {
+          res.json({
+            contact: newContact
+          });
+        }
+      })
+
+      // {
+      //   name: '',
+      //   title: '',
+      //   number: '',
+      //   calendarId: ''
+      // }
+
+    }
+
+  }
+
   return {
     // view: view,
     list: list,
-    deleteContact: deleteContact
+    deleteContact: deleteContact,
+    updateContact: updateContact
   };
 
 };

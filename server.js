@@ -177,6 +177,7 @@ module.exports = (function() {
   var contacts = require('./app/controllers/contacts.js')(config, db);
 
   app.get('/api/1/contacts/:calendarId', isAuthenticated, contacts.list);
+  app.post('/api/1/contacts/:calendarId', isAuthenticated, contacts.updateContact);
   app.get('/api/1/contacts/:calendarId/delete/:contactId', isAuthenticated, contacts.deleteContact);
 
 
