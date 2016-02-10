@@ -182,12 +182,6 @@ module.exports = function(config, db) {
         events = [];
       }
 
-      console.log('\n\n\n\n')
-      console.log('--------')
-      console.log(events)
-      console.log('--------')
-      console.log('\n\n\n\n')
-
       res.json(events);
 
     });
