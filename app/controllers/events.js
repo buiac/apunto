@@ -258,6 +258,13 @@ module.exports = function(config, db) {
                 body: alert.message + ' Reminded by Apunto'
 
             }, function(error, message) {
+              console.log('\n\n\n\n')
+              console.log('----error----')
+              console.log(error)
+              console.log('----message----')
+              console.log(message)
+              console.log('--------')
+              console.log('\n\n\n\n')
 
                 // The HTTP request to Twilio will run asynchronously. This callback
                 // function will be called when a response is received from Twilio
