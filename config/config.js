@@ -66,6 +66,12 @@ module.exports = (function() {
   config.ipAddress = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
   config.port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
 
+  // superadmin
+  config.superadmin = {
+    user: 'sebi.kovacs+120341231@gmail.com',
+    pass: 'fotografiiverzisislaninacresteinsomn'
+  }
+
   return config;
 
 }());

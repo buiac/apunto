@@ -12,7 +12,11 @@ module.exports = function(config, db) {
   var passport = require('passport');
 
   var view = function(req, res, next) {
-
+    console.log('\n\n\n\n')
+    console.log('----req.user----')
+    console.log(req)
+    console.log('--------')
+    console.log('\n\n\n\n')
     db.calendars.findOne({'userId': req.user._id}, function (err, calendar) {
 
       if (!calendar) {

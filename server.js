@@ -11,7 +11,6 @@ module.exports = (function() {
   // validation library for whatever comes in through the forms
   var expressValidator = require('express-validator');
 
-
   //var async = require('async');
   var fs = require('fs');
 
@@ -21,7 +20,9 @@ module.exports = (function() {
   var errorhandler = require('errorhandler');
   var flash = require('connect-flash');
   var passport = require('passport');
+  var basicAuth = require('basic-auth-connect');
   var LocalStrategy = require('passport-local').Strategy;
+  var moment   = require('moment');
 
   var app = express();
   
@@ -30,6 +31,11 @@ module.exports = (function() {
     saveUninitialized: true,
     resave: true       
   }));
+
+  app.use(function(req, res, next){
+    res.locals.moment = moment;
+    next();
+  });
 
   app.use(flash());
   app.use(passport.initialize());
@@ -58,8 +64,24 @@ module.exports = (function() {
     }
   };
 
+  var adminAuth = basicAuth(function(user, pass, callback) {
+    var user, pass;
+    var admin = false;
+    
+    // if(process.env.OPENSHIFT_APP_NAME) {
+    //   admin = (user === config.superadmin.user && pass === config.superadmin.pass);
+    // } else {
+    //   admin = true;
+    // }
+
+
+    admin = (user === config.superadmin.user && pass === config.superadmin.pass);
+
+    callback(null, admin);
+  });
+
   // configs
-  var config = require('./config/config.js');
+  var config = require('./data/config.js');
 
   // config express
   app.use(bodyParser.json({
@@ -127,6 +149,7 @@ module.exports = (function() {
 
   // alert routes
   var events = require('./app/controllers/events.js')(config, db);
+  var superadmin = require('./app/controllers/superadmin.js')(config, db);
 
   app.get('/api/1/events/:calendarId', events.list);
   app.post('/api/1/:calendarId/events/', events.create);
@@ -180,6 +203,11 @@ module.exports = (function() {
   app.post('/api/1/contacts/:calendarId', isAuthenticated, contacts.updateContact);
   app.get('/api/1/contacts/:calendarId/delete/:contactId', isAuthenticated, contacts.deleteContact);
 
+
+  /* Superadmin routes
+  */
+  app.get('/sa/dashboard', adminAuth, superadmin.dashboard);
+  app.get('/sa/delete-user/:userId', adminAuth, superadmin.deleteUser);
 
   // Logout
   app.get('/signout', function(req, res) {

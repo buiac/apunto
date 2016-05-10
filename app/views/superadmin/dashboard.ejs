@@ -1,0 +1,43 @@
+<%- include header %>
+
+  <div class="container">
+    <h1>superadmin</h1>
+  
+    <table class="tablesorter" id="sorted-table">
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Appointments (last 3 months)</th>
+          <th>Account Created on</th>
+          <th></th>
+        </tr>
+      </thead>
+      <% users.forEach(function(user, i){ %>
+      <tr>
+        <td><%= user.username %></td>
+        <td style="text-align: center;">
+          
+          <% if (user.events) { %>
+            <span class="label label-primary" style="font-size: 14px;"><%= user.events.length %></span>
+            <% } else { %>
+              <span class="label label-danger" style="font-size: 14px;">0</span>
+            <% } %>
+          </span>
+        </td>
+        <td style="text-align: center;">
+          <% if (user.timecreated) { %>
+            <%= moment(user.timecreated).format('YYYY-MM-DD') %>
+          <% } %>
+        </td>
+        <td style="text-align: center;">
+          <a href="/sa/delete-user/<%= user._id %>" class="btn btn-danger btn-sm">delete user</a>
+        </td>
+      </tr>
+      <% }) %>
+    </table>
+    
+      <p></p>
+    
+  </div>
+
+<%- include footer %>
