@@ -81,7 +81,13 @@ module.exports = (function() {
   });
 
   // configs
-  var config = require('./data/config.js');
+  var config;
+
+  if (process.env.OPENSHIFT_APP_NAME) {
+    config = require('../data/config.js');  
+  } else {
+    config = require('./data/config.js');  
+  }
 
   // config express
   app.use(bodyParser.json({
