@@ -66,8 +66,10 @@ $(document).ready(function () {
 
   });
 
+  // delete contact
   $('body').on('click', '.btn-confirm', function (e) {
     e.preventDefault();
+    var self = this;
 
     var $deleteButton = $(this);
     var $contact = $deleteButton.parent();
@@ -85,7 +87,7 @@ $(document).ready(function () {
       
       if (isConfirm) {
 
-        var url = e.target.parentNode.href;
+        var url = self.href;
 
         $.ajax({
           method: 'GET',
@@ -95,13 +97,10 @@ $(document).ready(function () {
           // remove item form list
           $contact.remove()
 
-          if (!$container.children().length) {
-            // append alert with message
-            $container.parent().html('<div class="alert alert-info"><p>You have no contacts yet.</p></div>')
-          }
-
           // show success modal
           swal("Deleted!", "The data has been deleted.", "success");
+
+          getContacts();
 
         });
 
