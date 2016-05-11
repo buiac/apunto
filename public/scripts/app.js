@@ -217,7 +217,6 @@ $(document).ready(function () {
   };
 
   var createEvent = function (e) {
-    
     e.preventDefault();
 
     var $form = $(this).parents('.create-update');
@@ -226,7 +225,7 @@ $(document).ready(function () {
     var event = $('.create-update').serializeObject();
     event.userName = Apunto.config.userName;
     event.companyName = Apunto.config.companyName;
-    event.number = $(".mobile-number").intlTelInput('getNumber');
+    event.number = $('.mobile-number').intlTelInput('getNumber');
     event.tzoffset = Apunto.config.tzoffset;
 
     var interval = (new Date(event.end).getTime() - new Date(event.start).getTime()) / 60000;

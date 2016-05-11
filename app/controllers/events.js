@@ -27,6 +27,7 @@ module.exports = function(config, db) {
 
   var create = function(req, res, next) {
 
+    
     req.checkBody('name', 'Please enter the name of your client.').notEmpty();
     req.checkBody('number', 'Please enter client phone number.').notEmpty();
     req.checkBody('start', 'Start date should not be empty.').notEmpty();
@@ -81,7 +82,11 @@ module.exports = function(config, db) {
       calendarId: req.params.calendarId
     };
 
-    db.contacts.findOne({'name': contact.name, 'number': contact.number, 'calendarId': contact.calendarId}, function (err, doc) {
+    db.contacts.findOne({
+      name: contact.name,
+      number: contact.number,
+      calendarId: contact.calendarId
+    }, function (err, doc) {
 
       if (err) {
         res.json(util.inspect(errors), 400);

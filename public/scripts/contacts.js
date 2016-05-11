@@ -65,11 +65,9 @@ $(document).ready(function () {
     var contact = {
       name: $form.find('[name="name"]').val(),
       title: $form.find('[name="name"]').val(),
-      number: $form.find('[name="number"]').val(),
+      number: $form.find('[name="number"]').intlTelInput('getNumber'),
       calendarId: Apunto.config.calendarId
     };
-
-    
 
     $.ajax({
       method: 'POST',
@@ -84,6 +82,4 @@ $(document).ready(function () {
 
   $('body').on('click', '.btn-new-contact', showNewContactModal)
   $('body').on('click', '#create-contact .create', createContact)
-
-
 });

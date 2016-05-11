@@ -50,11 +50,6 @@ module.exports = function(config, db) {
     db.contacts.remove({
       _id: req.params.contactId
     }, function (err, num) {
-      console.log('\n\n\n\n')
-      console.log('--------')
-      console.log(req.params.contactId)
-      console.log('--------')
-      console.log('\n\n\n\n')
       if (!err) {
         res.json({
           message: 'done'
@@ -79,16 +74,7 @@ module.exports = function(config, db) {
           });
         }
       })
-
-      // {
-      //   name: '',
-      //   title: '',
-      //   number: '',
-      //   calendarId: ''
-      // }
-
     }
-
   }
 
   return {
