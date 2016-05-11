@@ -219,6 +219,20 @@ body .calendar{
 }
 
 /* Draggable */
+.search-contacts {
+	margin-bottom: 20px;
+}
+
+.search-contacts input {
+	float: left;
+	width: 50%;
+	margin-right: 10px;
+}
+
+.search-contacts button {
+	width: 40%;
+}
+
 .contacts-list {
 	width: 0;
 	background: #F1F5F8;
@@ -346,18 +360,19 @@ body .contacts-list{
   width: 100%;
 }
 
-.show-clients,
-.show-clients:focus {
+.btn-logout,
+.btn-logout:focus {
 	border: 1px solid #fff;
 	color: #fff;
 	margin: 8px 0 0 10px;
 	padding: 6px 10px;
 	border-radius: 4px;
+	background: #436FD2;
 }
 
 
-.show-clients:hover {
-	color: #fff;
+.btn-logout:hover {
+	color: #436FD2;
 	opacity: .8;
 }
 

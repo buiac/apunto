@@ -36,7 +36,7 @@
 
           </div> <!-- navbar-header -->
 
-          <a href="" class="show-clients pull-right"><i class="fa fa-search"></i></a>
+          <a href="/signout" class="pull-right btn btn-default btn-logout" title="Log out"><i class="fa fa-power-off"></i></a>
 
           <div class="dropdown pull-right">
             <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
@@ -61,16 +61,8 @@
   <div class="contacts-list" data-userid="<%= user._id %>" >
 
     <div class="contacts-list-header">
-      <div class="search-input fa fa-search">
-        <input type="text" class="form-control" placeholder="Search contacts" name="srch-term" id="srch-term">
-      </div><!-- search-input -->
-
-      <a href="" class="close"><i class="fa fa-times"></i></a>
-
       <a href="" class="btn btn-primary btn-new-contact"><i class="fa fa-plus-circle"></i> Create new contact</a>
     </div>
-      
-    
         
     <div class="contacts-list-content">
     </div>
@@ -159,7 +151,8 @@
   <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="bower_components/ejs/ejs.js"></script>
   <script src="bower_components/intl-tel-input/build/js/intlTelInput.js"></script>
-    <script src="/bower_components/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="bower_components/list.js/dist/list.js"></script>
+  <script src="/bower_components/sweetalert/dist/sweetalert.min.js"></script>
   <script src="scripts/app.js"></script>
   <script src="scripts/contacts.js"></script>
   <script src="scripts/search-drag-drop.js"></script>
