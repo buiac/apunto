@@ -154,15 +154,12 @@ module.exports = function(config, db) {
           db.users.remove({
             _id: userId
           }, function  (err, num) {
-            console.log(num)
             res.redirect('/sa/dashboard');
           })
         })
 
       })
-    })
-
-    
+    })    
   }
 
   return {

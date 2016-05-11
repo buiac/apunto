@@ -11,6 +11,12 @@ module.exports = function(config, db) {
   var passport = require('passport');
   var LocalStrategy = require('passport-local').Strategy;
 
+  // Mailgun configuration
+  var Mailgun = require('mailgun-js');
+  var mailgun_api_key = config.mailgun.apikey;
+  var domain = 'getapunto.com';
+  var mailgun = new Mailgun({apiKey: mailgun_api_key, domain: domain});
+
   // Generates hash using bCrypt
   var createHash = function(password){
     return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
@@ -75,6 +81,27 @@ module.exports = function(config, db) {
             if (err) {
               return done(err);
             } else {
+
+              var reminderEmailConfig = {
+                from: 'contact@getapunto.com', // user.username
+                to: 'contact@getapunto.com',
+                subject: 'new signup',
+                html: '<p>username: ' + newDoc.username
+              };
+
+              //Invokes the method to send emails given the above data with the helper library
+              mailgun.messages().send(reminderEmailConfig, function (err, body) {
+                  //If there is an error, render the error page
+                  if (err) {
+                    console.log('----error mailgun----')
+                    console.log("got an error: ", err);
+                  }
+                  //Else we can greet and leave
+                  else {
+                    console.log('----success mailgun----')
+                    console.log(body);
+                  }
+              });
 
               db.templates.insert({
                 name: 'Default template',

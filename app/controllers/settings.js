@@ -31,11 +31,6 @@ module.exports = function(config, db) {
   };
 
   var templatesView = function (req, res, next) {
-    console.log('\n\n\n\n')
-    console.log('--------')
-    console.log(req.user)
-    console.log('--------')
-    console.log('\n\n\n\n')
 
     db.users.findOne({'_id': req.user._id}, function (err, user) {
 

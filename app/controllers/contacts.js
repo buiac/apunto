@@ -47,12 +47,6 @@ module.exports = function(config, db) {
   };
 
   var deleteContact = function (req, res, next) {
-
-    console.log('\n\n\n\n')
-    console.log('--------')
-    console.log(req.params.contactId)
-    console.log('--------')
-    console.log('\n\n\n\n')
     
     db.contacts.remove({
       _id: req.params.contactId
@@ -69,12 +63,6 @@ module.exports = function(config, db) {
 
   var updateContact = function (req, res, next) {
     var contactId = req.params.contactId;
-
-    console.log('\n\n\n\n')
-    console.log('--------')
-    console.log(req.body)
-    console.log('--------')
-    console.log('\n\n\n\n')
 
     if (contactId) {
       // update existing contact
