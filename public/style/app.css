@@ -114,6 +114,24 @@ div.clear {
 	display: inline-block;
 }
 
+#edit-contact .create {
+	display: none;
+}
+
+#edit-contact .update {
+	display: inline-block;
+}
+
+
+#create-contact .create {
+	display: inline-block;
+}
+
+#create-contact .update {
+	display: none;
+}
+
+
 /* Homepage
 */
 .home	{
@@ -240,6 +258,8 @@ body .calendar{
 	display: none;
 }
 
+
+.contacts-list .edit-contact,
 .contacts-list .delete-contact {
 	padding: 5px 10px;
 	border: 1px solid #ddd;
@@ -247,14 +267,26 @@ body .calendar{
 	margin-right: 10px;
 }
 
+.contacts-list .edit-contact {
+	padding: 5px 8px;
+}
+
+.contacts-list li:hover .edit-contact,
 .contacts-list li:hover .delete-contact {
 	border: 1px solid #fff;
 	background: #fff;
 }
 
-.contacts-list li .delete-contact:hover {
+.contacts-list li .delete-contact:hover,
+.contacts-list .edit-contact:hover {
 	border: 1px solid #DDD;
 	box-shadow: rgba(0,0,0, .5) 0 0 3px;
+}
+
+.contacts-list li .delete-contact:hover {
+	background: #d9534f;
+	border: 1px solid #d43f3a;
+	color: #FFF;
 }
 
 .contacts-list .delete-contact .fa.fa-trash {

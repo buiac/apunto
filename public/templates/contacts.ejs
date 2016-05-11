@@ -17,16 +17,23 @@
 
     <ul class="list list-unstyled">
 
-      <% for(var i = 0; i < contacts.length; i++) {%>
+      <% for(var i = 0; i < contacts.length; i++) { %>
         
         <li class="drag-item clearfix" data-duration="01:00" data-event='{"title": "<%= contacts[i].title %>", "number": "<%= contacts[i].number %>"}'>
           
           <span class="name">
             <%= contacts[i].title %>
           </span>
+          
+          
+
 
           <a href="/api/1/contacts/<%= calendarId %>/delete/<%= contacts[i]._id %>" class="pull-right btn-confirm delete-contact">
             <i class="fa fa-trash"></i>
+          </a>
+
+          <a href="" class="pull-right edit-contact" data-name="<%= contacts[i].title %>" data-id="<%= contacts[i]._id %>" data-number="<%= contacts[i].number %>">
+            <i class="fa fa-pencil"></i>
           </a>
           
           <div>

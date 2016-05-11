@@ -60,10 +60,26 @@ module.exports = function(config, db) {
   }
 
   var updateContact = function (req, res, next) {
-    var contactId = req.params.contactId;
+    var contactId = req.body.contactId;
+
+    var contact = {
+      name: req.body.name,
+      title: req.body.title,
+      number: req.body.number,
+    }
 
     if (contactId) {
-      // update existing contact
+      db.contacts.update({
+        _id: contactId
+      },{
+        $set: contact
+      }, function (err, newContact) {
+        if (!err) {
+          res.json({
+            contact: newContact
+          });
+        }
+      })      
     } else {
       // create new contact
 
