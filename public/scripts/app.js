@@ -53,6 +53,16 @@ $(document).ready(function () {
     templates = res.templates
   })
 
+
+  var contacts = null;
+  // get the contacts for this user
+  $.ajax({
+    method: 'GET',
+    url: 'api/1/contacts/' + $('.calendar').data('calendarid'),
+  }).done(function (res) {
+    contacts = res.contacts
+  });
+
   var obj = {
     full_name: Apunto.config.userName,
     company_name: Apunto.config.companyName
@@ -116,7 +126,8 @@ $(document).ready(function () {
           title: 'Schedule an event',
           idName: 'create',
           start: start.format('HH:mm'),
-          end: end.format('HH:mm')
+          end: end.format('HH:mm'),
+          contacts: contacts
         },
         event: {
           start: start.toDate(),
@@ -137,10 +148,45 @@ $(document).ready(function () {
       modalContent.append(temp);
       modal.modal();
       
+      // init mobile number
       $('.mobile-number').intlTelInput({
         defaultCountry: 'auto',
         utilsScript: '/bower_components/intl-tel-input/lib/libphonenumber/build/utils.js'
       });
+
+      // remove the tabindex from the modal
+      $('#create-modal').removeAttr('tabindex');
+
+      // init select2
+      $('#select-contact').select2();
+
+      // create a hash out of the contacts
+      var contactsHash = {};
+      contacts.forEach(function (contact) {
+        contactsHash[contact._id] = contact
+      });
+
+      $('#select-contact').on('change', function (e) {
+        var contactId = $(this).val()
+        var contact = contactsHash[contactId] 
+        
+        // get the contacts template
+        $.ajax({
+          method: 'GET',
+          url: '/templates/modal-contact-template.ejs'
+        }).done(function (res) {
+          
+          var temp = ejs.render(res, {contact: contact})
+          
+          $('#create-modal .contact-details').empty().append(temp).addClass('contact-details--show')
+
+          // update inputs
+          $('.contact-new [name="name"]').val(contact.name)
+          $('.contact-new [name="number"]').val(contact.number)
+        });
+      });
+
+
     })
   };
 
