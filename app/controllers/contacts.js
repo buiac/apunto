@@ -34,9 +34,23 @@ module.exports = function(config, db) {
   var list = function (req, res, next) {
     
     db.contacts.find({calendarId: req.params.calendarId}, function (err, docs) {
+
       if (err) {
         res.send({error: err}, 400);
       }
+
+      docs.sort(function (a, b) {
+        
+        if(a.name.toLowerCase() < b.name.toLowerCase()) {
+          return -1;
+        }
+
+        if(a.name.toLowerCase() > b.name.toLowerCase()) {
+          return 1;
+        }
+
+        return 0;
+      })
 
       res.json({
         contacts: docs,
