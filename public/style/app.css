@@ -77,9 +77,9 @@ div.clear {
 	bottom: 5px;
 	right: 4px;
 	font-size: 18px;
-	display: none;
 	cursor: pointer;
 	z-index: 4;
+	padding: 10px;
 }
 
 .delete-event:hover {

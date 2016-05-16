@@ -50,7 +50,7 @@ module.exports = function(config, db) {
         }
 
         return 0;
-      })
+      });
 
       res.json({
         contacts: docs,
@@ -80,6 +80,7 @@ module.exports = function(config, db) {
       name: req.body.name,
       title: req.body.title,
       number: req.body.number,
+      email: req.body.email
     }
 
     if (contactId) {
@@ -96,7 +97,6 @@ module.exports = function(config, db) {
       })      
     } else {
       // create new contact
-
       db.contacts.insert(req.body, function (err, newContact) {
         if (!err) {
           res.json({

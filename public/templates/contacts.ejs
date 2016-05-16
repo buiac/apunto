@@ -24,20 +24,19 @@
           <span class="name">
             <%= contacts[i].title %>
           </span>
-          
-          
-
 
           <a href="/api/1/contacts/<%= calendarId %>/delete/<%= contacts[i]._id %>" class="pull-right btn-confirm delete-contact">
             <i class="fa fa-trash"></i>
           </a>
 
-          <a href="" class="pull-right edit-contact" data-name="<%= contacts[i].title %>" data-id="<%= contacts[i]._id %>" data-number="<%= contacts[i].number %>">
+          <a href="" class="pull-right edit-contact" data-email="<%= contacts[i].email %>" data-name="<%= contacts[i].title %>" data-id="<%= contacts[i]._id %>" data-number="<%= contacts[i].number %>">
             <i class="fa fa-pencil"></i>
           </a>
           
           <div>
             <span class="text-muted"><%= contacts[i].number %></span>
+            <br>
+            <span class="text-muted"><%= contacts[i].email || 'No email' %></span>
           </div>
 
         </li>

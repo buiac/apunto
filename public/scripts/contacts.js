@@ -21,6 +21,11 @@ $(document).ready(function () {
     contactEditTemplate = res;
 
   });
+
+  function validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+  }
   
   function showNewContactModal (e) {
     e.preventDefault();
@@ -56,30 +61,6 @@ $(document).ready(function () {
 
   }
 
-  function createContact (e) {
-    e.preventDefault()
-
-    var $form = $('#create-contact');
-    var url = '/api/1/contacts/' + Apunto.config.calendarId
-
-    var contact = {
-      name: $form.find('[name="name"]').val(),
-      title: $form.find('[name="name"]').val(),
-      number: $form.find('[name="number"]').intlTelInput('getNumber'),
-      calendarId: Apunto.config.calendarId
-    };
-
-    $.ajax({
-      method: 'POST',
-      url: url,
-      data: contact
-    }).done(function (res) {
-      
-      window.location.reload()
-      
-    })
-  }
-
   var showEditContactModal = function (e) {
     e.preventDefault()
 
@@ -88,6 +69,7 @@ $(document).ready(function () {
 
     var name = $(this).data('name')
     var number = $(this).data('number')
+    var email = $(this).data('email')
     var contactId = $(this).data('id')
 
     var data = {
@@ -98,6 +80,7 @@ $(document).ready(function () {
       contact: {
         title: name,
         number: number,
+        email: (email !== 'undefined') ? email : '',
         contactId: contactId
       }
     };
@@ -121,16 +104,33 @@ $(document).ready(function () {
   function updateContact (e) {
     e.preventDefault()
 
-    var $form = $('#edit-contact');
+    var $form = $(this);
+    
     var url = '/api/1/contacts/' + Apunto.config.calendarId
+    var $alert = $form.find('.alert')
 
     var contact = {
       name: $form.find('[name="name"]').val(),
       title: $form.find('[name="name"]').val(),
       number: $form.find('[name="number"]').intlTelInput('getNumber'),
-      contactId: $form.find('[name="contactId"]').val(),
+      email: $form.find('[name="email"]').val(),
       calendarId: Apunto.config.calendarId
     };
+
+    if ($form.find('[name="contactId"]').val()) {
+      contact.contactId = $form.find('[name="contactId"]').val()
+    }
+
+    // check if the email is good
+    if (contact.email && !validateEmail(contact.email)) {
+      // add an error class to the form
+      $form.addClass('errors');
+
+      // update the error div message
+      $alert.html('<p>The email address is incorect</p>')
+
+      return;
+    }
 
     $.ajax({
       method: 'POST',
@@ -144,8 +144,8 @@ $(document).ready(function () {
   }
 
   $('body').on('click', '.btn-new-contact', showNewContactModal)
-  $('body').on('click', '#create-contact .create', createContact)
+  $('body').on('submit', '#create-contact', updateContact)
   $('body').on('click', '.edit-contact', showEditContactModal)
-  $('body').on('click', '#edit-contact .update', updateContact)
+  $('body').on('submit', '#edit-contact', updateContact)
   
 });
