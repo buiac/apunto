@@ -247,9 +247,17 @@ module.exports = function(config, db) {
       }
     ).exec(function (err, events) {
 
+      // calculate the difference between now and the start of the event
+
       res.json({
         date: gte,
-        events: events
+        eventFirst: {
+          event: events[0],
+          timenow: gte,
+          eventStartsAt: events[0].start,
+          timeDifference: (new Date(events[0].start).getTime() - new Date(gte).getTime()) / 1000 / 60 + ' minutes'
+        }
+
       });
 
     })
