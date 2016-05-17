@@ -229,6 +229,34 @@ module.exports = function(config, db) {
 
   };
 
+  var remindTemp = function (req, res, next) {
+    var gte = new Date()
+    var lte = moment().add(1, 'day').endOf('day').toDate()
+
+    db.events.find({
+        start: {
+          $lte: lte,
+          $gte: gte
+        },
+        sent: {
+          $ne: true
+        }
+      }).sort(
+      {
+        start: -1
+      }
+    ).exec(function (err, events) {
+
+      res.json({
+        date: gte,
+        events: events
+      });
+
+    })
+
+
+  }
+
   var remind = function (req, res, next) {
 
     var date = new Date()
@@ -320,7 +348,8 @@ module.exports = function(config, db) {
     get: get,
     remove: remove,
     update: update,
-    remind: remind
+    remind: remind,
+    remindTemp: remindTemp
   };
 
 };

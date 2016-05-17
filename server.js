@@ -164,6 +164,7 @@ module.exports = (function() {
 
   // send reminders
   app.get('/api/1/event/remind/', events.remind);
+  app.get('/api/1/event/remindtemp/', events.remindTemp);
 
   // dashboard routes
   var dashboard = require('./app/controllers/dashboard.js')(config, db);
