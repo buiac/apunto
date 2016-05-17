@@ -243,7 +243,7 @@ module.exports = function(config, db) {
         }
       }).sort(
       {
-        start: -1
+        start: 1
       }
     ).exec(function (err, events) {
 
