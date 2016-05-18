@@ -27,7 +27,6 @@ module.exports = function(config, db) {
 
   var create = function(req, res, next) {
 
-    
     req.checkBody('name', 'Please enter the name of your client.').notEmpty();
     req.checkBody('number', 'Please enter client phone number.').notEmpty();
     req.checkBody('start', 'Start date should not be empty.').notEmpty();
@@ -36,13 +35,14 @@ module.exports = function(config, db) {
 
     var name = req.body.name.trim();
     var userName = req.body.userName.trim();
-    var companyName = req.body.message.trim();
+    var companyName = req.body.companyName.trim();
 
     var message = req.body.message.trim();
 
     var number = req.body.number.replace(/[-() ]/gi, '');
     var startDate = new Date(req.body.start);
     var endDate = new Date(req.body.end);
+    var reminderDate = new Date(req.body.reminderDate)
 
     // TODO add multiple validations after transforms
     var errors = req.validationErrors();
@@ -63,7 +63,8 @@ module.exports = function(config, db) {
       end: endDate,
       calendarId: req.params.calendarId,
       message: message,
-      templateId: req.body.templateId
+      templateId: req.body.templateId,
+      reminderDate: reminderDate
     };
 
     db.events.insert(event, function (err, newEvent) {
@@ -123,6 +124,7 @@ module.exports = function(config, db) {
     var message = req.body.message;
     var eventId = req.body._id;
     var templateId = req.body.templateId;
+    var reminderDate = Date.create(req.body.reminderDate);
 
     startDate = moment(startDate).toDate();
     endDate = moment(endDate).toDate();
@@ -145,7 +147,8 @@ module.exports = function(config, db) {
       end: endDate,
       calendarId: req.params.calendarId,
       message: message,
-      templateId: templateId
+      templateId: templateId,
+      reminderDate: reminderDate
     };
 
     db.events.update({'_id': eventId}, event, function (err, num, newEvent) {
@@ -255,98 +258,91 @@ module.exports = function(config, db) {
           event: events[0],
           timenow: gte,
           eventStartsAt: events[0].start,
-          timeDifference: (new Date(events[0].start).getTime() - new Date(gte).getTime()) / 1000 / 60 + ' minutes'
+          timeDifference: parseInt((new Date(events[0].start).getTime() - new Date(gte).getTime()) / 1000 / 60 / 60) + ' hours'
         }
 
       });
 
     })
-
-
   }
 
   var remind = function (req, res, next) {
 
     var date = new Date()
-
-    if (date.getHours() === 4) { //date.getHours === 4
-      var lte = moment().add(1, 'day').endOf('day').toDate()
-      var gte = moment().add(1, 'day').startOf('day').toDate()
-    
-      db.events.find({
-        start: {
-          $lte: lte,
-          $gte: gte
-        },
-        sent: {
-          $ne: true
-        }
-      }).sort(
-      {
-        start: -1
+    var lte = moment().add(5, 'minutes').toDate()
+    var gte = moment().toDate()
+  
+    db.events.find({
+      reminderDate: {
+        $lte: lte,
+        $gte: gte
+      },
+      sent: {
+        $ne: true
       }
-      ).exec(function (err, alerts) {
-
-        if (alerts.length) {
-
-          alerts.forEach(function (alert) {
-            
-          
-            client.sms.messages.create({
-                
-                to: alert.number,
-                from:'+13475146545',
-                body: alert.message + ' Reminded by Apunto'
-
-            }, function(error, message) {
-
-                // The HTTP request to Twilio will run asynchronously. This callback
-                // function will be called when a response is received from Twilio
-                // The "error" variable will contain error information, if any.
-                // If the request was successful, this value will be "falsy"
-                if (!error) {
-                    // The second argument to the callback will contain the information
-                    // sent back by Twilio for the request. In this case, it is the
-                    // information about the text messsage you just sent:
-                    db.events.update({
-                      _id: alert._id
-                    }, {
-                      $set: {
-                        sent: true,
-                        twilioRes: message
-                      }
-                    }, {}, function(err, num, alert) {
-
-                      res.json({
-                        sid: message.sid,
-                        dateCreated: message.dateCreated,
-                        alert: alert
-                      });
-
-                    });
-                    
-
-                } else {
-                  
-                  res.json({
-                    error: true,
-                    errorObj: error
-                  });
-                    
-                }
-
-            });
-
-          });
-        } else {
-          res.json({
-            alerts: []
-          });
-        }
-
-      });
-
+    }).sort(
+    {
+      start: -1
     }
+    ).exec(function (err, alerts) {
+
+      if (alerts.length) {
+
+        alerts.forEach(function (alert) {
+          
+          client.sms.messages.create({
+            to: alert.number,
+            from:'+13475146545',
+            body: alert.message + ' Reminded by Apunto'
+          }, function(error, message) {
+
+              // The HTTP request to Twilio will run asynchronously. This callback
+              // function will be called when a response is received from Twilio
+              // The "error" variable will contain error information, if any.
+              // If the request was successful, this value will be "falsy"
+              if (!error) {
+                  // The second argument to the callback will contain the information
+                  // sent back by Twilio for the request. In this case, it is the
+                  // information about the text messsage you just sent:
+                  db.events.update({
+                    _id: alert._id
+                  }, {
+                    $set: {
+                      sent: true,
+                      twilioRes: message
+                    }
+                  }, {}, function(err, num, alert) {
+
+                    res.json({
+                      sid: message.sid,
+                      dateCreated: message.dateCreated,
+                      alert: alert
+                    });
+
+                  });
+                  
+
+              } else {
+                
+                res.json({
+                  error: true,
+                  errorObj: error
+                });
+                  
+              }
+
+          });
+
+        });
+      } else {
+        res.json({
+          alerts: []
+        });
+      }
+
+    });
+
+    
     
   };
 

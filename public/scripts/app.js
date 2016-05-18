@@ -121,6 +121,8 @@ $(document).ready(function () {
         message = message.replace(new RegExp('{' + item + '}', 'gi'), obj[item]);
       });
 
+
+
       var data = {
         modal: {
           title: 'Schedule an event',
@@ -239,11 +241,15 @@ $(document).ready(function () {
         }]
       }
 
+      // number of hours the reminder should be sent
+      var reminderUnit = (new Date(event.start).getTime() - new Date(event.reminderDate).getTime()) / 3600000;
+
       data.modal = {
         idName: 'update',
         title: 'Update event',
         start: event.start.format('HH:mm'),
-        end: event.end.format('HH:mm')
+        end: event.end.format('HH:mm'),
+        reminderUnit: reminderUnit
       };
 
       data.event = event;
@@ -266,7 +272,9 @@ $(document).ready(function () {
     e.preventDefault();
 
     var $form = $(this).parents('.create-update');
-    var $alertDanger = $form.find('.alert-danger')
+    var $alertDanger = $form.find('.alert-danger');
+    var $reminderType = $form.find('[name=reminder-type]');
+    var $reminderUnit = $form.find('[name=reminder-unit]');
 
     var event = $('.create-update').serializeObject();
     event.userName = Apunto.config.userName;
@@ -283,6 +291,14 @@ $(document).ready(function () {
     // clear the error container of messages and hide it
     $alertDanger.html('')
     $form.removeClass('errors')
+
+    // set the reminder Date
+    if ($reminderType.val() === 'days') {
+      $reminderUnit.val(1)
+    }
+
+    var reminderDate = moment(event.start).subtract($reminderUnit.val(), $reminderType.val()).toDate();
+    event.reminderDate = reminderDate;
 
     $.ajax({
       type: 'POST',
@@ -318,12 +334,23 @@ $(document).ready(function () {
 
   // send data to server when user clicks on the update button in the modal
   var updateEvent = function (e) {
-    
     e.preventDefault();
+
+    var $form = $(this).parents('form')
+    var $reminderType = $form.find('[name=reminder-type]');
+    var $reminderUnit = $form.find('[name=reminder-unit]');
 
     var event = $('.create-update').serializeObject();
     event.number = $('.mobile-number').intlTelInput('getNumber');
     event.tzoffset = Apunto.config.tzoffset;
+
+    // set the reminder Date
+    if ($reminderType.val() === 'days') {
+      $reminderUnit.val(1)
+    }
+
+    var reminderDate = moment(event.start).subtract($reminderUnit.val(), $reminderType.val()).toDate();
+    event.reminderDate = reminderDate;
 
     $.ajax({
       type: 'PUT',
@@ -417,6 +444,26 @@ $(document).ready(function () {
       message = message.replace(new RegExp('{' + item + '}', 'gi'), obj[item]);
     });
 
+    var reminderDate = event.reminderDate;
+    var deltaMinutes = Math.abs(delta._milliseconds) / 60000;
+
+    
+    if (delta._milliseconds !== 0) {
+      if (delta._milliseconds < 0) {
+        reminderDate = moment(reminderDate).subtract(deltaMinutes , 'minutes').toDate()
+      } else {
+        reminderDate = moment(reminderDate).add(deltaMinutes, 'minutes').toDate()
+      }
+    } 
+
+    if (delta._days !== 0) {
+      if (delta._days < 0) {
+        reminderDate = moment(reminderDate).subtract(Math.abs(delta._days) , 'days').toDate()
+      } else {
+        reminderDate = moment(reminderDate).add(Math.abs(delta._days), 'days').toDate()
+      }
+    }
+    
     $.ajax({
       type: 'PUT',
       url: '/api/1/' + Apunto.config.calendarId + '/events/',
@@ -427,6 +474,7 @@ $(document).ready(function () {
         number: event.number,
         message: message,
         templateId: template[0]._id,
+        reminderDate: reminderDate,
         _id: event._id
       }
     }).done(function (res) {
@@ -576,7 +624,8 @@ $(document).ready(function () {
           name: event.title,
           number: event.number,
           message: message,
-          templateId: templates[0]._id
+          templateId: templates[0]._id,
+          reminderDate: moment(event.start).subtract(1, 'hours').toDate()
         }
       }).done(function (res) {
         
@@ -586,6 +635,16 @@ $(document).ready(function () {
     })
   };
 
+  var adjustNumberOfDays = function (e) {
+
+    var $reminderType = $('[name=reminder-type]')
+    var $reminderUnit = $('[name=reminder-unit]')
+
+    if ($reminderType.val() === 'days') {
+      $reminderUnit.val(1)
+    }
+  }
+
   $('body').on('click', '#create .create', createEvent);
   $('body').on('click', '#update .update', updateEvent);
   $('body').on('click', '.textarea-cover', enableTextarea);
@@ -594,6 +653,8 @@ $(document).ready(function () {
   $('body').on('change', '.modal-template-select', changeTemplate)
   $('body').on('click', '.template-list a', updateTemplateForm)
   $('body').on('click', '.template-add-new', showTemplateForm)
+  $('body').on('change', '[name=reminder-type]', adjustNumberOfDays)
+  
 
   var createCalendar = function () {
     

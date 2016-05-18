@@ -28,6 +28,7 @@
         </div>
       <% } %>
       
+
       <div class="contact-new">
 
         <div class="form-group">
@@ -48,8 +49,30 @@
 
       </div> <!-- client-new -->
 
-      <div class="contact-details"></div>
+      <div class="contact-details"></div>      
 
+      <div class="form-group">
+        <label for="">Send Reminder</label>
+        <div>
+          <select name="reminder-unit" id="">
+            <option value="1" <% if (modal.reminderUnit === 1) { %> selected <% } %>>1</option>
+            <option value="2" <% if (modal.reminderUnit === 2) { %> selected <% } %>>2</option>
+            <option value="3" <% if (modal.reminderUnit === 3) { %> selected <% } %>>3</option>
+            <option value="4" <% if (modal.reminderUnit === 4) { %> selected <% } %>>4</option>
+            <option value="5" <% if (modal.reminderUnit === 5) { %> selected <% } %>>5</option>
+            <option value="6" <% if (modal.reminderUnit === 6) { %> selected <% } %>>6</option>
+          </select>
+
+          <select name="reminder-type" id="">
+            <option value="hours" <% if (modal.reminderUnit < 6) { %> selected <% } %>>hours</option>
+            <option value="days" <% if (modal.reminderUnit > 6) { %> selected <% } %>>days</option>
+          </select>
+
+          before the appointment
+        </div>
+      </div>
+
+      
       <div class="form-group">
         
         <label for="">Select template</label>
@@ -61,8 +84,7 @@
         </select>
 
       </div>
-
-
+      
       <div class="modal-message-preview cf">
         <label for="" class="control-label">Message Preview</label>
         <div class="textarea-cover"></div>
