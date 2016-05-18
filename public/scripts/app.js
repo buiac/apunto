@@ -656,6 +656,19 @@ $(document).ready(function () {
     $('form.create-update').removeClass('contact-details--show').addClass('contact-new--show')
   }
 
+  var clearNewContactFields = function (e) {
+    e.preventDefault()
+    $('form.create-update').removeClass('contact-details--show').addClass('contact-new--show')
+
+    var $form = $(this).parents('form');
+    var $newContactFields = $form.find('.contact-new');
+    
+    // Clear fields
+    $newContactFields.find('[name="name"]').val('')
+    $newContactFields.find('[name="number"]').val('')
+    $newContactFields.find('[name="email"]').val('')
+  }
+
   $('body').on('click', '#create .create', createEvent);
   $('body').on('click', '#update .update', updateEvent);
   $('body').on('click', '.textarea-cover', enableTextarea);
@@ -667,6 +680,7 @@ $(document).ready(function () {
   $('body').on('change', '[name=reminder-type]', adjustNumberOfDays)
   $('body').on('click', '.contact-details .close', hideContactDetails)
   $('body').on('click', '.contact-details .change-contact', showContactNew)
+  $('body').on('click', '.add-new-contact', clearNewContactFields)
 
   var createCalendar = function () {
     

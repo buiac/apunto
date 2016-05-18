@@ -17,7 +17,10 @@
 
       <% if (modal.contacts.length) { %>
         <div class="form-group find-contact">
-          <label for="">Find client by name</label>
+          <label for="" class="clearfix" style="display: block;">
+            Find client by name 
+            <a href="" class="add-new-contact pull-right">Add new contact</a>
+          </label>
           <select name="" id="select-contact" class="form-control">
             <option value="">-- Click here to find client --</option>
             <% modal.contacts.forEach(function(contact){ %>  
@@ -49,7 +52,7 @@
 
         <div class="form-group">
           
-          <label for="" class="control-label">Client email</label>
+          <label for="" class="control-label">Client email (optional)</label>
           
           <input type="email" name="email" id="" class="form-control" value="<%= event.email %>" required>
 

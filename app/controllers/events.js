@@ -90,6 +90,7 @@ module.exports = function(config, db) {
       name: name,
       title: name,
       number: number,
+      email: email,
       calendarId: req.params.calendarId
     };
 
