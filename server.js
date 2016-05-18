@@ -89,6 +89,12 @@ module.exports = (function() {
     config = require('./data/config.js');  
   }
 
+  console.log('\n\n\n\n')
+  console.log('--------')
+  console.log(config)
+  console.log('--------')
+  console.log('\n\n\n\n')
+
   // config express
   app.use(bodyParser.json({
     limit: '50mb'
@@ -164,7 +170,6 @@ module.exports = (function() {
 
   // send reminders
   app.get('/api/1/event/remind/', events.remind);
-  app.get('/api/1/event/remindtemp/', events.remindTemp);
 
   // dashboard routes
   var dashboard = require('./app/controllers/dashboard.js')(config, db);

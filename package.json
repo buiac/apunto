@@ -27,6 +27,7 @@
     "sugar": "^1.4.1",
     "superagent": "0.18.x",
     "mailgun-js":"^0.7.10",
+    "marked": "^0.3.5",
     "q": "^1.4.1"
   },
   "devDependencies": {

@@ -2,13 +2,7 @@
 
   <div id="contacts">
     <div class="search-contacts clearfix">
-
       <input class="search form-control" placeholder="Search" />
-
-      <button class="sort btn btn-default" data-sort="name">
-        Sort alphabetically
-      </button>
-
     </div>
 
     <div>
@@ -19,7 +13,7 @@
 
       <% for(var i = 0; i < contacts.length; i++) { %>
         
-        <li class="drag-item clearfix" data-duration="01:00" data-event='{"title": "<%= contacts[i].title %>", "number": "<%= contacts[i].number %>"}'>
+        <li class="drag-item clearfix" data-duration="01:00" data-event='{"title": "<%= contacts[i].title %>", "number": "<%= contacts[i].number %>", "email": "<%= contacts[i].email %>"}'>
           
           <span class="name">
             <%= contacts[i].title %>

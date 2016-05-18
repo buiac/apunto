@@ -121,8 +121,6 @@ $(document).ready(function () {
         message = message.replace(new RegExp('{' + item + '}', 'gi'), obj[item]);
       });
 
-
-
       var data = {
         modal: {
           title: 'Schedule an event',
@@ -162,35 +160,37 @@ $(document).ready(function () {
       // init select2
       $('#select-contact').select2();
 
-      // create a hash out of the contacts
-      var contactsHash = {};
-      contacts.forEach(function (contact) {
-        contactsHash[contact._id] = contact
-      });
-
-      $('#select-contact').on('change', function (e) {
-        var contactId = $(this).val()
-        var contact = contactsHash[contactId] 
-        
-        // get the contacts template
-        $.ajax({
-          method: 'GET',
-          url: '/templates/modal-contact-template.ejs'
-        }).done(function (res) {
-          
-          var temp = ejs.render(res, {contact: contact})
-          
-          $('#create-modal .contact-details').empty().append(temp).addClass('contact-details--show')
-
-          // update inputs
-          $('.contact-new [name="name"]').val(contact.name)
-          $('.contact-new [name="number"]').val(contact.number)
-        });
-      });
-
-
+      
     })
   };
+
+  $('body').on('change','.find-contact select', function (e) {
+    // create a hash out of the contacts
+    var contactsHash = {};
+    contacts.forEach(function (contact) {
+      contactsHash[contact._id] = contact
+    });
+    var contactId = $(this).val()
+    var contact = contactsHash[contactId]
+    var $form = $(this).parents('form')
+    
+    // get the contacts template
+    $.ajax({
+      method: 'GET',
+      url: '/templates/modal-contact-template.ejs'
+    }).done(function (res) {
+      
+      var temp = ejs.render(res, {contact: contact})
+      
+      $form.find('.contact-details').empty().append(temp);
+      $form.addClass('contact-details--show')
+      
+      // update inputs
+      $form.find('.contact-new [name="name"]').val(contact.name)
+      $form.find('.contact-new [name="number"]').val(contact.number)
+      $form.find('.contact-new [name="email"]').val(contact.email)
+    });
+  });
 
   // select a different template for the message that will be sent
   var changeTemplate = function (e) {
@@ -249,7 +249,8 @@ $(document).ready(function () {
         title: 'Update event',
         start: event.start.format('HH:mm'),
         end: event.end.format('HH:mm'),
-        reminderUnit: reminderUnit
+        reminderUnit: reminderUnit,
+        contacts: contacts
       };
 
       data.event = event;
@@ -317,8 +318,6 @@ $(document).ready(function () {
       var errors = JSON.parse(res.responseText);
 
       $.each(errors, function (i, error) {
-        
-
 
         // update the error container with messages
         var msg = $('<p></p>').html(error.msg);
@@ -343,6 +342,7 @@ $(document).ready(function () {
     var event = $('.create-update').serializeObject();
     event.number = $('.mobile-number').intlTelInput('getNumber');
     event.tzoffset = Apunto.config.tzoffset;
+    event.companyName = Apunto.config.companyName;
 
     // set the reminder Date
     if ($reminderType.val() === 'days') {
@@ -423,7 +423,6 @@ $(document).ready(function () {
 
   // Resize and move around
   var eventUpdate = function (event, delta, revertFunc, jsEvent, ui, view) {
-    
     var id = event.templateId;
 
     // get the id of the template
@@ -471,7 +470,9 @@ $(document).ready(function () {
         start: event.start.toDate(),
         end: event.end.toDate(),
         name: event.title,
+        email: event.email,
         number: event.number,
+        companyName: Apunto.config.companyName,
         message: message,
         templateId: template[0]._id,
         reminderDate: reminderDate,
@@ -491,7 +492,7 @@ $(document).ready(function () {
     var deleteBtn = $('<a href="" class="delete-event fa fa-trash" data-id="' + event._id + '"></a>');
     $(element).append(deleteBtn);
 
-  }; 
+  };
 
   var setTimeline = function() {
     setTimeout(function () {
@@ -588,8 +589,8 @@ $(document).ready(function () {
 
   }
 
+  // Drag a contact from the right menu and drop into the calendar
   var eventReceive = function (event) {
-
     $.ajax({
       method: 'get',
       url: '/t/templatesJson/' + Apunto.config.userId
@@ -622,6 +623,7 @@ $(document).ready(function () {
           start: event.start.toDate(),
           end: event.end.toDate(),
           name: event.title,
+          email: event.email,
           number: event.number,
           message: message,
           templateId: templates[0]._id,
@@ -645,6 +647,15 @@ $(document).ready(function () {
     }
   }
 
+  var hideContactDetails = function (e) {
+    $('form.create-update').removeClass('contact-details--show')
+  }
+
+  var showContactNew = function (e) {
+    e.preventDefault()
+    $('form.create-update').removeClass('contact-details--show').addClass('contact-new--show')
+  }
+
   $('body').on('click', '#create .create', createEvent);
   $('body').on('click', '#update .update', updateEvent);
   $('body').on('click', '.textarea-cover', enableTextarea);
@@ -654,7 +665,8 @@ $(document).ready(function () {
   $('body').on('click', '.template-list a', updateTemplateForm)
   $('body').on('click', '.template-add-new', showTemplateForm)
   $('body').on('change', '[name=reminder-type]', adjustNumberOfDays)
-  
+  $('body').on('click', '.contact-details .close', hideContactDetails)
+  $('body').on('click', '.contact-details .change-contact', showContactNew)
 
   var createCalendar = function () {
     

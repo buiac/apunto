@@ -10,6 +10,7 @@ module.exports = function(config, db) {
   var fs = require('fs');
   var util = require('util');
   var twilio = require('twilio');
+  var marked = require('marked');
 
   var moment = require('moment');
 
@@ -22,8 +23,15 @@ module.exports = function(config, db) {
     config.gateway.debug
   );
 
+  // Setup twilio
   var twilio = require('twilio');
-  var client = new twilio.RestClient('AC843270d590f2988caf4993adb06e0294', 'bada3f2f91251f3c0f6edefe94022366');
+  var client = new twilio.RestClient(config.twilio.key, config.twilio.secret);
+
+  // Mailgun configuration
+  var Mailgun = require('mailgun-js');
+  var mailgun_api_key = config.mailgun.apikey;
+  var domain = 'getapunto.com';
+  var mailgun = new Mailgun({apiKey: mailgun_api_key, domain: domain});
 
   var create = function(req, res, next) {
 
@@ -43,6 +51,7 @@ module.exports = function(config, db) {
     var startDate = new Date(req.body.start);
     var endDate = new Date(req.body.end);
     var reminderDate = new Date(req.body.reminderDate)
+    var email = req.body.email;
 
     // TODO add multiple validations after transforms
     var errors = req.validationErrors();
@@ -64,7 +73,8 @@ module.exports = function(config, db) {
       calendarId: req.params.calendarId,
       message: message,
       templateId: req.body.templateId,
-      reminderDate: reminderDate
+      reminderDate: reminderDate,
+      email: email
     };
 
     db.events.insert(event, function (err, newEvent) {
@@ -118,7 +128,9 @@ module.exports = function(config, db) {
     req.checkBody('_id', 'ID should not be empty.').notEmpty();
 
     var name = req.body.name.trim();
+    var companyName = req.body.companyName.trim();
     var number = req.body.number.replace(/[-() ]/gi, '');
+    var email = req.body.email.trim();
     var startDate = Date.create(req.body.start);
     var endDate = Date.create(req.body.end);
     var message = req.body.message;
@@ -141,8 +153,10 @@ module.exports = function(config, db) {
     var event = {
       status: false,
       name: name,
+      email: email,
       title: name,
       number: number,
+      companyName: companyName,
       start: startDate,
       end: endDate,
       calendarId: req.params.calendarId,
@@ -232,44 +246,10 @@ module.exports = function(config, db) {
 
   };
 
-  var remindTemp = function (req, res, next) {
-    var gte = new Date()
-    var lte = moment().add(1, 'day').endOf('day').toDate()
-
-    db.events.find({
-        start: {
-          $lte: lte,
-          $gte: gte
-        },
-        sent: {
-          $ne: true
-        }
-      }).sort(
-      {
-        start: 1
-      }
-    ).exec(function (err, events) {
-
-      // calculate the difference between now and the start of the event
-
-      res.json({
-        date: gte,
-        eventFirst: {
-          event: events[0],
-          timenow: gte,
-          eventStartsAt: events[0].start,
-          timeDifference: parseInt((new Date(events[0].start).getTime() - new Date(gte).getTime()) / 1000 / 60 / 60) + ' hours'
-        }
-
-      });
-
-    })
-  }
-
   var remind = function (req, res, next) {
 
     var date = new Date()
-    var lte = moment().add(5, 'minutes').toDate()
+    var lte = moment().add(15, 'minutes').toDate()
     var gte = moment().toDate()
   
     db.events.find({
@@ -290,6 +270,34 @@ module.exports = function(config, db) {
 
         alerts.forEach(function (alert) {
           
+          if (alert.email) {
+
+            console.log('\n\n\n\n')
+            console.log('--------')
+            console.log(alert)
+            console.log('--------')
+            console.log('\n\n\n\n')
+            var reminderEmailConfig = {
+              from: 'contact@getapunto.com', // user.username
+              to: alert.email,
+              subject: alert.companyName + ' - appointment reminder',
+              html: marked(alert.message) + '<p>Reminded by <a href="http://getapunto.com">getapunto.com</a></p>'
+            };
+
+            //Invokes the method to send emails given the above data with the helper library
+            mailgun.messages().send(reminderEmailConfig, function (err, body) {
+              //If there is an error, render the error page
+              if (err) {
+                console.log('----error mailgun----')
+                console.log("got an error: ", err);
+              } else {  
+                console.log('----success mailgun----')
+                console.log(body);
+              }
+            });
+          }
+
+          // send sms reminder
           client.sms.messages.create({
             to: alert.number,
             from:'+13475146545',
@@ -352,8 +360,7 @@ module.exports = function(config, db) {
     get: get,
     remove: remove,
     update: update,
-    remind: remind,
-    remindTemp: remindTemp
+    remind: remind
   };
 
 };
