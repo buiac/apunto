@@ -697,4 +697,57 @@ body .timeline {
 
 }
 
+.event-sent {
+	position: absolute;
+  bottom: 30px;
+  left: 2px;
+}
 
+.event-sent--false .event-sent-false{
+	display: block;
+}
+
+.event-sent--false .event-sent-true {
+	display: none;
+}
+
+.event-sent--true .event-sent-true {
+	display: block;
+}
+
+.event-sent--true .event-sent-false {
+	display: none;
+}
+
+.event-status {
+	position: absolute;
+  bottom: 15px;
+  left: 2px;
+}
+
+.event-status--false .event-status-false {
+	display: block;
+}
+
+.event-status--false .event-status-1,
+.event-status--false .event-status-0 {
+	display: none;
+}
+
+.event-status--1 .event-status-1 {
+	display: block;
+}
+
+.event-status--1 .event-status-false,
+.event-status--1 .event-status-0 {
+	display: none;
+}
+
+.event-status--0 .event-status-0 {
+	display: block;
+}
+
+.event-status--0 .event-status-false,
+.event-status--0 .event-status-1 {
+	display: none;
+}

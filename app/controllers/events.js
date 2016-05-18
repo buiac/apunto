@@ -272,17 +272,11 @@ module.exports = function(config, db) {
         alerts.forEach(function (alert) {
           
           if (alert.email) {
-
-            console.log('\n\n\n\n')
-            console.log('--------')
-            console.log(alert)
-            console.log('--------')
-            console.log('\n\n\n\n')
             var reminderEmailConfig = {
               from: 'contact@getapunto.com', // user.username
               to: alert.email,
               subject: alert.companyName + ' - appointment reminder',
-              html: marked(alert.message) + '<p>Reminded by <a href="http://getapunto.com">getapunto.com</a></p>'
+              html: marked(alert.message) + '<p><a href="http://'+ config.ipAddress + ':' + config.port +'/api/1/event/confirm/' + alert._id + '/1">Yes</a></p><p><a href="http://'+ config.ipAddress + ':' + config.port + '/api/1/event/confirm/' + alert._id + '/0">No</a></p><p>Reminded by <a href="http://getapunto.com">getapunto.com</a></p>'
             };
 
             //Invokes the method to send emails given the above data with the helper library
@@ -350,9 +344,30 @@ module.exports = function(config, db) {
       }
 
     });
+  };
 
-    
-    
+  var confirm = function (req, res, next) {
+    console.log('\n\n\n\n')
+    console.log('----confirm----')
+    console.log(req.params)
+    console.log('--------')
+    console.log('\n\n\n\n')
+
+    db.events.update({
+      _id: req.params.eventId
+    }, {
+      $set: {
+        status: req.params.status
+      }
+    }, function (err, ev) {
+      console.log('\n\n\n\n')
+      console.log('---ev-----')
+      console.log(ev)
+      console.log('--------')
+      console.log('\n\n\n\n')
+    });
+
+    // res.render()
   };
 
   return {
@@ -361,7 +376,8 @@ module.exports = function(config, db) {
     get: get,
     remove: remove,
     update: update,
-    remind: remind
+    remind: remind,
+    confirm: confirm
   };
 
 };

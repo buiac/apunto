@@ -488,9 +488,14 @@ $(document).ready(function () {
 
   // Before rendering the event on the calendar
   var eventRender = function (event, element, view) {
+    event.sent = event.sent || false;
 
     var deleteBtn = $('<a href="" class="delete-event fa fa-trash" data-id="' + event._id + '"></a>');
+    var sent = $('<div class="event-sent event-sent--' + event.sent + '"><span class="event-sent-true">Reminder sent</span> <span class="event-sent-false">Reminder not sent yet</span></div>')
+    var status = $('<div class="event-status event-status--' + event.status + '"><span class="event-status-false">Not confirmed yet</span> <span class="event-status-1">Confirmed</span> <span class="event-status-0">Canceled</span></div>')
     $(element).append(deleteBtn);
+    $(element).append(sent);
+    $(element).append(status);
 
   };
 
