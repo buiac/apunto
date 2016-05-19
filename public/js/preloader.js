@@ -3,7 +3,7 @@ var cSpeed=3;
 	var cHeight=55;
 	var cTotalFrames=30;
 	var cFrameWidth=64;
-	var cImageSrc='images/sprites.gif';
+	var cImageSrc='/images/sprites.gif';
 	
 	var cImageTimeout=false;
 	

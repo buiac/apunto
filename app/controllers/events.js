@@ -11,10 +11,13 @@ module.exports = function(config, db) {
   var util = require('util');
   var twilio = require('twilio');
   var marked = require('marked');
-
   var moment = require('moment');
-
   var nexmo = require('easynexmo');
+  var path = require('path');
+
+  var EmailTemplate = require('email-templates').EmailTemplate
+  var templateDir = path.join(config.emailTemplates.folder, 'confirmation')
+  var confirmation = new EmailTemplate(templateDir)
 
   nexmo.initialize(
     config.gateway.key,
@@ -272,24 +275,35 @@ module.exports = function(config, db) {
         alerts.forEach(function (alert) {
           
           if (alert.email) {
-            var reminderEmailConfig = {
-              from: 'contact@getapunto.com', // user.username
-              to: alert.email,
-              subject: alert.companyName + ' - appointment reminder',
-              html: marked(alert.message) + '<p><a href="http://'+ config.ipAddress + ':' + config.port +'/api/1/event/confirm/' + alert._id + '/1">Yes</a></p><p><a href="http://'+ config.ipAddress + ':' + config.port + '/api/1/event/confirm/' + alert._id + '/0">No</a></p><p>Reminded by <a href="http://getapunto.com">getapunto.com</a></p>'
-            };
 
-            //Invokes the method to send emails given the above data with the helper library
-            mailgun.messages().send(reminderEmailConfig, function (err, body) {
-              //If there is an error, render the error page
-              if (err) {
-                console.log('----error mailgun----')
-                console.log("got an error: ", err);
-              } else {  
-                console.log('----success mailgun----')
-                console.log(body);
-              }
-            });
+            confirmation.render({
+              urlConfirm: 'http://'+ config.ipAddress + ':' + config.port +'/api/1/event/confirm/' + alert._id + '/1',
+              urlCancel: 'http://'+ config.ipAddress + ':' + config.port +'/api/1/event/confirm/' + alert._id + '/0'
+            }, function (err, result) {
+              
+              var reminderEmailConfig = {
+                from: 'contact@getapunto.com', // user.username
+                to: alert.email,
+                subject: alert.companyName + ' - appointment reminder',
+                html: result.html
+              };
+
+              // marked(alert.message) + '<p><a href="">Yes</a></p><p><a href="http://'+ config.ipAddress + ':' + config.port + '/api/1/event/confirm/' + alert._id + '/0">No</a></p><p>Reminded by <a href="http://getapunto.com">getapunto.com</a></p>'
+
+              //Invokes the method to send emails given the above data with the helper library
+              mailgun.messages().send(reminderEmailConfig, function (err, body) {
+                //If there is an error, render the error page
+                if (err) {
+                  console.log('----error mailgun----')
+                  console.log("got an error: ", err);
+                } else {  
+                  console.log('----success mailgun----')
+                  console.log(body);
+                }
+              });
+
+            })
+            
           }
 
           // send sms reminder
@@ -347,12 +361,6 @@ module.exports = function(config, db) {
   };
 
   var confirm = function (req, res, next) {
-    console.log('\n\n\n\n')
-    console.log('----confirm----')
-    console.log(req.params)
-    console.log('--------')
-    console.log('\n\n\n\n')
-
     db.events.update({
       _id: req.params.eventId
     }, {
@@ -360,14 +368,10 @@ module.exports = function(config, db) {
         status: req.params.status
       }
     }, function (err, ev) {
-      console.log('\n\n\n\n')
-      console.log('---ev-----')
-      console.log(ev)
-      console.log('--------')
-      console.log('\n\n\n\n')
+      res.render('thank-you-confirm')
     });
 
-    // res.render()
+    
   };
 
   return {

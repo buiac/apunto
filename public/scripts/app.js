@@ -687,6 +687,10 @@ $(document).ready(function () {
   $('body').on('click', '.contact-details .change-contact', showContactNew)
   $('body').on('click', '.add-new-contact', clearNewContactFields)
 
+  setInterval(function () {
+    calendar.fullCalendar( 'refetchEvents');
+  }, 60000)
+
   var createCalendar = function () {
     
     calendar = $('.calendar').fullCalendar({
