@@ -158,9 +158,9 @@ module.exports = (function() {
   var superadmin = require('./app/controllers/superadmin.js')(config, db);
 
   app.get('/api/1/events/:calendarId', events.list);
-  app.post('/api/1/:calendarId/events/', events.create);
-  app.put('/api/1/:calendarId/events/', events.update);
-  app.delete('/api/1/:calendarId/events/:eventId', events.remove);
+  app.post('/api/1/events/:calendarId/', events.create);
+  app.put('/api/1/events/:calendarId/', events.update);
+  app.delete('/api/1/events/:calendarId/:eventId', events.remove);
 
   // send reminders
   app.get('/api/1/event/remind/', events.remind);

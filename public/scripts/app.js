@@ -303,7 +303,7 @@ $(document).ready(function () {
 
     $.ajax({
       type: 'POST',
-      url: '/api/1/' + Apunto.config.calendarId + '/events/',
+      url: '/api/1/events/' + Apunto.config.calendarId,
       data: event
     }).done(function (res) {
       
@@ -354,7 +354,7 @@ $(document).ready(function () {
 
     $.ajax({
       type: 'PUT',
-      url: '/api/1/' + Apunto.config.calendarId + '/events/',
+      url: '/api/1/events/' + Apunto.config.calendarId,
       data: event
     }).done(function (res) {
       
@@ -394,7 +394,7 @@ $(document).ready(function () {
     
     $.ajax({
       type: 'DELETE',
-      url: '/api/1/' + Apunto.config.calendarId+'/events/' + event._id
+      url: '/api/1/events/' + Apunto.config.calendarId+'/' + event._id
     }).done(function (res) {
       
       calendar.fullCalendar('removeEvents', event._id);
@@ -465,7 +465,7 @@ $(document).ready(function () {
     
     $.ajax({
       type: 'PUT',
-      url: '/api/1/' + Apunto.config.calendarId + '/events/',
+      url: '/api/1/events/' + Apunto.config.calendarId,
       data: {
         start: event.start.toDate(),
         end: event.end.toDate(),
@@ -621,7 +621,7 @@ $(document).ready(function () {
 
       $.ajax({
         type: 'POST',
-        url: '/api/1/' + Apunto.config.calendarId + '/events/',
+        url: '/api/1/events/' + Apunto.config.calendarId,
         data: {
           userName: Apunto.config.userName,
           companyName: Apunto.config.companyName,
