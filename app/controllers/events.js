@@ -378,6 +378,11 @@ module.exports = function(config, db) {
   };
 
   var confirm = function (req, res, next) {
+    console.log('\n\n\n\n')
+    console.log('----req.params.eventId----')
+    console.log(req.params.eventId)
+    console.log('--------')
+    console.log('\n\n\n\n')
     db.events.update({
       _id: req.params.eventId
     }, {
