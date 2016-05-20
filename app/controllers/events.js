@@ -15,6 +15,12 @@ module.exports = function(config, db) {
   var nexmo = require('easynexmo');
   var path = require('path');
 
+  console.log('\n\n\n\n')
+  console.log('----config.emailTemplates.folder----')
+  console.log(config.emailTemplates.folder)
+  console.log('--------')
+  console.log('\n\n\n\n')
+
   var EmailTemplate = require('email-templates').EmailTemplate
   var templateDir = path.join(config.emailTemplates.folder, 'confirmation')
   var confirmation = new EmailTemplate(templateDir)
