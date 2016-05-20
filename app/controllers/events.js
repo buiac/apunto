@@ -280,7 +280,14 @@ module.exports = function(config, db) {
               urlConfirm: 'http://'+ config.ipAddress + ':' + config.port +'/api/1/event/confirm/' + alert._id + '/1',
               urlCancel: 'http://'+ config.ipAddress + ':' + config.port +'/api/1/event/confirm/' + alert._id + '/0'
             }, function (err, result) {
-              
+              if (err) {
+                console.log('\n\n\n\n')
+                console.log('---err-----')
+                console.log(err)
+                console.log('--------')
+                console.log('\n\n\n\n')
+                return;
+              }
               var reminderEmailConfig = {
                 from: 'contact@getapunto.com', // user.username
                 to: alert.email,
