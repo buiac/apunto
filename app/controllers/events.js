@@ -279,7 +279,7 @@ module.exports = function(config, db) {
             var baseUrl = 'http://'+ config.ipAddress + ':' + config.port;
 
             if (process.env.OPENSHIFT_NODEJS_IP) {
-              baseUrl = 'http://getapunto.com'
+              baseUrl = 'http://www.getapunto.com'
             }
 
             var confirmUrl = baseUrl +'/api/1/event/confirm/' + alert._id;
@@ -377,7 +377,7 @@ module.exports = function(config, db) {
     });
   };
 
-  var confirm = function (req, res, next) {
+  var confirm = function (req, res) {
 
     db.events.update({
       _id: req.params.eventId
