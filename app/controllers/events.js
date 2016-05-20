@@ -15,12 +15,6 @@ module.exports = function(config, db) {
   var nexmo = require('easynexmo');
   var path = require('path');
 
-  console.log('\n\n\n\n')
-  console.log('----config.emailTemplates.folder----')
-  console.log(config.emailTemplates.folder)
-  console.log('--------')
-  console.log('\n\n\n\n')
-
   var EmailTemplate = require('email-templates').EmailTemplate
   var templateDir = path.join(config.emailTemplates.folder, 'confirmation')
   var confirmation = new EmailTemplate(templateDir)
@@ -282,10 +276,20 @@ module.exports = function(config, db) {
           
           if (alert.email) {
 
-            confirmation.render({
-              urlConfirm: 'http://'+ config.ipAddress + ':' + config.port +'/api/1/event/confirm/' + alert._id + '/1',
-              urlCancel: 'http://'+ config.ipAddress + ':' + config.port +'/api/1/event/confirm/' + alert._id + '/0'
-            }, function (err, result) {
+            var baseUrl = 'http://'+ config.ipAddress + ':' + config.port;
+
+            if (process.env.OPENSHIFT_NODEJS_IP) {
+              baseUrl = 'http://getapunto.com'
+            }
+
+            var confirmUrl = baseUrl +'/api/1/event/confirm/' + alert._id;
+
+            var urls = {
+              urlConfirm: confirmUrl  + '/1',
+              urlCancel: confirmUrl + '/0'
+            };
+
+            confirmation.render(urls, function (err, result) {
               if (err) {
                 console.log('\n\n\n\n')
                 console.log('---err-----')
