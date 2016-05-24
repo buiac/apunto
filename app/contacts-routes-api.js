@@ -1,7 +1,7 @@
 module.exports = function (db) {
   var express = require('express');
   var router = express.Router();
-  var config = require('../data/config.js');
+  var config = require(((process.env.OPENSHIFT_APP_NAME) ? '../../' : '../') + 'data/config.js');
   var util = require('./services/util.js')(config, db);
   var contacts = require('./controllers/contacts.js')(config, db);
 

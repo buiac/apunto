@@ -27,7 +27,7 @@ module.exports = (function() {
     next();
   });
 
-  var config = require('./data/config.js');
+  var config = require(((process.env.OPENSHIFT_APP_NAME) ? '../' : './') + 'data/config.js');
   var datastore = require('./app/datastore.js');
   var db = datastore(config).db
   var dashboardRoutes = require('./app/dashboard-routes.js')(db);
