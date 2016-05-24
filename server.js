@@ -27,16 +27,16 @@ module.exports = (function() {
     next();
   });
 
-  var config = require(((process.env.NODE_ENV === 'local') ? './' : '../') + 'data/config.js');
+  var config = require('./data/config.js');
   var datastore = require('./app/datastore.js');
   var db = datastore(config).db
-  var dashboardRoutes = require(config.basePath + 'app/dashboard-routes.js')(db);
-  var settingsRoutes = require(config.basePath + 'app/settings-routes.js')(db);
-  var settingsRoutesApi = require(config.basePath + 'app/settings-routes-api.js')(db);
-  var eventsRoutesApi = require(config.basePath + 'app/events-routes-api.js')(db);
-  var contactsRoutesApi = require(config.basePath + 'app/contacts-routes-api.js')(db);
-  var authRoutes = require(config.basePath + 'app/auth-routes.js')(db);
-  var saRoutes = require(config.basePath + 'app/sa-routes.js')(db);
+  var dashboardRoutes = require('./app/dashboard-routes.js')(db);
+  var settingsRoutes = require('./app/settings-routes.js')(db);
+  var settingsRoutesApi = require('./app/settings-routes-api.js')(db);
+  var eventsRoutesApi = require('./app/events-routes-api.js')(db);
+  var contactsRoutesApi = require('./app/contacts-routes-api.js')(db);
+  var authRoutes = require('./app/auth-routes.js')(db);
+  var saRoutes = require('./app/sa-routes.js')(db);
 
   // config express
   app.use(expressSession({
