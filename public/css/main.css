@@ -1126,6 +1126,9 @@ img.mfp-img {
 
 /* Signin
 */
+.account {
+	background: #436FD2;
+}
 .account .home-content h1 {
 	text-align: center;
 	/*margin-bottom: 30px;*/

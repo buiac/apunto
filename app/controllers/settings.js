@@ -60,7 +60,7 @@ module.exports = function(config, db) {
     });
   };
 
-  var templatesJson = function (req, res, next) {
+  var templates = function (req, res, next) {
     var userId = req.params.userId;
 
     db.templates.find({
@@ -188,60 +188,14 @@ module.exports = function(config, db) {
     });
   };
 
-  var updateOnboarding = function (req, res, next) {
-    req.checkBody('name', 'Name should not be empty').notEmpty();
-    req.checkBody('companyName', 'Company name should not be empty').notEmpty();
-
-    var name = req.body.name.trim();
-    var companyName = req.body.companyName.trim();
-    var userId = req.body._id;
-
-
-    db.users.update({
-      _id: userId
-    }, {
-      $set: {
-        name: name,
-        companyName: companyName
-      }
-    }, {}, function(err, num, user) {
-
-
-
-      if (err) {
-        res.send({error: err}, 400);
-      }
-
-      if (num > 0) {
-        db.users.findOne({_id: userId}, function (err, doc) {
-          if (err) {
-            res.send({error: err}, 400);
-          }
-
-          res.json({
-            user: {
-              username: doc.username,
-              _id: doc._id,
-              name: doc.name || '',
-              companyName: doc.companyName || ''
-            }
-          });
-        });
-      }
-
-    });
-
-  };
-
   return {
     view: view,
     update: update,
     getUser: getUser,
-    updateOnboarding: updateOnboarding,
     templatesView: templatesView,
     addTemplate: addTemplate,
     deleteTemplate: deleteTemplate,
-    templatesJson: templatesJson
+    templates: templates
   };
 
 };

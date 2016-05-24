@@ -7,89 +7,44 @@ module.exports = (function() {
 
   var express = require('express');
   var expressSession = require('express-session');
+  var nconf = require('nconf');
 
   // validation library for whatever comes in through the forms
   var expressValidator = require('express-validator');
-
-  //var async = require('async');
-  var fs = require('fs');
-
-  var sugar = require('sugar');
 
   var bodyParser = require('body-parser');
   var errorhandler = require('errorhandler');
   var flash = require('connect-flash');
   var passport = require('passport');
-  var basicAuth = require('basic-auth-connect');
+  
   var LocalStrategy = require('passport-local').Strategy;
-  var moment   = require('moment');
+  var moment = require('moment');
 
   var app = express();
-  
-  app.use(expressSession({
-    secret: 'mySecretKey',
-    saveUninitialized: true,
-    resave: true       
-  }));
 
   app.use(function(req, res, next){
     res.locals.moment = moment;
     next();
   });
 
-  app.use(flash());
-  app.use(passport.initialize());
-  app.use(passport.session());
-
-  // Chekcs if user is authenticated
-  var isAuthenticated = function (req,res,next){
-    if (req.hostname === 'localhost') { // req.hostname === 'localhost'
-     
-     db.users.findOne({
-       username: 'sebi.kovacs@gmail.com'
-     }, function (err, user) {
-
-       req.user = user;
-       return next()
-       
-     })
-
-    } else {
-
-     if (req.isAuthenticated()){
-       return next();
-     } else {
-       res.redirect("/signin"); 
-     }
-    }
-  };
-
-  var adminAuth = basicAuth(function(user, pass, callback) {
-    var user, pass;
-    var admin = false;
-    
-    // if(process.env.OPENSHIFT_APP_NAME) {
-    //   admin = (user === config.superadmin.user && pass === config.superadmin.pass);
-    // } else {
-    //   admin = true;
-    // }
-
-
-    admin = (user === config.superadmin.user && pass === config.superadmin.pass);
-
-    callback(null, admin);
-  });
-
-  // configs
-  var config;
-
-  if (process.env.OPENSHIFT_APP_NAME) {
-    config = require('../data/config.js');  
-  } else {
-    config = require('./data/config.js');  
-  }
+  var config = require(((process.env.NODE_ENV === 'local') ? './' : '../') + 'data/config.js');
+  var datastore = require(config.basePath + 'app/datastore.js');
+  var db = datastore(config).db
+  var dashboardRoutes = require(config.basePath + 'app/dashboard-routes.js')(db);
+  var settingsRoutes = require(config.basePath + 'app/settings-routes.js')(db);
+  var settingsRoutesApi = require(config.basePath + 'app/settings-routes-api.js')(db);
+  var eventsRoutesApi = require(config.basePath + 'app/events-routes-api.js')(db);
+  var contactsRoutesApi = require(config.basePath + 'app/contacts-routes-api.js')(db);
+  var authRoutes = require(config.basePath + 'app/auth-routes.js')(db);
+  var saRoutes = require(config.basePath + 'app/sa-routes.js')(db);
 
   // config express
+  app.use(expressSession({
+    secret: config.sessionSecret,
+    saveUninitialized: true,
+    resave: true
+  }));
+
   app.use(bodyParser.json({
     limit: '50mb'
   }));
@@ -100,6 +55,10 @@ module.exports = (function() {
   }));
 
   app.use(expressValidator());
+
+  app.use(flash());
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   app.set('views', __dirname + '/app/views');
   app.set('view engine', 'ejs');
@@ -115,113 +74,18 @@ module.exports = (function() {
   app.all('*', function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type');
-
     next();
   });
-
-  // datastore
-  var Datastore = require('nedb');
-  var db = {};
-
-  db.alerts = new Datastore({
-    filename: config.dataDir + config.dbDir + '/alerts.db',
-    autoload: true
-  });
-
-  db.events = new Datastore({
-    filename: config.dataDir + config.dbDir + '/events.db',
-    autoload: true
-  });
-
-  db.users = new Datastore({
-    filename: config.dataDir + config.dbDir + '/users.db',
-    autoload: true
-  });
-
-  db.calendars = new Datastore({
-    filename: config.dataDir + config.dbDir + '/calendars.db',
-    autoload: true
-  });
-
-  db.contacts = new Datastore({
-    filename: config.dataDir + config.dbDir + '/contacts.db',
-    autoload: true
-  });
-
-  db.templates = new Datastore({
-    filename: config.dataDir + config.dbDir + '/templates.db',
-    autoload: true
-  });
-
-  // alert routes
-  var events = require('./app/controllers/events.js')(config, db);
-  var superadmin = require('./app/controllers/superadmin.js')(config, db);
-
-  app.get('/api/1/events/:calendarId', events.list);
-  app.post('/api/1/events/:calendarId/', events.create);
-  app.put('/api/1/events/:calendarId/', events.update);
-  app.delete('/api/1/events/:calendarId/:eventId', events.remove);
-
-  // send reminders
-  app.get('/api/1/event/remind/', events.remind);
-  app.get('/api/1/event/confirm/:eventId/:status', events.confirm);
-
-  // dashboard routes
-  var dashboard = require('./app/controllers/dashboard.js')(config, db);
-
-  app.get('/dashboard', isAuthenticated , dashboard.view);
-
-  // auth routes
-  var auth = require('./app/controllers/authenticate.js')(config, db);
-
-  app.get('/signup', auth.signupView);
-
-  app.post('/signup', auth.signup);
-
-  app.get('/signin', auth.signinView);
-
-  app.post('/signin', auth.signin);
   
-
-  /* Settings routes
-  */ 
-  var settings = require('./app/controllers/settings.js')(config, db);
-
-  app.get('/settings/account', isAuthenticated, settings.view);
-
-  app.post('/settings/account', isAuthenticated, settings.update);
+  // Routes
+  app.use('/dashboard', dashboardRoutes);
+  app.use('/settings', settingsRoutes);
+  app.use('/auth', authRoutes);
+  app.use('/sa', saRoutes);
+  app.use('/api/1/events', eventsRoutesApi);
+  app.use('/api/1/settings', settingsRoutesApi);
+  app.use('/api/1/contacts', contactsRoutesApi);
   
-  app.post('/onboarding', isAuthenticated, settings.updateOnboarding);
-  
-  app.get('/api/1/settings/:userId', isAuthenticated, settings.getUser);
-
-  /* Backend templates routes
-  */
-  app.get('/settings/templates', isAuthenticated, settings.templatesView)
-  app.post('/settings/templates', isAuthenticated, settings.addTemplate)
-  app.get('/settings/templates/:id', isAuthenticated, settings.deleteTemplate)
-  app.get('/t/templatesJson/:userId', isAuthenticated, settings.templatesJson)
-
-  /* Contacts Routes
-  */ 
-  var contacts = require('./app/controllers/contacts.js')(config, db);
-
-  app.get('/api/1/contacts/:calendarId', isAuthenticated, contacts.list);
-  app.post('/api/1/contacts/:calendarId', isAuthenticated, contacts.updateContact);
-  app.get('/api/1/contacts/:calendarId/delete/:contactId', isAuthenticated, contacts.deleteContact);
-
-
-  /* Superadmin routes
-  */
-  app.get('/sa/dashboard', adminAuth, superadmin.dashboard);
-  app.get('/sa/delete-user/:userId', adminAuth, superadmin.deleteUser);
-
-  // Logout
-  app.get('/signout', function(req, res) {
-    req.logout();
-    res.redirect('/signin');
-  });
-
   // start express server
   app.listen(config.port, config.ipAddress, function() {
     console.log(
@@ -232,7 +96,5 @@ module.exports = (function() {
     );
   });
 
-
   return app;
-
 }());

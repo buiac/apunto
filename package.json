@@ -23,6 +23,7 @@
     "mailgun-js": "^0.7.10",
     "marked": "^0.3.5",
     "moment": "2.8.x",
+    "nconf": "^0.8.4",
     "nedb": "1.0.x",
     "passport": "~0.2.0",
     "passport-local": "~1.0.0",

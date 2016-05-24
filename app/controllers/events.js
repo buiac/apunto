@@ -130,17 +130,17 @@ module.exports = function(config, db) {
     req.checkBody('end', 'End date should not be empty.').notEmpty();
     req.checkBody('message', 'Message should not be empty.').notEmpty();
     req.checkBody('_id', 'ID should not be empty.').notEmpty();
-
+    
     var name = req.body.name.trim();
     var companyName = req.body.companyName.trim();
     var number = req.body.number.replace(/[-() ]/gi, '');
     var email = req.body.email.trim();
-    var startDate = Date.create(req.body.start);
-    var endDate = Date.create(req.body.end);
+    var startDate = new Date(req.body.start);
+    var endDate = new Date(req.body.end);
     var message = req.body.message;
     var eventId = req.body._id;
     var templateId = req.body.templateId;
-    var reminderDate = Date.create(req.body.reminderDate);
+    var reminderDate = new Date(req.body.reminderDate);
 
     startDate = moment(startDate).toDate();
     endDate = moment(endDate).toDate();
@@ -276,13 +276,7 @@ module.exports = function(config, db) {
           
           if (alert.email) {
 
-            var baseUrl = 'http://'+ config.ipAddress + ':' + config.port;
-
-            if (process.env.OPENSHIFT_NODEJS_IP) {
-              baseUrl = 'http://www.getapunto.com'
-            }
-
-            var confirmUrl = baseUrl +'/api/1/event/confirm/' + alert._id;
+            var confirmUrl = config.baseUrl +'/api/1/events/r/confirm/' + alert._id;
 
             var urls = {
               urlConfirm: confirmUrl  + '/1',
@@ -299,13 +293,11 @@ module.exports = function(config, db) {
                 return;
               }
               var reminderEmailConfig = {
-                from: 'contact@getapunto.com', // user.username
+                from: config.sender.email, // user.username
                 to: alert.email,
                 subject: alert.companyName + ' - appointment reminder',
                 html: result.html
               };
-
-              // marked(alert.message) + '<p><a href="">Yes</a></p><p><a href="http://'+ config.ipAddress + ':' + config.port + '/api/1/event/confirm/' + alert._id + '/0">No</a></p><p>Reminded by <a href="http://getapunto.com">getapunto.com</a></p>'
 
               //Invokes the method to send emails given the above data with the helper library
               mailgun.messages().send(reminderEmailConfig, function (err, body) {
@@ -326,7 +318,7 @@ module.exports = function(config, db) {
           // send sms reminder
           client.sms.messages.create({
             to: alert.number,
-            from:'+13475146545',
+            from: config.sender.phone,
             body: alert.message + ' Reminded by Apunto'
           }, function(error, message) {
 

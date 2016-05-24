@@ -16,11 +16,7 @@ module.exports = function(config, db) {
   var mailgun_api_key = config.mailgun.apikey;
   var domain = 'getapunto.com';
   var mailgun = new Mailgun({apiKey: mailgun_api_key, domain: domain});
-
-  // Generates hash using bCrypt
-  var createHash = function(password){
-    return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
-  };
+  var util = require('../services/util.js')(config, db);
 
   // passport serializer
   passport.serializeUser(function(user, done) {
@@ -43,7 +39,7 @@ module.exports = function(config, db) {
       passReqToCallback : true
     },
     function (req, username, password, done) {
-      var findOrCreateUser = function(){
+      // var findOrCreateUser = function(){
         
         db.users.findOne({'username': username}, function (err, user) {
         
@@ -65,13 +61,27 @@ module.exports = function(config, db) {
             timecreated: new Date()
           };
 
-          var calendar = {}
+          var calendar = {};
+
+          var name = req.body.fullName;
+          var companyName = req.body.company;
+
+          if (!name) {
+            return done(null, false, 
+              req.flash('message', 'Please tell us your name'));
+          }
+
+          if (!companyName) {
+            return done(null, false, 
+              req.flash('message', 'Please tell us your company name'));
+          }          
 
           // set the user's local credentials
           newUser.username = username;
-          newUser.password = createHash(password);
+          newUser.password = util.createHash(password);
+          newUser.name = name;
+          newUser.companyName = companyName;
 
-          
           // set calendar default name
           calendar.name = 'Default name';
 
@@ -83,8 +93,8 @@ module.exports = function(config, db) {
             } else {
 
               var reminderEmailConfig = {
-                from: 'contact@getapunto.com', // user.username
-                to: 'contact@getapunto.com',
+                from: config.sender.email,
+                to: config.sender.email,
                 subject: 'new signup',
                 html: '<p>username: ' + newDoc.username
               };
@@ -119,16 +129,16 @@ module.exports = function(config, db) {
 
          }
         });
-      } // findorcreateuser
+      // } // findorcreateuser
 
-      process.nextTick(findOrCreateUser);
+      // process.nextTick(findOrCreateUser);
 
     }
   ));
 
   var signup = passport.authenticate('signup', {
     successRedirect: '/dashboard',
-    failureRedirect: '/signup',
+    failureRedirect: '/auth/signup',
     failureFlash : true
   });
 
@@ -151,7 +161,6 @@ module.exports = function(config, db) {
     },
     function (req, username, password, done) {
       
-        
       db.users.findOne({'username': username}, function (err, user) {
 
         if (err){
@@ -180,22 +189,25 @@ module.exports = function(config, db) {
 
   var signin = passport.authenticate('signin', {
     successRedirect: '/dashboard',
-    failureRedirect: '/signin',
+    failureRedirect: '/auth/signin',
     failureFlash : true
   });
 
+  var signout = function(req, res) {
+    req.logout();
+    res.redirect('/auth/signin');
+  }
+
   var signinView = function(req, res, next) {
-
     res.render('signin', {info: req.flash("message")});
-    
   };
-
 
   return {
     signupView: signupView,
     signup: signup,
     signinView: signinView,
-    signin: signin
+    signin: signin,
+    signout: signout
   };
 
 };

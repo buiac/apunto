@@ -48,7 +48,7 @@ $(document).ready(function () {
   // get the message templates created by the user
   $.ajax({
     method: 'get',
-    url: '/t/templatesJson/' + Apunto.config.userId
+    url: '/api/1/settings/templates/' + Apunto.config.userId
   }).done(function (res) {
     templates = res.templates
   })
@@ -96,7 +96,7 @@ $(document).ready(function () {
     // select templates
     $.ajax({
       method: 'get',
-      url: '/t/templatesJson/' + Apunto.config.userId
+      url: '/api/1/settings/templates/' + Apunto.config.userId
     }).done(function (res) {
       
       templates = res.templates;
@@ -228,7 +228,7 @@ $(document).ready(function () {
 
     $.ajax({
       method: 'get',
-      url: '/t/templatesJson/' + Apunto.config.userId
+      url: '/api/1/settings/templates/' + Apunto.config.userId
     }).done(function (res) {
 
       templates = res.templates;
@@ -598,7 +598,7 @@ $(document).ready(function () {
   var eventReceive = function (event) {
     $.ajax({
       method: 'get',
-      url: '/t/templatesJson/' + Apunto.config.userId
+      url: '/api/1/settings/templates/' + Apunto.config.userId
     }).done(function (res) {
       
       templates = res.templates

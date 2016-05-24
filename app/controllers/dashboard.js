@@ -17,23 +17,11 @@ module.exports = function(config, db) {
       if (!calendar) {
         res.send({error: 'error'}, 400);
       }
-      
-      if (calendar) {
-        
-        request
-        .get(config.ipAddress + ':' + config.port + '/api/1/alerts/' + calendar._id)
-        .end(function(err, response){
           
-          res.render('dashboard', {
-            alerts: response.body,
-            user: req.user,
-            calendar: calendar
-          });
-
-        });
-
-      }
-
+      res.render('dashboard', {
+        user: req.user,
+        calendar: calendar
+      });
     });
   };
 
