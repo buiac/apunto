@@ -28,7 +28,7 @@ module.exports = (function() {
   });
 
   var config = require(((process.env.NODE_ENV === 'local') ? './' : '../') + 'data/config.js');
-  var datastore = require(config.basePath + 'app/datastore.js');
+  var datastore = require('./app/datastore.js');
   var db = datastore(config).db
   var dashboardRoutes = require(config.basePath + 'app/dashboard-routes.js')(db);
   var settingsRoutes = require(config.basePath + 'app/settings-routes.js')(db);
