@@ -4,14 +4,7 @@
 module.exports = function(config, db) {
   'use strict';
 
-  var express = require('express');
-  var request = require('superagent');
-  var async = require('async');
-  var fs = require('fs');
-  var util = require('util');
-  var passport = require('passport');
-
-  var view = function (req, res, next) {
+  var view = function (req, res) {
 
     db.users.findOne({'_id': req.user._id}, function (err, user) {
 
@@ -30,7 +23,7 @@ module.exports = function(config, db) {
     });
   };
 
-  var templatesView = function (req, res, next) {
+  var templatesView = function (req, res) {
 
     db.users.findOne({'_id': req.user._id}, function (err, user) {
 
@@ -52,15 +45,12 @@ module.exports = function(config, db) {
             user: user,
             templates: templates
           });
-
-        })
-
+        });
       }
-
     });
   };
 
-  var templates = function (req, res, next) {
+  var templates = function (req, res) {
     var userId = req.params.userId;
 
     db.templates.find({
@@ -69,19 +59,17 @@ module.exports = function(config, db) {
       
       res.json({
         templates: templates
-      })
-    })
-  }
+      });
+    });
+  };
 
-  var addTemplate = function (req, res, next) {
+  var addTemplate = function (req, res) {
     var name = req.body.name;
     var message = req.body.message;
     var userId = req.body.userId;
     var templateId = req.body.templateId;
 
-
     if (templateId) {
-
       // perform an update
       db.templates.update({
         _id: templateId
@@ -90,10 +78,9 @@ module.exports = function(config, db) {
           name: name,
           message: message
         }
-      }, function (err, num) {
-        
-        res.redirect('/settings/templates')
-      })
+      }, function () {
+        res.redirect('/settings/templates');
+      });
 
     } else {
       // create a new template
@@ -101,25 +88,23 @@ module.exports = function(config, db) {
         name: name,
         message: message,
         userId: userId
-      }, function (err, newDoc) {
-        
-        res.redirect('/settings/templates')
-      })
+      }, function () {
+        res.redirect('/settings/templates');
+      });
     }
   };
 
-  var deleteTemplate = function (req, res, next) {
-    var id = req.params.id
+  var deleteTemplate = function (req, res) {
+    var id = req.params.id;
 
     db.templates.remove({
       _id: id
-    }, function (err, num) {
-      res.redirect('/settings/templates')
-    })
-  }
+    }, function () {
+      res.redirect('/settings/templates');
+    });
+  };
 
-  var getUser = function (req, res, next) {
-
+  var getUser = function (req, res) {
     db.users.findOne({'_id': req.params.userId}, function (err, user) {
 
       if (!user) {
@@ -127,7 +112,6 @@ module.exports = function(config, db) {
       }
       
       if (user) {
-        
         res.json({
           user: {
             username: user.username,
@@ -136,27 +120,23 @@ module.exports = function(config, db) {
             companyName: user.companyName || ''
           }
         });
-
       }
-
     });
-
   };
 
-  var update = function (req, res, next) {
+  var update = function (req, res) {
     req.checkBody('name', 'Name should not be empty').notEmpty();
     req.checkBody('userName', 'User name should not be empty').notEmpty();
     req.checkBody('template', 'Template should not be empty').notEmpty();
 
     var name = req.body.name.trim();
-    var companyName = req.body.companyName.trim();
-    
+    var companyName = req.body.companyName.trim();    
     var userName = req.body.userName.trim();
     var userId = req.body._id;
-
+    var template;
 
     if (req.body.template) {
-      var template = req.body.template.trim();
+      template = req.body.template.trim();
     }
 
     db.users.update({
@@ -168,7 +148,7 @@ module.exports = function(config, db) {
         username: userName,
         template: template
       }
-    }, {}, function(err, num, user) {
+    }, {}, function(err) {
 
       if (err) {
         res.send({error: err}, 400);

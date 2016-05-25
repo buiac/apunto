@@ -4,20 +4,15 @@
 module.exports = function(config, db) {
   'use strict';
 
-  var express = require('express');
-  var request = require('superagent');
-  var async = require('async');
-  var fs = require('fs');
   var util = require('util');
   var twilio = require('twilio');
-  var marked = require('marked');
   var moment = require('moment');
   var nexmo = require('easynexmo');
   var path = require('path');
 
-  var EmailTemplate = require('email-templates').EmailTemplate
-  var templateDir = path.join(config.emailTemplates.folder, 'confirmation')
-  var confirmation = new EmailTemplate(templateDir)
+  var EmailTemplate = require('email-templates').EmailTemplate;
+  var templateDir = path.join(config.emailTemplates.folder, 'confirmation');
+  var confirmation = new EmailTemplate(templateDir);
 
   nexmo.initialize(
     config.gateway.key,
@@ -27,7 +22,6 @@ module.exports = function(config, db) {
   );
 
   // Setup twilio
-  var twilio = require('twilio');
   var client = new twilio.RestClient(config.twilio.key, config.twilio.secret);
 
   // Mailgun configuration
@@ -36,8 +30,7 @@ module.exports = function(config, db) {
   var domain = 'getapunto.com';
   var mailgun = new Mailgun({apiKey: mailgun_api_key, domain: domain});
 
-  var create = function(req, res, next) {
-
+  var create = function(req, res) {
     req.checkBody('name', 'Please enter the name of your client.').notEmpty();
     req.checkBody('number', 'Please enter client phone number.').notEmpty();
     req.checkBody('start', 'Start date should not be empty.').notEmpty();
@@ -53,7 +46,7 @@ module.exports = function(config, db) {
     var number = req.body.number.replace(/[-() ]/gi, '');
     var startDate = new Date(req.body.start);
     var endDate = new Date(req.body.end);
-    var reminderDate = new Date(req.body.reminderDate)
+    var reminderDate = new Date(req.body.reminderDate);
     var email = req.body.email;
 
     // TODO add multiple validations after transforms
@@ -81,12 +74,10 @@ module.exports = function(config, db) {
     };
 
     db.events.insert(event, function (err, newEvent) {
-
       res.json({
         message: 'Create successful.',
         event: newEvent
       });
-
     });
 
     var contact = {
@@ -109,21 +100,17 @@ module.exports = function(config, db) {
       }
 
       if (!doc) {
-
-        db.contacts.insert(contact, function (err, newContact) {
-          
+        db.contacts.insert(contact, function (err) {
           if (err) {
             res.json(util.inspect(errors), 400);
             return;
           }
-
         });
       }
     });
-
   };
 
-  var update = function (req, res, next) {
+  var update = function (req, res) {
     req.checkBody('name', 'Title should not be empty').notEmpty();
     req.checkBody('number', 'Number should not be empty.').notEmpty();
     req.checkBody('start', 'Start date should not be empty.').notEmpty();
@@ -169,37 +156,26 @@ module.exports = function(config, db) {
       reminderDate: reminderDate
     };
 
-    db.events.update({'_id': eventId}, event, function (err, num, newEvent) {
-      
+    db.events.update({'_id': eventId}, event, function (err, num) {
       if (num > 0) {
-        
         db.events.findOne({'_id': eventId}, function (err, doc) {
-
           res.json({
             message: 'Update successfull.',
             event: doc
           });
-
         });
-
       } else {
-
         res.json(util.inspect(errors), 400);
-
       }
-
     });
-  }
+  };
 
-  var list = function(req, res, next) {
-
+  var list = function(req, res) {
     db.events.find({
       calendarId: req.params.calendarId
     }).sort({
       date: -1
     }).exec(function (err, events) {
-
-
       if(err) {
         return res.send(err, 400);
       }
@@ -209,32 +185,10 @@ module.exports = function(config, db) {
       }
 
       res.json(events);
-
     });
-
   };
 
-  var get = function(req, res, next) {
-
-    db.events.findOne({
-      _id: req.params.eventId
-    }).exec(function (err, event) {
-
-      if(err) {
-        return res.send(err, 400);
-      }
-
-      if (!alert) {
-        event = {};
-      }
-
-      res.json(event);
-
-    });
-
-  };
-
-  var remove = function(req, res, next) {
+  var remove = function(req, res) {
     var id = req.params.alertId;
     db.events.remove({
       _id: req.params.eventId
@@ -245,16 +199,12 @@ module.exports = function(config, db) {
       }
 
       res.json({message: 'Delete successful ' + id, num: num});
-
     });
-
   };
 
-  var remind = function (req, res, next) {
-
-    var date = new Date()
-    var lte = moment().add(15, 'minutes').toDate()
-    var gte = moment().toDate()
+  var remind = function (req, res) {
+    var lte = moment().add(15, 'minutes').toDate();
+    var gte = moment().toDate();
   
     db.events.find({
       reminderDate: {
@@ -264,18 +214,14 @@ module.exports = function(config, db) {
       sent: {
         $ne: true
       }
-    }).sort(
-    {
+    }).sort({
       start: -1
-    }
-    ).exec(function (err, alerts) {
+    }).exec(function (err, alerts) {
 
       if (alerts.length) {
 
         alerts.forEach(function (alert) {
-          
           if (alert.email) {
-
             var confirmUrl = config.baseUrl +'/api/1/events/r/confirm/' + alert._id;
 
             var urls = {
@@ -285,13 +231,12 @@ module.exports = function(config, db) {
 
             confirmation.render(urls, function (err, result) {
               if (err) {
-                console.log('\n\n\n\n')
-                console.log('---err-----')
-                console.log(err)
-                console.log('--------')
-                console.log('\n\n\n\n')
+                console.log('---err-----');
+                console.log(err);
+                
                 return;
               }
+
               var reminderEmailConfig = {
                 from: config.sender.email, // user.username
                 to: alert.email,
@@ -303,16 +248,14 @@ module.exports = function(config, db) {
               mailgun.messages().send(reminderEmailConfig, function (err, body) {
                 //If there is an error, render the error page
                 if (err) {
-                  console.log('----error mailgun----')
-                  console.log("got an error: ", err);
+                  console.log('----error mailgun----');
+                  console.log('got an error: ', err);
                 } else {  
-                  console.log('----success mailgun----')
+                  console.log('----success mailgun----');
                   console.log(body);
                 }
               });
-
-            })
-            
+            });
           }
 
           // send sms reminder
@@ -344,54 +287,41 @@ module.exports = function(config, db) {
                       dateCreated: message.dateCreated,
                       alert: alert
                     });
-
                   });
-                  
-
               } else {
-                
                 res.json({
                   error: true,
                   errorObj: error
                 });
-                  
               }
-
           });
-
         });
       } else {
         res.json({
           alerts: []
         });
       }
-
     });
   };
 
   var confirm = function (req, res) {
-
     db.events.update({
       _id: req.params.eventId
     }, {
       $set: {
         status: req.params.status
       }
-    }, function (err, ev) {
-      res.render('thank-you-confirm')
+    }, function () {
+      res.render('thank-you-confirm');
     });
-
-    
   };
 
   return {
     create: create,
     list: list,
-    get: get,
     remove: remove,
     update: update,
     remind: remind,
     confirm: confirm
   };
-
 };

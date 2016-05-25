@@ -1,4 +1,5 @@
 module.exports = function(config) {
+  'use strict';
   var Datastore = require('nedb');
   var db = {};
 
@@ -34,5 +35,5 @@ module.exports = function(config) {
 
   return {
     db: db
-  }
-}
+  };
+};

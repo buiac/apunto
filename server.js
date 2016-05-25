@@ -7,7 +7,6 @@ module.exports = (function() {
 
   var express = require('express');
   var expressSession = require('express-session');
-  var nconf = require('nconf');
 
   // validation library for whatever comes in through the forms
   var expressValidator = require('express-validator');
@@ -16,8 +15,7 @@ module.exports = (function() {
   var errorhandler = require('errorhandler');
   var flash = require('connect-flash');
   var passport = require('passport');
-  
-  var LocalStrategy = require('passport-local').Strategy;
+
   var moment = require('moment');
 
   var app = express();
@@ -29,7 +27,7 @@ module.exports = (function() {
 
   var config = require(((process.env.OPENSHIFT_APP_NAME) ? '../' : './') + 'data/config.js');
   var datastore = require('./app/datastore.js');
-  var db = datastore(config).db
+  var db = datastore(config).db;
   var dashboardRoutes = require('./app/dashboard-routes.js')(db);
   var settingsRoutes = require('./app/settings-routes.js')(db);
   var settingsRoutesApi = require('./app/settings-routes-api.js')(db);

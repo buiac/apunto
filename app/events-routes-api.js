@@ -1,8 +1,8 @@
 module.exports = function (db) {
+  'use strict';
   var express = require('express');
   var router = express.Router();
   var config = require(((process.env.OPENSHIFT_APP_NAME) ? '../../' : '../') + 'data/config.js');
-  var util = require('./services/util.js')(config, db);
   var events = require('./controllers/events.js')(config, db);
 
   // middleware that is specific to this router
@@ -20,4 +20,4 @@ module.exports = function (db) {
   router.get('/r/confirm/:eventId/:status', events.confirm);
 
   return router;
-}
+};

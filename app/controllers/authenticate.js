@@ -1,13 +1,6 @@
+'use strict';
 module.exports = function(config, db) {
-	var express = require('express');
-  var expressSession = require('express-session');
-
-  var expressValidator = require('express-validator');
   var bCrypt = require('bcrypt-nodejs');
-
-  var bodyParser = require('body-parser');
-  var errorhandler = require('errorhandler');
-  var flash = require('connect-flash');
   var passport = require('passport');
   var LocalStrategy = require('passport-local').Strategy;
 
@@ -103,12 +96,12 @@ module.exports = function(config, db) {
               mailgun.messages().send(reminderEmailConfig, function (err, body) {
                   //If there is an error, render the error page
                   if (err) {
-                    console.log('----error mailgun----')
-                    console.log("got an error: ", err);
+                    console.log('----error mailgun----');
+                    console.log('got an error: ', err);
                   }
                   //Else we can greet and leave
                   else {
-                    console.log('----success mailgun----')
+                    console.log('----success mailgun----');
                     console.log(body);
                   }
               });
@@ -117,7 +110,7 @@ module.exports = function(config, db) {
                 name: 'Default template',
                 message: 'Reminder: you have an appointment on {date} starting at {time} with {full_name} from {company_name}.',
                 userId: newDoc._id
-              })
+              });
 
               // insert the calendar
               calendar.userId = newDoc._id;
@@ -129,10 +122,6 @@ module.exports = function(config, db) {
 
          }
         });
-      // } // findorcreateuser
-
-      // process.nextTick(findOrCreateUser);
-
     }
   ));
 
@@ -142,10 +131,10 @@ module.exports = function(config, db) {
     failureFlash : true
   });
 
-  var signupView = function(req, res, next) {
+  var signupView = function(req, res) {
 
     res.render('signup', {
-      info: req.flash("message")
+      info: req.flash('message')
     });
 
   };
@@ -196,10 +185,10 @@ module.exports = function(config, db) {
   var signout = function(req, res) {
     req.logout();
     res.redirect('/auth/signin');
-  }
+  };
 
-  var signinView = function(req, res, next) {
-    res.render('signin', {info: req.flash("message")});
+  var signinView = function(req, res) {
+    res.render('signin', {info: req.flash('message')});
   };
 
   return {

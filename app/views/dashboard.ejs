@@ -24,6 +24,15 @@
 
 <body>
 
+  <div>
+    
+    <div class="main">
+      <div class="calendar" data-calendarid="<%= calendar._id %>" data-companyname="<%= user.companyName %>" data-username="<%= user.name %>" data-template="<%= user.template %>" >
+        
+      </div>
+    </div>
+  </div>
+
   <nav class="navbar navbar-inverse navbar-static-top">
     
     <div class="container-fluid">
@@ -36,7 +45,7 @@
               <span class="logo"></span>
             </a>
 
-          </div> <!-- navbar-header -->
+          </div>
 
           <a href="/auth/signout" class="pull-right btn btn-default btn-logout" title="Log out"><i class="fa fa-power-off"></i></a>
 
@@ -51,26 +60,23 @@
             </ul>
           </div>
 
-        </div> <!-- col -->
-      </div> <!-- row -->
-    </div> <!-- container-fluid -->
+        </div> 
+      </div> 
+    </div> 
   </nav>
-        
-  <div class="calendar" data-calendarid="<%= calendar._id %>" data-companyname="<%= user.companyName %>" data-username="<%= user.name %>" data-template="<%= user.template %>" >
-    
-  </div>
 
-  <div class="contacts-list" data-userid="<%= user._id %>" >
-
-    <div class="contacts-list-header">
-      <a href="" class="btn btn-primary btn-new-contact"><i class="fa fa-plus-circle"></i> Create new contact</a>
-    </div>
-        
-    <div class="contacts-list-content">
+  <div class="sidebar">
+    <div class="contacts-list" data-userid="<%= user._id %>">
+      <div class="contacts-list-header">
+        <a href="" class="btn btn-primary btn-new-contact"><i class="fa fa-plus-circle"></i> Create new contact</a>
+      </div>
+          
+      <div class="contacts-list-content">
+      </div>
+      
     </div>
     
   </div>
-
 
   <div class="modal" id="create-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -121,6 +127,7 @@
   <script src="bower_components/intl-tel-input/build/js/intlTelInput.js"></script>
   <script src="bower_components/list.js/dist/list.js"></script>
   <script src="bower_components/select2/dist/js/select2.js"></script>
+  <script src="bower_components/i18next/i18next.js"></script>
 
   <script src="/bower_components/sweetalert/dist/sweetalert.min.js"></script>
   <script src="scripts/app.js"></script>

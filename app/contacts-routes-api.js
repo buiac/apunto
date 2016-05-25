@@ -1,3 +1,4 @@
+'use strict';
 module.exports = function (db) {
   var express = require('express');
   var router = express.Router();
@@ -16,4 +17,4 @@ module.exports = function (db) {
   router.get('/:calendarId/delete/:contactId', util.isAuthenticated, contacts.deleteContact);
 
   return router;
-}
+};

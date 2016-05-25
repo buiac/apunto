@@ -1,4 +1,6 @@
-$(document).ready(function () {
+'use strict';
+(function ($, ejs) {
+  $(document).ready(function () {
 
   var contactEditTemplate = null;
   var Apunto = {};
@@ -48,29 +50,26 @@ $(document).ready(function () {
     var temp = ejs.render(contactEditTemplate, data);
     
     // clear html 
-    modalContent.html('')
-
+    modalContent.html('');
     modalContent.append(temp);
-
-    modal.modal()
+    modal.modal();
 
     $('.mobile-number').intlTelInput({
       defaultCountry: 'auto',
       utilsScript: '/bower_components/intl-tel-input/lib/libphonenumber/build/utils.js'
     });
-
   }
 
   var showEditContactModal = function (e) {
-    e.preventDefault()
+    e.preventDefault();
 
     var modal = $('#contact-modal');
     var modalContent = modal.find('.modal-content');
 
-    var name = $(this).data('name')
-    var number = $(this).data('number')
-    var email = $(this).data('email')
-    var contactId = $(this).data('id')
+    var name = $(this).data('name');
+    var number = $(this).data('number');
+    var email = $(this).data('email');
+    var contactId = $(this).data('id');
 
     var data = {
       modal: {
@@ -89,11 +88,11 @@ $(document).ready(function () {
     var temp = ejs.render(contactEditTemplate, data);
     
     // clear html 
-    modalContent.html('')
+    modalContent.html('');
 
     modalContent.append(temp);
 
-    modal.modal()
+    modal.modal();
 
     $('.mobile-number').intlTelInput({
       defaultCountry: 'auto',
@@ -102,12 +101,11 @@ $(document).ready(function () {
   };
 
   function updateContact (e) {
-    e.preventDefault()
-
-    var $form = $(this);
+    e.preventDefault();
     
-    var url = '/api/1/contacts/' + Apunto.config.calendarId
-    var $alert = $form.find('.alert')
+    var $form = $(e.target);
+    var url = '/api/1/contacts/' + Apunto.config.calendarId;
+    var $alert = $form.find('.alert');
 
     var contact = {
       name: $form.find('[name="name"]').val(),
@@ -118,7 +116,7 @@ $(document).ready(function () {
     };
 
     if ($form.find('[name="contactId"]').val()) {
-      contact.contactId = $form.find('[name="contactId"]').val()
+      contact.contactId = $form.find('[name="contactId"]').val();
     }
 
     // check if the email is good
@@ -127,7 +125,7 @@ $(document).ready(function () {
       $form.addClass('errors');
 
       // update the error div message
-      $alert.html('<p>The email address is incorect</p>')
+      $alert.html('<p>The email address is incorect</p>');
 
       return;
     }
@@ -136,16 +134,14 @@ $(document).ready(function () {
       method: 'POST',
       url: url,
       data: contact
-    }).done(function (res) {
-      
-      window.location.reload()
-      
-    })
+    }).done(function () {
+      window.location.reload();
+    });
   }
 
-  $('body').on('click', '.btn-new-contact', showNewContactModal)
-  $('body').on('submit', '#create-contact', updateContact)
-  $('body').on('click', '.edit-contact', showEditContactModal)
-  $('body').on('submit', '#edit-contact', updateContact)
-  
+  $('body').on('click', '.btn-new-contact', showNewContactModal);
+  $('body').on('submit', '#create-contact', updateContact);
+  $('body').on('click', '.edit-contact', showEditContactModal);
+  $('body').on('submit', '#edit-contact', updateContact);
 });
+})(window.jQuery, window.ejs);

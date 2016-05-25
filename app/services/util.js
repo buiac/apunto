@@ -14,14 +14,13 @@ module.exports = function(config, db) {
 
   var isAuthenticated = function (req, res, next) {
     if (config.env === 'local') {
-     
       db.users.findOne({
        username: 'sebi.kovacs@gmail.com'
       }, function (err, user) {
         if (user) {
           
           req.user = user;
-          return next()
+          return next();
 
         } else {
           db.users.insert({
@@ -32,10 +31,10 @@ module.exports = function(config, db) {
             companyName: 'GOT Industries'
           }, function (err, newUser) {
             req.user = newUser;
-            return next()            
-          })
+            return next();       
+          });
         }
-      })
+      });
 
     } else {
 
@@ -48,7 +47,6 @@ module.exports = function(config, db) {
   };
 
   var adminAuth = basicAuth(function(user, pass, callback) {
-    var user, pass;
     var admin = false;
 
     admin = (user === config.superadmin.user && pass === config.superadmin.pass);
@@ -62,5 +60,4 @@ module.exports = function(config, db) {
     adminAuth: adminAuth,
     createHash: createHash
   };
-
 };

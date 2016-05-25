@@ -1,4 +1,5 @@
 module.exports = function (db) {
+  'use strict';
   var express = require('express');
   var router = express.Router();
   var config = require(((process.env.OPENSHIFT_APP_NAME) ? '../../' : '../') + 'data/config.js');
@@ -12,7 +13,7 @@ module.exports = function (db) {
   });
 
   router.get('/:userId', util.isAuthenticated, settings.getUser);
-  router.get('/templates/:userId', util.isAuthenticated, settings.templates)
+  router.get('/templates/:userId', util.isAuthenticated, settings.templates);
 
   return router;
-}
+};

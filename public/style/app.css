@@ -1,3 +1,6 @@
+body {
+	background: #e4e5e6;
+}
 body,
 html,
 #calendar,
@@ -34,6 +37,10 @@ div.clear {
 	background: #436FD2;
 	border-bottom: 0;
 	margin-bottom: 0;
+	position: fixed;
+	top: 0;
+	z-index: 14;
+	width: 100%;
 }
 .navbar>.container-fluid .navbar-brand {
 	width: 93px;
@@ -211,7 +218,6 @@ div.clear {
 }
 
 .fc-toolbar {
-	background: #F1F5F8;
 	margin-bottom: 0;
 	color: #646464;
 	position: relative;
@@ -265,38 +271,23 @@ p.text-white {
 */
 body .calendar {
 	width: 100%;
-}
-body .calendar{
-	-webkit-transition: width .1s ease-in-out;
-  -moz-transition: width .1s ease-in-out;
-  -o-transition: width .1s ease-in-out;
-  transition: width .1s ease-in-out;
-
-  width: 80%;
+	background: #FFF;
 }
 
 /* Draggable */
 .search-contacts {
-	margin-bottom: 20px;
+	background: #FFF;
+	padding: 10px;
 }
 
 .search-contacts input {
 	float: left;
-	width: 50%;
 	margin-right: 10px;
 }
 
 .search-contacts button {
 	width: 40%;
 }
-
-.contacts-list {
-	width: 0;
-	background: #F1F5F8;
-	height: 100%;
-	display: none;
-}
-
 
 .contacts-list .edit-contact,
 .contacts-list .delete-contact {
@@ -333,16 +324,7 @@ body .calendar{
 }
 
 body .contacts-list{
-	-webkit-transition: width .1s ease-in-out;
-  -moz-transition: width .1s ease-in-out;
-  -o-transition: width .1s ease-in-out;
-  transition: width .1s ease-in-out;
-	
 	display: block;
-  width: 20%;
-  position: absolute;
-  right: 0;
-  top: 50px;
 }
 
 .contacts-list-header {
@@ -620,7 +602,8 @@ body .timeline {
 }
 
 .settings {
-
+	padding: 70px 20px 30px;
+	background: #FFF;
 }
 
 .settings .nav-stacked {
@@ -750,4 +733,38 @@ body .timeline {
 .event-status--0 .event-status-false,
 .event-status--0 .event-status-1 {
 	display: none;
+}
+
+
+.sidebar {
+	position: fixed;
+	top: 0;
+	left: auto;
+	right: 0;
+	height: 100%;
+	width: 280px;
+	z-index: 10;
+	overflow: hidden;
+	padding-top: 50px;
+}
+
+.navbar-new {
+	margin: 0;
+	padding: 0;
+	height: 50px;
+	border: none;
+	border-bottom: 1px solid #d1d4d7;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+	color: #2a2c36;
+	line-height: 50px;
+	background: #fff;
+	
+	width: 100%;
+	z-index: 11;
+}
+
+.main {
+	padding: 80px 280px 0 30px;
 }

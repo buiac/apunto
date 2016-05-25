@@ -1,38 +1,7 @@
-/* dashboard
- */
-
 module.exports = function(config, db) {
   'use strict';
 
-  var express = require('express');
-  var request = require('superagent');
-  var async = require('async');
-  var fs = require('fs');
-  var util = require('util');
-  var passport = require('passport');
-
-  var view = function(req, res, next) {
-
-    db.users.findOne({'_id': req.user._id}, function (err, user) {
-
-      if (!user) {
-        res.send({error: err}, 400);
-      }
-      
-      if (user) {
-        
-        res.render('settings', {
-          user: user,
-        });
-
-      }
-
-    });
-  };
-
-
-  var list = function (req, res, next) {
-    
+  var list = function (req, res) {
     db.contacts.find({calendarId: req.params.calendarId}, function (err, docs) {
 
       if (err) {
@@ -60,20 +29,19 @@ module.exports = function(config, db) {
 
   };
 
-  var deleteContact = function (req, res, next) {
+  var deleteContact = function (req, res) {
     db.contacts.remove({
       _id: req.params.contactId
-    }, function (err, num) {
+    }, function (err) {
       if (!err) {
         res.json({
           message: 'done'
         });
       }
+    });
+  };
 
-    })
-  }
-
-  var updateContact = function (req, res, next) {
+  var updateContact = function (req, res) {
     var contactId = req.body.contactId;
 
     var contact = {
@@ -81,7 +49,7 @@ module.exports = function(config, db) {
       title: req.body.title,
       number: req.body.number,
       email: req.body.email
-    }
+    };
 
     if (contactId) {
       db.contacts.update({
@@ -94,7 +62,7 @@ module.exports = function(config, db) {
             contact: newContact
           });
         }
-      })      
+      });
     } else {
       // create new contact
       db.contacts.insert(req.body, function (err, newContact) {
@@ -103,15 +71,13 @@ module.exports = function(config, db) {
             contact: newContact
           });
         }
-      })
+      });
     }
-  }
+  };
 
   return {
-    // view: view,
     list: list,
     deleteContact: deleteContact,
     updateContact: updateContact
   };
-
 };

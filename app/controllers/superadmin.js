@@ -7,17 +7,17 @@ module.exports = function(config, db) {
   var q = require('q');
   var moment = require('moment');
 
-  var getAllUsers = function (params) {
+  var getAllUsers = function () {
     var deferred = q.defer();
 
     db.users.find({}, function (err, users) {
 
       if (err) {
-        deferred.reject(err)
+        deferred.reject(err);
         return;
       }
 
-      deferred.resolve(users)
+      deferred.resolve(users);
 
     });
 
@@ -32,12 +32,12 @@ module.exports = function(config, db) {
     }, function (err, calendar) {
 
       if (err) {
-        deferred.reject(err)
+        deferred.reject(err);
         return;
       }
 
-      deferred.resolve(calendar)
-    })
+      deferred.resolve(calendar);
+    });
 
     return deferred.promise;
   };
@@ -57,19 +57,17 @@ module.exports = function(config, db) {
     }, function (err, events) {
 
       if (err) {
-        deferred.reject(err)
+        deferred.reject(err);
         return;
       }
 
-      deferred.resolve(events)
-    })
+      deferred.resolve(events);
+    });
 
     return deferred.promise;
   };
 
-  var dashboard = function (req, res, next) {
-    
-    var start = new Date().getTime()
+  var dashboard = function (req, res) {
 
     getAllUsers({}).then(function (users) {
       
@@ -82,22 +80,20 @@ module.exports = function(config, db) {
       });
 
       q.all(arr).then(function (calendars) {
-        
-        // TODO match users and calendars
 
         // create a hash
-        var usersHash = {}
+        var usersHash = {};
         users.forEach(function (user) {
-          usersHash[user._id] = user
-        })
+          usersHash[user._id] = user;
+        });
 
         calendars.forEach(function (calendar) {
           if (calendar.userId in usersHash) {
-            usersHash[calendar.userId].calendar = calendar
+            usersHash[calendar.userId].calendar = calendar;
           }
-        })        
+        });    
 
-        var array = []
+        var array = [];
 
         calendars.forEach(function (calendar) {
           array.push(getEvents({
@@ -107,35 +103,33 @@ module.exports = function(config, db) {
 
         q.all(array).then(function (events) {
 
-          var events = [].concat.apply([], events);
+          events = [].concat.apply([], events);
 
-          var calendarHash = {}
+          var calendarHash = {};
 
           users.forEach(function (user) {
-            calendarHash[user.calendar._id] = user
-          })
+            calendarHash[user.calendar._id] = user;
+          });
 
           events.forEach(function (event) {
             if (event.calendarId in calendarHash) {
               if (!calendarHash[event.calendarId].events) {
-                calendarHash[event.calendarId].events = []
+                calendarHash[event.calendarId].events = [];
               }
 
-              calendarHash[event.calendarId].events.push(event)
+              calendarHash[event.calendarId].events.push(event);
             }
-          })
+          });
 
           res.render('superadmin/dashboard.ejs', {
             users: users
-          }) 
-          var end = new Date().getTime()
-
-        })
-      })
-    })
+          });
+        });
+      });
+    });
   };
 
-  var deleteUser = function (req, res, next) {
+  var deleteUser = function (req, res) {
     // /sa/delete-user/:userId
 
     var userId = req.params.userId;
@@ -145,26 +139,24 @@ module.exports = function(config, db) {
       
       db.events.remove({
         calendarId: calendar._id
-      }, function (err, num) {
+      }, function () {
         
         db.calendars.remove({
           userId: userId
-        }, function (err, num) {
+        }, function () {
           
           db.users.remove({
             _id: userId
-          }, function  (err, num) {
+          }, function  () {
             res.redirect('/sa/dashboard');
-          })
-        })
-
-      })
-    })    
-  }
+          });
+        });
+      });
+    }); 
+  };
 
   return {
     dashboard: dashboard,
     deleteUser: deleteUser
   };
-
 };
