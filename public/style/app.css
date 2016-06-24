@@ -97,8 +97,8 @@ div.clear {
 
 .fc-event {
 	background: #1d9d74;
-	border: none;
-	border-radius: 0;
+	border: 1px solid #fff;
+	border-radius: 3px;
 }
 
 .fc-event:hover .delete-event {
