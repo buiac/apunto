@@ -705,6 +705,7 @@
           end: '17:00',
           dow: [ 1, 2, 3, 4, 5 ]
         },
+        hiddenDays: [0,6],
         header: {
           left: '',
           center: 'title',
