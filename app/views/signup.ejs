@@ -4,7 +4,7 @@
 
   <p>Gratuit primele 30 de zile</p>
 
-  <form action="/auth/signup" method="POST">
+  <form action="/auth/signup" method="POST" class="auth-form cf">
     <% if (info.length) { %>
       <div class="alert alert-danger">
         <%= info %>
@@ -34,5 +34,5 @@
 
   </form>
 
-  <a href="/auth/signin" style="display: block; text-align: center; margin: 20px 0 0;">Am deja cont</a>
+  <a href="/auth/signin" class="auth-already">Am deja cont</a>
 <%- include ./partials/auth-footer %>

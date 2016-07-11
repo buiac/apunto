@@ -1,7 +1,7 @@
 <%- include ./partials/auth-header %>
 
 <h1>Sign In</h1>
-<form action="/auth/signin" method="POST" class="cf">
+<form action="/auth/signin" method="POST" class="cf auth-form">
   <% if (info.length) { %>
     <div class="alert alert-danger">
       <%= info %>
@@ -17,10 +17,10 @@
     <input type="password" class="form-control" name="password">
   </div>
 
-  <a href="/auth/signup">Creaza cont nou</a>
-
   <button type="submit" class="btn btn-primary btn-animated">Submit</button>
 
 </form>
+
+<a href="/auth/signup" class="auth-already">Creaza cont nou</a>
 
 <%- include ./partials/auth-footer %>
