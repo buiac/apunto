@@ -38,8 +38,14 @@
 
         // init draggable
         $('.drag-item').draggable({
-            revert: true,      // immediately snap back to original position
-            revertDuration: 0  //
+            revert: true,
+            revertDuration: 0,
+            start: function(e, ui) {
+              $(e.target).parent().css('overflow', 'visible')
+            },
+            stop: function(e, ui) {
+              $(e.target).parent().css('overflow', 'auto')
+            }, 
         });
         
       });
