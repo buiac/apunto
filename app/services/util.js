@@ -13,7 +13,7 @@ module.exports = function(config, db) {
   };
 
   var isAuthenticated = function (req, res, next) {
-    if (config.env === 'local') {
+    if (false) {
       db.users.findOne({
        username: 'sebi.kovacs@gmail.com'
       }, function (err, user) {

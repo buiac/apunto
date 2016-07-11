@@ -52,22 +52,9 @@
 
     };
 
-    $('.show-clients').click(function (e) {
-      e.preventDefault();
-      
-      if (searchToggle) {
-        $('body').removeClass('search-active');
-      } else {
-        $('body').addClass('search-active');
-      }
-      
-      searchToggle = !searchToggle;
-      
+    setTimeout(function () {
       getContacts();
-
-    });
-
-    getContacts();
+    }, 500)
 
     $('.contacts-list-header .close').on('click', function (e) {
       e.preventDefault();
