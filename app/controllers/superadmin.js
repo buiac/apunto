@@ -47,12 +47,14 @@ module.exports = function(config, db) {
     var deferred = q.defer();
 
     // get the events in the last 3 months
-    var startDate = new Date(moment().subtract(1, 'months').format());
+    var startDate = new Date(moment().subtract(1, 'months').startOf('month').format());
+    var endDate = new Date(moment().subtract(1, 'months').endOf('month').format());
 
     db.events.find({
       calendarId: params.calendarId,
       start: {
-        $gte: startDate
+        $gte: startDate,
+        $lte: endDate
       }
     }, function (err, events) {
 
