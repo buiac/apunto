@@ -15,10 +15,15 @@
       <% users.forEach(function(user, i){ %>
       <tr>
         <td><%= user.username %></td>
-        <td style="text-align: center;">
+        <td style="text-align: left;">
           
           <% if (user.events) { %>
-            <span class="label label-primary" style="font-size: 14px;"><%= user.events.length %></span>
+            <div>
+              <span>Number of messages sent: <strong><%= user.events.length %></strong></span>
+            </div>
+            <div>
+              <span>Estimated price: <strong>$<%= user.events.length * 0.07367%></strong></span>
+            </div>
             <% } else { %>
               <span class="label label-danger" style="font-size: 14px;">0</span>
             <% } %>
