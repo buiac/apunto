@@ -54,6 +54,11 @@ div.clear {
 	top: 8px;
 }
 
+.navbar>.container-fluid .navbar-brand.notice {
+	margin: 0;
+	left: 44px;
+}
+
 .navbar .logo {
 	width: 93px;
 	height: 35px;

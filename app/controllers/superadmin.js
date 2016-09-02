@@ -131,73 +131,6 @@ module.exports = function(config, db) {
     
   }
 
-  
-  // var dashboard = function (req, res) {
-
-  //   getAllUsers({}).then(function (users) {
-      
-  //     var arr = [];
-      
-  //     users.forEach(function (user) {
-  //       arr.push(getCalendar({
-  //         userId: user._id
-  //       }));
-  //     });
-
-  //     q.all(arr).then(function (calendars) {
-
-  //       // create a hash
-  //       var usersHash = {};
-  //       users.forEach(function (user) {
-  //         usersHash[user._id] = user;
-  //       });
-
-  //       calendars.forEach(function (calendar) {
-  //         if (calendar && calendar.userId in usersHash) {
-  //           usersHash[calendar.userId].calendar = calendar;
-  //         }
-  //       });    
-
-
-  //       var array = [];
-
-  //       calendars.forEach(function (calendar) {
-  //         if (calendar) {
-  //           array.push(getEvents({
-  //             calendarId: calendar._id
-  //           }));
-  //         }
-          
-  //       });
-
-  //       q.all(array).then(function (events) {
-
-  //         events = [].concat.apply([], events);
-
-  //         var calendarHash = {};
-
-  //         users.forEach(function (user) {
-  //           calendarHash[user.calendar._id] = user;
-  //         });
-
-  //         events.forEach(function (event) {
-  //           if (event.calendarId in calendarHash) {
-  //             if (!calendarHash[event.calendarId].events) {
-  //               calendarHash[event.calendarId].events = [];
-  //             }
-
-  //             calendarHash[event.calendarId].events.push(event);
-  //           }
-  //         });
-
-  //         res.render('superadmin/dashboard.ejs', {
-  //           users: users
-  //         });
-  //       });
-  //     });
-  //   });
-  // };
-
   var deleteUser = function (req, res) {
     // /sa/delete-user/:userId
 
@@ -224,8 +157,42 @@ module.exports = function(config, db) {
     }); 
   };
 
+  var upgradeUser = function (req, res) {
+    db.users.findOne({
+      _id: req.params.userId
+    }, function (err, user) {
+      if (err) {
+        res.send({error: err}, 400)
+        return
+      }
+
+      // upgrade user
+      var payment = {
+        type: 'pro',
+        interval: req.params.interval,
+        startDate: new Date(),
+        endDate: moment().add(req.params.interval, 'months').toDate()
+      }
+
+      db.users.update({
+        _id: req.params.userId
+      },{
+        $set:{
+          payment: payment
+        }
+      }, function (err, updated) {
+        if (err) {
+          res.send({error: err}, 400)
+          return   
+        }
+        res.redirect('/sa/dashboard');
+      })
+    })
+  }
+
   return {
     dashboard: dashboard,
-    deleteUser: deleteUser
+    deleteUser: deleteUser,
+    upgradeUser: upgradeUser
   };
 };

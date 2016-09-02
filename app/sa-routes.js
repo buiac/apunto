@@ -13,7 +13,8 @@ module.exports = function (db) {
   });
 
   router.get('/dashboard', util.adminAuth, superadmin.dashboard);
-  router.get('/delete-user/:userId', util.adminAuth, superadmin.deleteUser);  
+  router.get('/delete-user/:userId', util.adminAuth, superadmin.deleteUser);
+  router.get('/upgrade-user/:userId/:interval', util.adminAuth, superadmin.upgradeUser);
 
   return router;
 };

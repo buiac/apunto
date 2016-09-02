@@ -10,11 +10,21 @@
           <th>Appointments (last 3 months)</th>
           <th>Account Created on</th>
           <th></th>
+          <th></th>
         </tr>
       </thead>
       <% users.forEach(function(user, i){ %>
       <tr>
-        <td><%= user.username %></td>
+        <td>
+          <div>
+            <%= user.username %>
+          </div>
+          <% if (user.payment) { %>
+            <span class="label label-success"><%= user.payment.type %> for <%= user.payment.interval %> months</span>
+          <% } else { %>
+            <span class="label label-warning">free</span>
+          <% } %>
+        </td>
         <td style="text-align: left;">
           
           <% if (user.events) { %>
@@ -36,6 +46,17 @@
         </td>
         <td style="text-align: center;">
           <a href="/sa/delete-user/<%= user._id %>" class="btn btn-danger btn-sm">delete user</a>
+        </td>
+        <td style="font-size: 11px;">
+          <div>
+            <a href="/sa/upgrade-user/<%= user._id %>/1" class="upgrade-user">Upgrade for 1 month</a>
+          </div>
+          <div>
+            <a href="/sa/upgrade-user/<%= user._id %>/3" class="upgrade-user">Upgrade for 2 months</a>
+          </div>
+          <div>
+            <a href="/sa/upgrade-user/<%= user._id %>/12" class="upgrade-user">Upgrade for 1 year</a>
+          </div>
         </td>
       </tr>
       <% }) %>
