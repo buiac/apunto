@@ -33,7 +33,6 @@
     </div>
   </div>
   <% var daysLeft = moment(new Date(user.payment.endDate)).diff(new Date(), 'days') %>
-  <% daysLeft = -1 %>
   <nav class="navbar navbar-inverse navbar-static-top">
     
     <div class="container-fluid">
@@ -59,14 +58,12 @@
           </div>
           
           <% if (user.payment && daysLeft <= 5 && daysLeft > 0) { %>
-            <span class="label label-warning pull-right" style="font-size: 14px;margin: 15px 10px 0 0;">Atentie! Au ramas doar <%= daysLeft %> zile pana la expirarea abonamentului. <a href="">Click aici pentru a remedia situatia.</a></span>
+            <span class="label label-warning pull-right" style="font-size: 14px;margin: 15px 10px 0 0;">Atentie! Au ramas doar <%= daysLeft %> zile pana la expirarea abonamentului. <a href="/settings/billing">Click aici pentru a remedia situatia.</a></span>
           <% } else if (user.payment && daysLeft === 0) { %>
-            <span class="label label-danger pull-right" style="font-size: 14px;margin: 15px 10px 0 0;">Atentie! Abonamentul dvs. expira azi. <a href="" style="color: #fff; text-decoration: underline">Click aici pentru a remedia situatia.</a></span>
+            <span class="label label-danger pull-right" style="font-size: 14px;margin: 15px 10px 0 0;">Atentie! Abonamentul dvs. expira azi. <a href="/settings/billing" style="color: #fff; text-decoration: underline">Click aici pentru a remedia situatia.</a></span>
           <% } else if (user.payment && daysLeft < 0) { %>
-            <span class="label label-danger pull-right" style="font-size: 14px;margin: 15px 10px 0 0;">Abonamentul dvs. a expirat. <a href="" style="color: #fff; text-decoration: underline">Click aici pentru a remedia situatia.</a></span>
+            <span class="label label-danger pull-right" style="font-size: 14px;margin: 15px 10px 0 0;">Abonamentul dvs. a expirat. <a href="/settings/billing" style="color: #fff; text-decoration: underline">Click aici pentru a remedia situatia.</a></span>
           <% } %>
-
-
         </div> 
       </div> 
     </div> 

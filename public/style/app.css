@@ -825,3 +825,73 @@ body .timeline {
 	padding: 80px 280px 0 30px;
 }
 
+/* Pricing Table
+*/
+.pricing-table {
+  font-family: Arial, sans-serif;
+  margin: 10%;
+  padding: 0 0 1px 0;
+  background: #FFF;
+  box-shadow: rgba(0,0,0, .5) 0px 1px 5px;
+}
+
+.pricing-table .header {
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.pricing-table .body {
+  padding: 30px 60px;
+}
+
+.pricing-table .body ul {
+  list-style-type: square;
+}
+
+.pricing-table .body ul li {
+  margin: 0 0 15px 0;
+  color: #333;
+}
+
+.pricing-table .price {
+  padding: 10px 30px;
+  background: #29B6F6;
+  color: #FFF;
+}
+
+.pricing-table .price-interval {
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.pricing-table .price-bonus {
+  font-family: 'Open Sans Condensed', sans-serif;
+  font-size: 23px;
+  color: #ffcc00;
+}
+
+.pricing-table .price-year {
+  background: #0288D1;
+}
+
+.pricing-table .price .price-int {
+  font-family: 'Oxygen', sans-serif;
+  font-size: 48px;
+  font-weight: bold;
+}
+
+.pricing-table .btn-price-cta {
+	font-size: 24px;
+	display: block;
+	width: 250px;
+	margin: 30px auto 5px;
+	border-radius: 0;
+}
+
+.price-notice {
+	font-size: 12px;
+	font-style: italic;
+	display: block;
+	text-align: center;
+	margin-bottom: 30px;
+}

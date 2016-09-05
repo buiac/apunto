@@ -4,6 +4,10 @@
 module.exports = function(config, db) {
   'use strict';
 
+    var twilio = require('twilio');
+    // Setup twilio
+    var client = new twilio.RestClient(config.twilio.key, config.twilio.secret);
+
   var view = function (req, res) {
 
     db.users.findOne({'_id': req.user._id}, function (err, user) {
@@ -168,6 +172,35 @@ module.exports = function(config, db) {
     });
   };
 
+  var billingView = function (req, res) {
+    res.render('settings/billing', {
+      user: req.user, 
+      success: false
+    });
+  }
+
+  var order = function (req, res) {
+    client.sms.messages.create({
+      to: '+40755052956',
+      from: config.sender.phone,
+      body: 'A new order from ' + req.user.name
+    }, function(error, message) {
+        
+        if (!error) {
+          res.render('settings/billing', {
+            user: req.user,
+            success: true
+          })      
+        } else {
+          res.json({
+            error: true,
+            errorObj: error
+          });
+        }
+    });
+    
+  }
+
   return {
     view: view,
     update: update,
@@ -175,7 +208,9 @@ module.exports = function(config, db) {
     templatesView: templatesView,
     addTemplate: addTemplate,
     deleteTemplate: deleteTemplate,
-    templates: templates
+    templates: templates,
+    billingView: billingView,
+    order: order
   };
 
 };

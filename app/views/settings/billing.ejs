@@ -1,0 +1,68 @@
+  <%- include ../partials/header %>
+
+  <div class="container settings">
+    
+    <div class="row">
+      <div class="col-md-3">
+          
+        <ul class="nav nav-pills nav-stacked">
+          
+          <li><a href="/settings/account">Account</a></li>
+          
+          <li><a href="/settings/templates">Templates</a></li>
+
+          <li class="active"><a href="/settings/billing">Billing</a></li>
+
+        </ul>
+
+      </div>
+      <% var daysLeft = moment(new Date(user.payment.endDate)).diff(new Date(), 'days') %>
+      <div class="col-md-8">
+        
+        <h2>Billing</h2>
+        
+        <% if (success) {%>
+          <div class="alert alert-success">
+            <p>Va multumim pentru comanda. Va vom contacta in curand.</p>
+          </div>
+        <% } else {%>
+          <% if (daysLeft > 0 ) { %>
+            <p>Abonamentul este platit iar contul tau este activ pana in data de <strong><%= moment(user.payment.endDate).format('DD MMMM YYYY') %></strong>.</p>
+          <% } else { %>
+
+            <div class="alert alert-warning">
+              <p>Abonamentul dumneavoastra a expirat. Puteti folosi calendarul in mod gratuit insa mesajele de notificare nu vor fi trimise.</p> 
+            </div>
+
+            <div class="pricing-table">
+              <!-- <div class="header">
+                Pro
+              </div> -->
+              <div class="price price-month">
+                <span class="price-int">19</span><span class="currency">&euro;</span> <span class="price-interval">/ luna</span>
+              </div>
+              <div class="price price-year">
+                <span class="price-int">199</span><span class="currency">&euro;</span> <span class="price-interval">/ an</span> <span class="price-bonus">economisiti 29 de euro!</span>
+              </div>
+              <div class="body">
+                <ul>
+                  <li>Numar nelimitat de notificari SMS</li>
+                  <li>Calendar cu toate programarile saptamanii</li>
+                  <li>Stocarea informatiilor in cloud</li>
+                  <li>Accesibil de oriunde</li>
+                  <li>Suport tehnic gratuit</li>
+                  <li>Securitatea datelor</li>
+                </ul>
+              </div>
+              <div class="footer">
+                <a href="/settings/billing/order" class="btn btn-primary btn-price-cta">Comanda acum</a>
+                <span class="price-notice">Dupa apasarea butonului de comanda veti fi sunat de un operator pentru finalizarea comenzii.</span>
+              </div>
+            </div>
+
+            <% } %>
+          <% } %>
+      </div>
+    </div>
+  </div>
+  <%- include ../partials/footer %>

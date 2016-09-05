@@ -257,44 +257,62 @@ module.exports = function(config, db) {
               });
             });
           }
+          db.calendars.findOne({
+            _id: alert.calendarId
+          }, function (err, calendar) {
+            if (err) {
+              // handle error
+            }
 
-          // send sms reminder
-          client.sms.messages.create({
-            to: alert.number,
-            from: config.sender.phone,
-            body: alert.message + ' Reminded by Apunto'
-          }, function(error, message) {
+            if (calendar) {
+              // find user
+              db.users.findOne({
+                _id: calendar.userId
+              }, function (err, user) {
+                if (err) {
+                  // handle error
+                }
 
-              // The HTTP request to Twilio will run asynchronously. This callback
-              // function will be called when a response is received from Twilio
-              // The "error" variable will contain error information, if any.
-              // If the request was successful, this value will be "falsy"
-              if (!error) {
-                  // The second argument to the callback will contain the information
-                  // sent back by Twilio for the request. In this case, it is the
-                  // information about the text messsage you just sent:
-                  db.events.update({
-                    _id: alert._id
-                  }, {
-                    $set: {
-                      sent: true,
-                      twilioRes: message
-                    }
-                  }, {}, function(err, num, alert) {
+                if (user && user.payment && user.payment.type === 'pro') {
+                  var daysLeft = moment(new Date(user.payment.endDate)).diff(new Date(), 'days')
 
-                    res.json({
-                      sid: message.sid,
-                      dateCreated: message.dateCreated,
-                      alert: alert
+                  if (daysLeft >= 0 ) {
+                    console.log('daysLeft')
+                    console.log(daysLeft)
+                    // send sms reminder
+                    client.sms.messages.create({
+                      to: alert.number,
+                      from: config.sender.phone,
+                      body: alert.message + ' Reminded by Apunto'
+                    }, function(error, message) {
+
+                        if (!error) {
+                            db.events.update({
+                              _id: alert._id
+                            }, {
+                              $set: {
+                                sent: true,
+                                twilioRes: message
+                              }
+                            }, {}, function(err, num, alert) {
+                              res.json({
+                                sid: message.sid,
+                                dateCreated: message.dateCreated,
+                                alert: alert
+                              });
+                            });
+                        } else {
+                          res.json({
+                            error: true,
+                            errorObj: error
+                          });
+                        }
                     });
-                  });
-              } else {
-                res.json({
-                  error: true,
-                  errorObj: error
-                });
-              }
-          });
+                  }
+                }
+              })
+            }
+          })
         });
       } else {
         res.json({

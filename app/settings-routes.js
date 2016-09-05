@@ -17,6 +17,9 @@ module.exports = function (db) {
   router.get('/templates', util.isAuthenticated, settings.templatesView);
   router.post('/templates', util.isAuthenticated, settings.addTemplate);
   router.get('/templates/:id', util.isAuthenticated, settings.deleteTemplate);
+  
+  router.get('/billing', util.isAuthenticated, settings.billingView);
+  router.get('/billing/order', util.isAuthenticated, settings.order);
 
   return router;
 };
