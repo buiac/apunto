@@ -13,7 +13,7 @@ module.exports = function(config, db) {
   };
 
   var isAuthenticated = function (req, res, next) {
-    if (true) {
+    if (false) {
       db.users.findOne({
        username: 'platon_n@yahoo.com'
       }, function (err, user) {
