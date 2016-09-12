@@ -92,7 +92,6 @@
     });
 
     var showCreateModal = function (start, end) {
-
       var modal = $('#create-modal');
       var modalContent = modal.find('.modal-content');
 
@@ -150,6 +149,17 @@
         modalContent.html('');
         modalContent.append(temp);
         modal.modal();
+
+        // init rome calendar
+        rome(document.querySelector('#repeat-calendar'),
+          {
+            time: false,
+            weekStart: 1
+          }
+        ).on('data', function (value) {
+          $('.repeat-start-date').html(moment(value).format('DD MMMM YYYY'))
+          $('[name="repeatStartDate"]').val(value)
+        })
         
         // init mobile number
         $('.mobile-number').intlTelInput({
@@ -263,6 +273,26 @@
         modalContent.append(temp);
         modal.modal();
 
+        // get the calendar initial value
+        var repeatActive = $('[name="repeatActive"]').attr('checked')
+
+        if (repeatActive) {
+          var repeatStartDate = moment($('[name="repeatStartDate"]').val()).toDate()
+
+          // init rome calendar
+          rome(document.querySelector('#repeat-calendar'),
+            {
+              time: false,
+              weekStart: 1,
+              initialValue: repeatStartDate
+            }
+          ).on('data', function (value) {
+            $('.repeat-start-date').html(moment(value).format('DD MMMM YYYY'))
+            $('[name="repeatStartDate"]').val(value)
+          })
+        }
+        
+
         $('.mobile-number').intlTelInput({
           defaultCountry: 'auto',
           utilsScript: '/bower_components/intl-tel-input/lib/libphonenumber/build/utils.js'
@@ -301,6 +331,13 @@
 
       var reminderDate = moment(event.start).subtract($reminderUnit.val(), $reminderType.val()).toDate();
       event.reminderDate = reminderDate;
+
+      // Update the start and end date to the date set in the repeat calendar
+      if ($form.find('[name="repeatStartDate"]').val()) {
+        event.start = moment($form.find('[name="repeatStartDate"]').val()).hours('18').minutes('00').toDate()
+        event.end = moment($form.find('[name="repeatStartDate"]').val()).hours('19').minutes('00').toDate()
+        event.reminderDate = event.start
+      }
 
       $.ajax({
         type: 'POST',
@@ -350,6 +387,12 @@
 
       var reminderDate = moment(event.start).subtract($reminderUnit.val(), $reminderType.val()).toDate();
       event.reminderDate = reminderDate;
+
+      if ($form.find('[name="repeatStartDate"]').val()) {
+        event.start = moment($form.find('[name="repeatStartDate"]').val()).hours('11').minutes('00').toDate()
+        event.end = moment($form.find('[name="repeatStartDate"]').val()).hours('12').minutes('00').toDate()
+        event.reminderDate = event.start
+      }
 
       $.ajax({
         type: 'PUT',
@@ -488,9 +531,15 @@
       var deleteBtn = $('<a href="" class="delete-event fa fa-trash" data-id="' + event._id + '"></a>');
       var sent = $('<div class="event-sent event-sent--' + event.sent + '"><span class="event-sent-true">Reminder sent</span> <span class="event-sent-false">Reminder not sent yet</span></div>');
       var status = $('<div class="event-status event-status--' + event.status + '"><span class="event-status-false">Not confirmed yet</span> <span class="event-status-1">Confirmed</span> <span class="event-status-0">Canceled</span></div>');
+      var refreshIcon = $('<div class="refresh-icon"><i class="fa fa-refresh" title="Repeating event"></i></div>')
+
       $(element).append(deleteBtn);
       $(element).append(sent);
       $(element).append(status);
+
+      if (event.repeatActive) {
+        $(element).append(refreshIcon);
+      }
     };
 
     var setTimeline = function() {
@@ -664,6 +713,24 @@
       $newContactFields.find('[name="email"]').val('');
     };
 
+    var checkboxRepeatToggle = function (e) {
+      var input = $(this).find('input')
+      var repeatComponent = $(this).parent().next()
+      
+      input[0].checked ? repeatComponent.addClass('repeat-show') : repeatComponent.removeClass('repeat-show')
+
+      // init rome
+      rome(document.querySelector('#repeat-calendar'),
+        {
+          time: false,
+          weekStart: 1
+        }
+      ).on('data', function (value) {
+        $('.repeat-start-date').html(moment(value).format('DD MMMM YYYY'))
+        $('[name="repeatStartDate"]').val(value)
+      })
+    }
+
     $('body').on('click', '#create .create', createEvent);
     $('body').on('click', '#update .update', updateEvent);
     $('body').on('click', '.textarea-cover', enableTextarea);
@@ -676,6 +743,7 @@
     $('body').on('click', '.contact-details .close', hideContactDetails);
     $('body').on('click', '.contact-details .change-contact', showContactNew);
     $('body').on('click', '.add-new-contact', clearNewContactFields);
+    $('body').on('click', '.repeat-toggle', checkboxRepeatToggle);
 
     setInterval(function () {
       calendar.fullCalendar( 'refetchEvents');

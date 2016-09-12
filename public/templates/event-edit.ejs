@@ -92,7 +92,32 @@
           before the appointment
         </div>
       </div>
+      
+      <div class="form-group">
+        <div class="checkbox repeat-toggle">
+          <label>
+            <input type="checkbox" name="repeatActive" id="" <% if (event.repeatActive) {%> checked="checked" <% } %>> <strong>Repeat event</strong>
+          </label>
+        </div>
+      </div>
 
+      <div class="repeat-event <% if (event.repeatActive) {%> repeat-show <% } %>">
+        <div class="form-group">
+          <label>Repeat every</label>
+          <select name="repeatInterval" class="form-control">
+            <option value="1" <% if (event.repeatInterval === 1) { %> selected <% } %>>1 month</option>
+            <option value="3" <% if (event.repeatInterval === 3) { %> selected <% } %>>3 months</option>
+            <option value="6" <% if (event.repeatInterval === 6) { %> selected <% } %>>6 months</option>
+            <option value="12" <% if (event.repeatInterval === 12) { %> selected <% } %>>1 year</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Starting with: <span class="repeat-start-date"> <% if (event.repeatStartDate) {%> <%= moment(event.repeatStartDate).format('DD MMMM YYYY') %> <% } else { %> Choose date from calendar <% } %></span></label>
+          <div id="repeat-calendar"></div>
+          <input type="hidden" name="repeatStartDate" value="<%= event.repeatStartDate || ''%>">
+        </div>
+      </div>
       
       <div class="form-group">
         

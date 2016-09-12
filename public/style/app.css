@@ -895,3 +895,46 @@ body .timeline {
 	text-align: center;
 	margin-bottom: 30px;
 }
+
+/* Repeat
+*/
+.repeat-start-date {
+	color: green;
+}
+
+.repeat-event {
+	display: none;
+}
+
+.repeat-show {
+	display: block;
+}
+
+.refresh-icon {
+	position: absolute;
+	z-index: 10;
+	top: 10px;
+	right: 10px;
+}
+
+.refresh-icon .fa-refresh {
+	font-size: 18px;
+	color: #FFF;
+}
+
+/* Romejs Calendar Styles
+*/
+.rd-days th,
+.rd-days td {
+	padding: 10px;
+}
+
+.rd-day-selected {
+	background: #436fd2;
+	color: #fff;
+}
+
+.rd-days td:hover {
+	background: #abbee8;
+	color: #fff;
+}

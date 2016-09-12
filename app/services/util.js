@@ -13,9 +13,9 @@ module.exports = function(config, db) {
   };
 
   var isAuthenticated = function (req, res, next) {
-    if (false) {
+    if (true) {
       db.users.findOne({
-       username: 'sebi.kovacs@gmail.com'
+       username: 'platon_n@yahoo.com'
       }, function (err, user) {
         if (user) {
           
@@ -53,11 +53,46 @@ module.exports = function(config, db) {
 
     callback(null, admin);
   });
+
+  var clone = function (obj) {
+    var copy;
+
+    // Handle the 3 simple types, and null or undefined
+    if (null == obj || "object" != typeof obj) return obj;
+
+    // Handle Date
+    if (obj instanceof Date) {
+        copy = new Date();
+        copy.setTime(obj.getTime());
+        return copy;
+    }
+
+    // Handle Array
+    if (obj instanceof Array) {
+        copy = [];
+        for (var i = 0, len = obj.length; i < len; i++) {
+            copy[i] = clone(obj[i]);
+        }
+        return copy;
+    }
+
+    // Handle Object
+    if (obj instanceof Object) {
+        copy = {};
+        for (var attr in obj) {
+            if (obj.hasOwnProperty(attr)) copy[attr] = clone(obj[attr]);
+        }
+        return copy;
+    }
+
+    throw new Error("Unable to copy obj! Its type isn't supported.");
+  }
   
 
   return {
     isAuthenticated: isAuthenticated,
     adminAuth: adminAuth,
-    createHash: createHash
+    createHash: createHash,
+    clone: clone
   };
 };

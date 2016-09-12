@@ -5,6 +5,7 @@ module.exports = function(config, db) {
   'use strict';
 
   var util = require('util');
+  var utils = require('../services/util.js')(config, db);
   var twilio = require('twilio');
   var moment = require('moment');
   var nexmo = require('easynexmo');
@@ -37,6 +38,11 @@ module.exports = function(config, db) {
     req.checkBody('end', 'End date should not be empty.').notEmpty();
     req.checkBody('message', 'Message should not be empty.').notEmpty();
 
+    if (req.body.repeatActive) {
+      req.checkBody('repeatInterval', 'Please set message repeat interval.').notEmpty();
+      req.checkBody('repeatStartDate', 'Please set the date when the message repeat should start.').notEmpty();
+    }
+
     var name = req.body.name.trim();
     var userName = req.body.userName.trim();
     var companyName = req.body.companyName.trim();
@@ -48,6 +54,12 @@ module.exports = function(config, db) {
     var endDate = new Date(req.body.end);
     var reminderDate = new Date(req.body.reminderDate);
     var email = req.body.email;
+
+    if (req.body.repeatActive) {
+      var repeatActive = req.body.repeatActive;
+      var repeatInterval = req.body.repeatInterval;
+      var repeatStartDate = req.body.repeatStartDate;
+    }
 
     // TODO add multiple validations after transforms
     var errors = req.validationErrors();
@@ -70,7 +82,10 @@ module.exports = function(config, db) {
       message: message,
       templateId: req.body.templateId,
       reminderDate: reminderDate,
-      email: email
+      email: email, 
+      repeatActive: repeatActive,
+      repeatInterval: repeatInterval,
+      repeatStartDate: repeatStartDate
     };
 
     db.events.insert(event, function (err, newEvent) {
@@ -117,6 +132,11 @@ module.exports = function(config, db) {
     req.checkBody('end', 'End date should not be empty.').notEmpty();
     req.checkBody('message', 'Message should not be empty.').notEmpty();
     req.checkBody('_id', 'ID should not be empty.').notEmpty();
+
+    if (req.body.repeatActive) {
+      req.checkBody('repeatInterval', 'Please set message repeat interval.').notEmpty();
+      req.checkBody('repeatStartDate', 'Please set the date when the message repeat should start.').notEmpty();
+    }
     
     var name = req.body.name.trim();
     var companyName = req.body.companyName.trim();
@@ -133,6 +153,12 @@ module.exports = function(config, db) {
     endDate = moment(endDate).toDate();
 
     // TODO add multiple validations after transforms
+
+    if (req.body.repeatActive) {
+      var repeatActive = req.body.repeatActive;
+      var repeatInterval = req.body.repeatInterval;
+      var repeatStartDate = req.body.repeatStartDate;
+    }
 
     var errors = req.validationErrors();
 
@@ -153,7 +179,10 @@ module.exports = function(config, db) {
       calendarId: req.params.calendarId,
       message: message,
       templateId: templateId,
-      reminderDate: reminderDate
+      reminderDate: reminderDate,
+      repeatActive: repeatActive,
+      repeatInterval: repeatInterval,
+      repeatStartDate: repeatStartDate
     };
 
     db.events.update({'_id': eventId}, event, function (err, num) {
@@ -221,6 +250,7 @@ module.exports = function(config, db) {
       if (alerts.length) {
 
         alerts.forEach(function (alert) {
+          // handle email alerts
           if (alert.email) {
             var confirmUrl = config.baseUrl +'/api/1/events/r/confirm/' + alert._id;
 
@@ -257,6 +287,33 @@ module.exports = function(config, db) {
               });
             });
           }
+
+          // if it's a recurring event clone it and add it to the calendar
+          if (alert.repeatActive) {
+            // clone alert
+            var newAlert = utils.clone(alert)
+
+            // delete the alert ID before inserting into the database
+            delete newAlert._id
+
+            // update the repeatStartDate attribute with the hours and minutes of the event
+            newAlert.repeatStartDate = moment(newAlert.repeatStartDate).hours(moment(newAlert.start).hours()).minutes(moment(newAlert.start).minutes()).toDate()
+            
+            // add number of months
+            newAlert.start = moment(newAlert.repeatStartDate).add(newAlert.repeatInterval, 'months').toDate()
+            newAlert.end = moment(newAlert.repeatStartDate).add(newAlert.repeatInterval, 'months').add(1, 'hour').toDate()
+            newAlert.reminderDate = newAlert.start
+            newAlert.repeatStartDate = newAlert.start
+
+            db.events.insert(newAlert, function (err, obj) {
+              console.log('error')
+              console.log(err)
+              console.log('inserted a new event')
+              console.log(obj)
+            })
+          }
+
+          // check if the user has a valid pro account and use it
           db.calendars.findOne({
             _id: alert.calendarId
           }, function (err, calendar) {
@@ -277,8 +334,6 @@ module.exports = function(config, db) {
                   var daysLeft = moment(new Date(user.payment.endDate)).diff(new Date(), 'days')
 
                   if (daysLeft >= 0 ) {
-                    console.log('daysLeft')
-                    console.log(daysLeft)
                     // send sms reminder
                     client.sms.messages.create({
                       to: alert.number,
