@@ -334,8 +334,8 @@
 
       // Update the start and end date to the date set in the repeat calendar
       if ($form.find('[name="repeatStartDate"]').val()) {
-        event.start = moment($form.find('[name="repeatStartDate"]').val()).hours('18').minutes('00').toDate()
-        event.end = moment($form.find('[name="repeatStartDate"]').val()).hours('19').minutes('00').toDate()
+        event.start = moment($form.find('[name="repeatStartDate"]').val()).hours('11').minutes('00').toDate()
+        event.end = moment($form.find('[name="repeatStartDate"]').val()).hours('12').minutes('00').toDate()
         event.reminderDate = event.start
       }
 
@@ -503,21 +503,32 @@
         }
       }
       
+
+      var eventData = {
+        start: event.start.toDate(),
+        end: event.end.toDate(),
+        name: event.title,
+        email: event.email,
+        number: event.number,
+        companyName: Apunto.config.companyName,
+        message: message,
+        templateId: template[0]._id,
+        reminderDate: reminderDate,
+        _id: event._id
+      }
+
+      if (event.repeatActive) {
+        eventData.repeatActive = event.repeatActive
+        eventData.repeatInterval = event.repeatInterval
+        eventData.repeatStartDate = reminderDate
+      }
+
+
+
       $.ajax({
         type: 'PUT',
         url: '/api/1/events/' + Apunto.config.calendarId,
-        data: {
-          start: event.start.toDate(),
-          end: event.end.toDate(),
-          name: event.title,
-          email: event.email,
-          number: event.number,
-          companyName: Apunto.config.companyName,
-          message: message,
-          templateId: template[0]._id,
-          reminderDate: reminderDate,
-          _id: event._id
-        }
+        data: eventData
       }).done(function () {
         calendar.fullCalendar( 'refetchEvents');
       });
