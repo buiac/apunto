@@ -13,9 +13,7 @@ module.exports = function(config, db) {
 
   // passport serializer
   passport.serializeUser(function(user, done) {
-
     done(null, user._id);
-
   });
    
   passport.deserializeUser(function(userId, done) {
@@ -51,7 +49,13 @@ module.exports = function(config, db) {
           //if there is no user with that email
           // create the user
           var newUser = {
-            timecreated: new Date()
+            timecreated: new Date(),
+            payment: {
+              type: 'pro',
+              interval: 1,
+              startDate: new Date(),
+              endDate: moment().add(req.params.interval, 'months').toDate()
+            }
           };
 
           var calendar = {};
