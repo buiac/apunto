@@ -424,7 +424,9 @@
       var max = 160;
       var len = $(this).val().length;
       if (len >= max) {
-        $('#charNum').text(' you have reached the limit');
+        $('#charNum').text(' 160 characters maximum alowed in an SMS');
+
+        $(this).val($(this).val().substring(0,160))
       } else {
         var charc = max - len;
         $('#charNum').text(charc + ' characters left');

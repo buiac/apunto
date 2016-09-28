@@ -334,11 +334,16 @@ module.exports = function(config, db) {
                   var daysLeft = moment(new Date(user.payment.endDate)).diff(new Date(), 'days')
 
                   if (daysLeft >= 0 ) {
+                    
+                    // truncate string
+                    var alertMessage = alert.message;
+                    alertMessage = alertMessage.substring(0, 160)
+
                     // send sms reminder
                     client.sms.messages.create({
                       to: alert.number,
                       from: config.sender.phone,
-                      body: alert.message + ' Reminded by Apunto'
+                      body: alertMessage
                     }, function(error, message) {
 
                         if (!error) {
