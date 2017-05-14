@@ -4,6 +4,7 @@
   "private": true,
   "main": "server.js",
   "scripts": {
+    "deploy": "git push live master",
     "test": "./node_modules/.bin/jshint ."
   },
   "dependencies": {
